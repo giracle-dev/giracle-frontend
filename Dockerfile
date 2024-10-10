@@ -1,29 +1,14 @@
-# ベースイメージとしてNode.jsを使用
-FROM node:20.11-bullseye AS builder
+FROM oven/bun AS builder
 
 WORKDIR /app
-
-COPY package.json ./
-COPY package-lock.json ./
-COPY tsconfig.json ./
-
-RUN npm ci
 
 COPY . .
-COPY .env ./
+COPY package.json .
+COPY bun.lockb .
+COPY vite.config.ts .
 
-RUN npm run build
+RUN bun i
 
-# 実行用
-FROM node:20.11-bullseye
+CMD ["bun", "run", "dev", "--host"]
 
-WORKDIR /app
-
-## ビルド用のレイヤからコピーする
-COPY --from=builder /app ./
-
-# ポートを公開
-EXPOSE 6173
-
-# サーバーを起動するコマンドを設定
-CMD ["npm", "run", "preview", "--", "--host"]
+EXPOSE 5173
