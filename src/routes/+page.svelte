@@ -1,9 +1,6 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { page } from '$app/stores';
-
+  import { onMount } from "svelte";
+  import { page } from "$app/stores";
 </script>
 
-<div>
-  testPJ
-</div>
+<div>testPJ</div>
