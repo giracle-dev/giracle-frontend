@@ -24,8 +24,6 @@
     await authMiddleware();
 
   });
-
-  let channelName: string = "";
 </script>
 
 <svelte:head>
