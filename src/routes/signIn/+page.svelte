@@ -1,6 +1,6 @@
 <script>
-  import { onMount } from "svelte";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
+  import { goto } from "$app/navigation";
 
   let username = "";
   let password = "";
@@ -8,7 +8,12 @@
   const signIn = async () => {
     const userRepository = repositoryFactory.get("user");
     const response = await userRepository.signIn(username, password);
-    console.log(response);
+    if (response.success) {
+      console.log("サインインに成功しました！");
+      goto("/");
+    } else {
+      console.log("サインインに失敗しました。");
+    }
   };
 </script>
 

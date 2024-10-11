@@ -3,4 +3,4 @@
   import { page } from "$app/stores";
 </script>
 
-<div>testPJ</div>
+<div class="w-full">testPJ</div>
