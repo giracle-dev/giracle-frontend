@@ -79,7 +79,7 @@
     <div
       on:touchstart={handleTouchStart}
       on:touchend={handleTouchEnd}
-      class="h-full"
+      class="h-[calc(100vh-64px)] overflow-y-auto"
     >
       <slot />
     </div>
