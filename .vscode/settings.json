@@ -5,5 +5,5 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "editor.tabSize": 2,
-  "cSpell.words": ["Giracle", "tabler"]
+  "cSpell.words": ["daisyui", "Giracle", "tabler", "tailwindcss"]
 }

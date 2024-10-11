@@ -9,13 +9,16 @@
   import Header from "$lib/components/Header/Header.svelte";
   import { page } from "$app/stores";
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
-  const hiddenDefaultLayout = ["/signIn", "/signUp"];
+  const hiddenDefaultLayout = ["/signIn", "/signUp", "/setting"];
   let openDrawer = false;
 
   let touchStartX = 0;
   let touchEndX = 0;
   let touchStartY = 0;
   let touchEndY = 0;
+
+  let headerTitle = "None Title";
+  let headerIcon = "channel" as "channel" | "channelList";
 
   const handleTouchStart = (event: TouchEvent) => {
     touchStartX = event.changedTouches[0].screenX;
@@ -50,9 +53,26 @@
     //     });
     // }
 
-    //authのmiddleware
+    //middleware
     await authMiddleware();
   });
+
+  $: {
+    switch ($page.url.pathname) {
+      case "/channel":
+        headerTitle = "Channel";
+        headerIcon = "channelList";
+        break;
+      case `/channel/${$page.params.id}`:
+        headerTitle = "Channel Detail";
+        headerIcon = "channel";
+        break;
+      default:
+        headerTitle = "None Title";
+        headerIcon = "channel";
+        break;
+    }
+  }
 </script>
 
 <!-- <svelte:head>
@@ -75,6 +95,8 @@
       on:drawer={() => {
         onChangeDrawer();
       }}
+      {headerTitle}
+      {headerIcon}
     />
     <div
       on:touchstart={handleTouchStart}

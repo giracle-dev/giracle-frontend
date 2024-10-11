@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { page } from "$app/stores";
-</script>
+  import { goto } from "$app/navigation";
 
-<div class="w-full">testPJ</div>
+  onMount(() => {
+    goto("/channel");
+  });
+</script>
