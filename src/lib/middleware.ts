@@ -49,8 +49,8 @@ export const authMiddleware = async () => {
           goto("/channel");
         }
       })
-      .catch(() => {
-        console.log("error");
+      .catch((e) => {
+        console.log("error->", e);
       });
   }
 
