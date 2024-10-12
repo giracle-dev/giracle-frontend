@@ -1,5 +1,5 @@
 import { PUBLIC_BACKEND_ADDRESS } from "$env/static/public";
-import type { IChannel, IResponseChannel } from "$lib/types/IChannel";
+import type { IChannel, IResponseChannelList } from "$lib/types/IChannel";
 
 export default {
   createChannel: async (name: string): Promise<IChannel> => {
@@ -11,13 +11,13 @@ export default {
     });
     return await response.json();
   },
-  getChannel: async (): Promise<IResponseChannel> => {
+  getChannel: async (): Promise<IResponseChannelList> => {
     const response = await fetch(`${PUBLIC_BACKEND_ADDRESS}/channel/list`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
-    const responseData: IResponseChannel = await response.json();
+    const responseData: IResponseChannelList = await response.json();
     return await responseData;
   },
   deleteChannel: async (id: string): Promise<void> => {

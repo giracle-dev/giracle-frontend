@@ -5,7 +5,7 @@ export interface IChannel {
   createdUserId: string;
 }
 
-export interface IResponseChannel {
+export interface IResponseChannelList {
   message: string;
   data: IChannel[];
 }
