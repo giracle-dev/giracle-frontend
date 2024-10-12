@@ -3,6 +3,9 @@ import { browser } from "$app/environment";
 import { repositoryFactory } from "./repositories/RepositoryFactory";
 import { channelListStore } from "./store/channel";
 import { initWS } from "./wsHandler/INIT.ws";
+import { myUserStore } from "./store/myuser";
+import { get } from "svelte/store";
+import type { IResponseUSerVerifyToken } from "./types/IUser";
 
 const userRepository = repositoryFactory.get("user");
 const channelRepository = repositoryFactory.get("channel");
@@ -58,9 +61,13 @@ export const authMiddleware = async () => {
   if (!noRedirectList.includes(location.pathname)) {
     await userRepository
       .verifyToken()
-      .then((response) => {
-        console.log(response);
+      .then((response: IResponseUSerVerifyToken ) => {
+        console.log("middleware :: authMiddleware : response->", response);
+
+        //WebSocketの初期化
         initWS();
+        //自分のユーザーIdをストアにセット
+        myUserStore.set({...get(myUserStore), ...response.data});
 
         // ログインしていない場合はログインページにリダイレクト
         if (!response.success && !noRedirectList.includes(location.pathname)) {
