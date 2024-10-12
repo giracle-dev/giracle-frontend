@@ -1,6 +1,4 @@
-import { myUserStore } from "$lib/store/myuser";
 import type { IResponseUSerVerifyToken } from "$lib/types/IUser";
-import { get } from "svelte/store";
 
 export default {
   signUp: async (
@@ -24,11 +22,7 @@ export default {
       credentials: "include",
       body: JSON.stringify({ username, password }),
     });
-
-    const res:IResponseUSerVerifyToken = await response.json()
-    //自分のユーザーIdをストアにセット
-    myUserStore.set({...get(myUserStore), ...res.data});
-    return res;
+    return await response.json();
   },
   verifyToken: async (): Promise<IResponseUSerVerifyToken> => {
     const response = await fetch("api/user/verify-token", {

@@ -2,6 +2,8 @@
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { goto } from "$app/navigation";
   import { initWS } from "$lib/wsHandler/INIT.ws";
+  import { myUserStore } from "$lib/store/myuser";
+  import { get } from "svelte/store";
 
   let username = "";
   let password = "";
@@ -12,6 +14,8 @@
 
     if (response.success) {
       initWS();
+      //自分のユーザーIdをストアにセット
+      myUserStore.set({ ...get(myUserStore), ...response.data });
       goto("/");
     } else {
       console.log("サインインに失敗しました。");
