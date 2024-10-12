@@ -6,7 +6,7 @@ export default {
     username: string,
     password: string,
   ): Promise<IResponseUSerVerifyToken> => {
-    const response = await fetch(`${PUBLIC_BACKEND_ADDRESS}/user/sign-up`, {
+    const response = await fetch("api/user/sign-up", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -17,7 +17,7 @@ export default {
     username: string,
     password: string,
   ): Promise<IResponseUSerVerifyToken> => {
-    const response = await fetch(`${PUBLIC_BACKEND_ADDRESS}/user/sign-in`, {
+    const response = await fetch("api/user/sign-in", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -26,14 +26,11 @@ export default {
     return await response.json();
   },
   verifyToken: async (): Promise<IResponseUSerVerifyToken> => {
-    const response = await fetch(
-      `${PUBLIC_BACKEND_ADDRESS}/user/verify-token`,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      },
-    );
+    const response = await fetch("api/user/verify-token", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
 
     return await response.json();
   },
@@ -41,14 +38,11 @@ export default {
     username: string,
     password: string,
   ): Promise<IResponseUSerVerifyToken> => {
-    const response = await fetch(
-      `${PUBLIC_BACKEND_ADDRESS}/user/change-password`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      },
-    );
+    const response = await fetch("api/user/change-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
     return await response.json();
   },
 };
