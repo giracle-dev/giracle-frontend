@@ -1,22 +1,18 @@
 export let ws: WebSocket;
 
 export const initWS = () => {
-  /*
-  console.log("initWS :: token->", document.cookie);
-  let token: string = "";
+  //WebSocketの接続確率
+  ws = new WebSocket("/ws");
 
-  for (const c of document.cookie.split(";")) {
-    console.log("initWS :: c->", c);
-    if (c.startsWith("token=")) {
-      console.log("initWS :: c->", c);
-      token = c.split("=")[1];
-    }
+  ws.onopen = (event) => {
+    //テスト
+    ws.send(JSON.stringify({
+      signal: "ping",
+      data: null
+    }));
+    console.log("INIT.ws :: initWS : open->", event);
   }
 
-  if (token === "") return;
-  */
-
-  ws = new WebSocket("/ws");
   ws.onerror = (event) => {
     console.log("INIT.ws :: initWS : error->", event);
   }
