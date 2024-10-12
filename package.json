@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "vite dev",
+    "dev": "bunx --bun vite dev",
     "build": "vite build",
     "preview": "vite preview --port 6173",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
