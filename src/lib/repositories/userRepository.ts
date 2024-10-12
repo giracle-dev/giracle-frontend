@@ -1,4 +1,3 @@
-import { PUBLIC_BACKEND_ADDRESS } from "$env/static/public";
 import type { IResponseUSerVerifyToken } from "$lib/types/IUser";
 
 export default {
