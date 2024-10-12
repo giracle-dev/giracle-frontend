@@ -2,6 +2,7 @@ import { goto } from "$app/navigation";
 import { browser } from "$app/environment";
 import { repositoryFactory } from "./repositories/RepositoryFactory";
 import { channelListStore } from "./store/channel";
+import { initWS } from "./wsHandler/INIT.ws";
 
 const userRepository = repositoryFactory.get("user");
 const channelRepository = repositoryFactory.get("channel");
@@ -44,6 +45,7 @@ export const authMiddleware = async () => {
       .verifyToken()
       .then((response) => {
         if (response.success) {
+          initWS();
           goto("/channel");
         }
       })
@@ -58,6 +60,8 @@ export const authMiddleware = async () => {
       .verifyToken()
       .then((response) => {
         console.log(response);
+        initWS();
+
         // ログインしていない場合はログインページにリダイレクト
         if (!response.success && !noRedirectList.includes(location.pathname)) {
           goto("/signIn");

@@ -1,6 +1,7 @@
 <script>
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { goto } from "$app/navigation";
+  import { initWS } from "$lib/wsHandler/INIT.ws";
 
   let username = "";
   let password = "";
@@ -8,8 +9,9 @@
   const signIn = async () => {
     const userRepository = repositoryFactory.get("user");
     const response = await userRepository.signIn(username, password);
+
     if (response.success) {
-      console.log("サインインに成功しました！");
+      initWS();
       goto("/");
     } else {
       console.log("サインインに失敗しました。");
