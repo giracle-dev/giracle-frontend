@@ -1,14 +1,15 @@
 <script lang="ts">
   import "../app.css";
-  import { browser } from "$app/environment";
   import { onMount } from "svelte";
-  // import { pwaAssetsHead } from "virtual:pwa-assets/head";
-  import { pwaInfo } from "virtual:pwa-info";
-  import { authMiddleware } from "$lib/middleware";
+  import { authMiddleware, pwaMiddleware } from "$lib/middleware";
   import Drawer from "$lib/components/Drawer/Drawer.svelte";
   import Header from "$lib/components/Header/Header.svelte";
   import { page } from "$app/stores";
+  // import { pwaAssetsHead } from "virtual:pwa-assets/head";
+  import { pwaInfo } from "virtual:pwa-info";
+
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
+
   const hiddenDefaultLayout = ["/signIn", "/signUp", "/setting"];
   let openDrawer = false;
 
@@ -42,18 +43,8 @@
     }
   };
   onMount(async () => {
-    // if (browser && "serviceWorker" in navigator) {
-    //   navigator.serviceWorker
-    //     .register("/service-worker.js", { type: "module" })
-    //     .then((registration) => {
-    //       console.info("サービスワーカーを登録しました:", registration.scope);
-    //     })
-    //     .catch((error) => {
-    //       console.error("サービスワーカーが登録できませんでした:", error);
-    //     });
-    // }
-
     //middleware
+    // await pwaMiddleware();
     await authMiddleware();
   });
 

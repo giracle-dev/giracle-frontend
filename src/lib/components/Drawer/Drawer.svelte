@@ -1,5 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import { IconSettings } from "@tabler/icons-svelte";
+  import { goto } from "$app/navigation";
 
   export let openDrawer: boolean = false;
 
@@ -27,9 +29,46 @@
       aria-label="close sidebar"
       class="drawer-overlay"
     />
-    <ul class="menu bg-base-200 text-base-content min-h-full w-40 md:w-60 p-4">
+    <div
+      class=" menu bg-base-200 text-base-content min-h-full w-60 md:w-60 p-2"
+    >
+      <div class="h-[64px] border-b">serverInfo elements</div>
       <!-- Sidebar content here -->
-      <li><a href="/channel">Sidebar Item 1</a></li>
-    </ul>
+      <ul class="h-[calc(100svh-144px)] overflow-y-auto py-2">
+        <li><a href="/channel"># Sidebar Item 1</a></li>
+      </ul>
+      <!-- user -->
+      <div
+        class="bg-base-700 pa-2 flex items-center gap-2 h-[64px]"
+        role="button"
+        tabindex="0"
+        on:click={() => {
+          console.log("test");
+        }}
+        on:keydown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            console.log("test");
+          }
+        }}
+      >
+        <img
+          src="https://media.tenor.com/SgHXpt3rKfYAAAAi/grant-yapping.gif"
+          alt="user"
+          class="w-10 h-10 rounded-full"
+        />
+        <div class="w-[120px] truncate">User Name asdfadfadfasdfdaf</div>
+        <div class="flex gap-2">
+          <button
+            class="btn btn-ghost btn-circle"
+            on:click={(event) => {
+              event.stopPropagation();
+              goto("/setting");
+            }}
+          >
+            <IconSettings size={20} />
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

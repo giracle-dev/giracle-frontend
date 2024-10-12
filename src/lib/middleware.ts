@@ -1,9 +1,23 @@
 import { goto } from "$app/navigation";
+import { browser } from "$app/environment";
 import { repositoryFactory } from "./repositories/RepositoryFactory";
 import { channelListStore } from "./store/channel";
 
 const userRepository = repositoryFactory.get("user");
 const channelRepository = repositoryFactory.get("channel");
+
+export const pwaMiddleware = async () => {
+  if (browser && "serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("/service-worker.js", { type: "module" })
+      .then((registration) => {
+        console.info("サービスワーカーを登録しました:", registration.scope);
+      })
+      .catch((error) => {
+        console.error("サービスワーカーが登録できませんでした:", error);
+      });
+  }
+};
 
 /**
  * 認証クリア後の初期実行処理
@@ -30,7 +44,7 @@ export const authMiddleware = async () => {
       .verifyToken()
       .then((response) => {
         if (response.success) {
-          goto("/");
+          goto("/channel");
         }
       })
       .catch(() => {
