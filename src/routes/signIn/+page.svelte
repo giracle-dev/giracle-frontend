@@ -15,7 +15,7 @@
     if (response.success) {
       initWS();
       //自分のユーザーIdをストアにセット
-      myUserStore.set({ ...get(myUserStore), ...response.data });
+      myUserStore.set({ ...get(myUserStore), id: response.data.userId });
       goto("/");
     } else {
       console.log("サインインに失敗しました。");

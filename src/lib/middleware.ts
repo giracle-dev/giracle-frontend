@@ -67,7 +67,7 @@ export const authMiddleware = async () => {
         //WebSocketの初期化
         initWS();
         //自分のユーザーIdをストアにセット
-        myUserStore.set({...get(myUserStore), ...response.data});
+        myUserStore.set({...get(myUserStore), id: response.data.userId});
 
         // ログインしていない場合はログインページにリダイレクト
         if (!response.success && !noRedirectList.includes(location.pathname)) {
