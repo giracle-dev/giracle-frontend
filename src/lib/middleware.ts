@@ -58,6 +58,7 @@ export const authMiddleware = async () => {
       .then((response) => {
         if (response.success) {
           initWS();
+          init();
           goto("/channel");
         }
       })
