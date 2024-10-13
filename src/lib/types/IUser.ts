@@ -6,8 +6,13 @@ export interface IResponseUSerVerifyToken {
   }
 }
 
+export interface IResponseGetUserinfo {
+  message: string;
+  data: IUser;
+}
+
 export interface IUser {
   id: string;
   name: string;
-  description: string;
+  selfIntroduction: string;
 }
