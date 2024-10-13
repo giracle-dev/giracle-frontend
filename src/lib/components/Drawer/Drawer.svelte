@@ -2,6 +2,8 @@
   import { createEventDispatcher } from "svelte";
   import { IconSettings } from "@tabler/icons-svelte";
   import { goto } from "$app/navigation";
+  import { myUserStore } from "$lib/store/myuser";
+  import { get } from "svelte/store";
 
   export let openDrawer: boolean = false;
 
@@ -43,7 +45,8 @@
         role="button"
         tabindex="0"
         on:click={() => {
-          console.log("test");
+          console.log("test userId->", get(myUserStore).id);
+          goto("/user/" + get(myUserStore).id);
         }}
         on:keydown={(e) => {
           if (e.key === "Enter" || e.key === " ") {

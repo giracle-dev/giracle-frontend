@@ -48,6 +48,10 @@ export default defineConfig({
         target: process.env.PUBLIC_BACKEND_ADDRESS || "http://localhost:3000",
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
+      "/ws": {
+        target: process.env.PUBLIC_BACKEND_ADDRESS || "http://localhost:3000",
+        ws: true,
+      },
     },
   },
 });

@@ -1,5 +1,4 @@
-import { PUBLIC_BACKEND_ADDRESS } from "$env/static/public";
-import type { IResponseUSerVerifyToken } from "$lib/types/IUser";
+import type { IResponseGetUserinfo, IResponseUSerVerifyToken, IUser } from "$lib/types/IUser";
 
 export default {
   signUp: async (
@@ -45,4 +44,14 @@ export default {
     });
     return await response.json();
   },
+  getUserInfo: async (
+    userId: string
+  ): Promise<IResponseGetUserinfo> => {
+    const response = await fetch("api/user/info/" + userId, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    return await response.json();
+  }
 };

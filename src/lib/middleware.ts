@@ -2,6 +2,10 @@ import { goto } from "$app/navigation";
 import { browser } from "$app/environment";
 import { repositoryFactory } from "./repositories/RepositoryFactory";
 import { channelListStore } from "./store/channel";
+import { initWS } from "./wsHandler/INIT.ws";
+import { myUserStore } from "./store/myuser";
+import { get } from "svelte/store";
+import type { IResponseUSerVerifyToken } from "./types/IUser";
 
 const userRepository = repositoryFactory.get("user");
 const channelRepository = repositoryFactory.get("channel");
@@ -23,6 +27,15 @@ export const pwaMiddleware = async () => {
  * 認証クリア後の初期実行処理
  */
 const init = async () => {
+  //自分のユーザー情報の取得
+  userRepository.getUserInfo(get(myUserStore).id).then((response) => {
+    console.log("middleware :: authMiddleware : response(getUserInfo)->", response);
+    myUserStore.set({
+      ...get(myUserStore),
+      name: response.data.name,
+      selfIntroduction: response.data.selfIntroduction
+    });
+  });
   // チャンネル一覧を取得
   await channelRepository.getChannel().then((response) => {
     console.log(response);
@@ -44,11 +57,13 @@ export const authMiddleware = async () => {
       .verifyToken()
       .then((response) => {
         if (response.success) {
+          initWS();
+          init();
           goto("/channel");
         }
       })
-      .catch(() => {
-        console.log("error");
+      .catch((e) => {
+        console.log("error->", e);
       });
   }
 
@@ -56,8 +71,14 @@ export const authMiddleware = async () => {
   if (!noRedirectList.includes(location.pathname)) {
     await userRepository
       .verifyToken()
-      .then((response) => {
-        console.log(response);
+      .then((response: IResponseUSerVerifyToken ) => {
+        console.log("middleware :: authMiddleware : response->", response);
+
+        //WebSocketの初期化
+        initWS();
+        //自分のユーザーIdをストアにセット
+        myUserStore.set({...get(myUserStore), id: response.data.userId});
+
         // ログインしていない場合はログインページにリダイレクト
         if (!response.success && !noRedirectList.includes(location.pathname)) {
           goto("/signIn");

@@ -1,6 +1,9 @@
 <script>
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { goto } from "$app/navigation";
+  import { initWS } from "$lib/wsHandler/INIT.ws";
+  import { myUserStore } from "$lib/store/myuser";
+  import { get } from "svelte/store";
 
   let username = "";
   let password = "";
@@ -8,8 +11,11 @@
   const signIn = async () => {
     const userRepository = repositoryFactory.get("user");
     const response = await userRepository.signIn(username, password);
+
     if (response.success) {
-      console.log("サインインに成功しました！");
+      initWS();
+      //自分のユーザーIdをストアにセット
+      myUserStore.set({ ...get(myUserStore), id: response.data.userId });
       goto("/");
     } else {
       console.log("サインインに失敗しました。");
