@@ -19,4 +19,12 @@ export const initWS = () => {
   ws.onmessage = (event) => {
     console.log("INIT.ws :: initWS : event->", event.data);
   }
+  ws.onclose = (event) => {
+    console.log("INIT.ws :: initWS : close->", event);
+
+    //再接続
+    setTimeout(() => {
+      ws = new WebSocket("/ws");
+    }, Math.random() * 500 + 1000);
+  }
 };
