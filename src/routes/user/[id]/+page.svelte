@@ -28,6 +28,7 @@
 
 <div>
   <h1>ユーザー</h1>
+  <p>name: {name}</p>
   <p>id: {$page.params.id}</p>
 
   <div>
