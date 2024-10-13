@@ -7,7 +7,7 @@ export default async function profileUpdate(
   }
 ) {
   ws.send(JSON.stringify({
-    signal: "profileUpdate",
+    signal: "user::profileUpdate",
     data: data
   }));
 }
