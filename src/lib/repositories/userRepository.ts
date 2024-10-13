@@ -1,4 +1,4 @@
-import type { IResponseUSerVerifyToken } from "$lib/types/IUser";
+import type { IResponseUSerVerifyToken, IUser } from "$lib/types/IUser";
 
 export default {
   signUp: async (
@@ -44,4 +44,14 @@ export default {
     });
     return await response.json();
   },
+  getUserInfo: async (
+    userId: string
+  ): Promise<IUser> => {
+    const response = await fetch("api/user/info" + userId, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    return await response.json();
+  }
 };
