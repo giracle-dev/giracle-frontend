@@ -42,6 +42,7 @@
   </div>
 
   <button
+    on:click={updateIt}
     class="btn"
     disabled={selfIntroduction === get(myUserStore).selfIntroduction &&
       name === get(myUserStore).name}>更新</button
