@@ -25,5 +25,5 @@
   <h1>ユーザー</h1>
   <p>id: {$page.params.id}</p>
 
-  <button on:click={updateIt}>更新</button>
+  <button on:click={updateIt} class="btn">更新</button>
 </div>
