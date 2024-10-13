@@ -27,6 +27,15 @@ export const pwaMiddleware = async () => {
  * 認証クリア後の初期実行処理
  */
 const init = async () => {
+  //自分のユーザー情報の取得
+  userRepository.getUserInfo(get(myUserStore).id).then((response) => {
+    console.log("middleware :: authMiddleware : response(getUserInfo)->", response);
+    myUserStore.set({
+      ...get(myUserStore),
+      name: response.data.name,
+      selfIntroduction: response.data.selfIntroduction
+    });
+  });
   // チャンネル一覧を取得
   await channelRepository.getChannel().then((response) => {
     console.log(response);
