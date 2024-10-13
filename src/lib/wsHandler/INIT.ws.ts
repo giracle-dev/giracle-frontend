@@ -24,7 +24,7 @@ export const initWS = () => {
 
     //再接続
     setTimeout(() => {
-      ws = new WebSocket("/ws");
+      initWS();
     }, Math.random() * 500 + 1000);
   }
 };
