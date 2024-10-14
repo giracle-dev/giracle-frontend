@@ -1,15 +1,45 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
+  import { ws } from "$lib/wsHandler/INIT.ws";
   import { IconSearch, IconPlus } from "@tabler/icons-svelte";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { channelListStore } from "$lib/store/channel";
+  import type { IChannel } from "$lib/types/IChannel";
   const channelRepository = repositoryFactory.get("channel");
+
   let my_modal_5: HTMLDialogElement;
   let channelName = "";
-  onMount(() => {
+  let channels: IChannel[] = [];
+
+  onMount(async () => {
     my_modal_5 = document.getElementById("my_modal_5") as HTMLDialogElement;
+
+    channels = (await channelRepository.getChannel()).data;
+    console.log("/channel :: channels->", channels);
   });
+
+  /**
+   * チャンネルへ参加する
+   * @param channelId
+   */
+  const joinChannel = (channelId: string) => {
+    ws.send(JSON.stringify({
+      signal: "channel::JoinChannel",
+      data: { channelId }
+    }));
+  }
+
+  /**
+   * チャンネルから脱退する
+   * @param channelId
+   */
+  const leaveChannel = (channelId: string) => {
+    ws.send(JSON.stringify({
+      signal: "channel::LeaveChannel",
+      data: { channelId }
+    }));
+  }
 
   const channelCreate = async () => {
     await channelRepository
@@ -87,6 +117,17 @@
         <div class="hidden md:block">チャンネルを作成する</div>
       </button>
     </div>
+  </div>
+  <div class="mt-3 pb-3">
+    {#each channels as channel}
+      <div class="w-full card bg-base-200">
+        <div class="flex flex-row item-center card-body">
+          <p>{ channel.name }</p>
+          <button on:click={()=>joinChannel(channel.id)} class="btn btn-primary">参加</button>
+          <button on:click={()=>leaveChannel(channel.id)} class="btn btn-primary">脱退</button>
+        </div>
+      </div>
+    {/each}
   </div>
 </div>
 
