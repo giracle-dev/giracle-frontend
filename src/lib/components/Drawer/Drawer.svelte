@@ -4,8 +4,11 @@
   import { goto } from "$app/navigation";
   import { myUserStore } from "$lib/store/myuser";
   import { get } from "svelte/store";
+  import type { IChannel } from "$lib/types/IChannel";
+  import { page } from "$app/stores";
 
   export let openDrawer: boolean = false;
+  export let channelList: IChannel[];
 
   const dispatch = createEventDispatcher();
 
@@ -36,8 +39,20 @@
     >
       <div class="h-[64px] border-b">serverInfo elements</div>
       <!-- Sidebar content here -->
+      <li><a href="/channel">チャンネル一覧</a></li>
       <ul class="h-[calc(100svh-144px)] overflow-y-auto py-2">
-        <li><a href="/channel"># Sidebar Item 1</a></li>
+        {#if channelList && channelList.length > 0}
+          {#each channelList as channel}
+            <li>
+              <a href="/channel/{channel.id}"
+                >{channel.name}
+                {#if channel.id === $page.params.id}
+                  <span class="badge badge-primary">&larr;</span>
+                {/if}
+              </a>
+            </li>
+          {/each}
+        {/if}
       </ul>
       <!-- user -->
       <div

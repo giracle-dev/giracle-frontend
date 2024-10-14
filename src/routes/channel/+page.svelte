@@ -3,6 +3,7 @@
   import { goto } from "$app/navigation";
   import { IconSearch, IconPlus } from "@tabler/icons-svelte";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
+  import { channelListStore } from "$lib/store/channel";
   const channelRepository = repositoryFactory.get("channel");
   let my_modal_5: HTMLDialogElement;
   let channelName = "";
@@ -13,9 +14,17 @@
   const channelCreate = async () => {
     await channelRepository
       .createChannel(channelName)
-      .then((response) => {
+      .then(async (response) => {
         if (response) {
           console.log("チャンネル作成に成功しました！");
+          await channelRepository
+            .getChannel()
+            .then((response) => {
+              channelListStore.set(response.data);
+            })
+            .catch((error) => {
+              console.error("チャンネルリスト取得に失敗しました。", error);
+            });
         } else {
           console.log("チャンネル作成に失敗しました。");
         }
@@ -27,6 +36,30 @@
         channelName = "";
       });
     console.log("channelCreate");
+  };
+
+  const deleteChannel = async (id: string) => {
+    await channelRepository
+      .deleteChannel(id)
+      .then(async (response) => {
+        if (response) {
+          console.log("チャンネル削除に成功しました！");
+          await channelRepository
+            .getChannel()
+            .then((response) => {
+              channelListStore.set(response.data);
+            })
+            .catch((error) => {
+              console.error("チャンネルリスト取得に失敗しました。", error);
+            });
+        } else {
+          console.log("チャンネル削除に失敗しました。");
+        }
+      })
+      .catch((error) => {
+        console.error("チャンネル削除に失敗しました。", error);
+      });
+    console.log("deleteChannel");
   };
 </script>
 

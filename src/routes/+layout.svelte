@@ -7,6 +7,7 @@
   import { page } from "$app/stores";
   // import { pwaAssetsHead } from "virtual:pwa-assets/head";
   import { pwaInfo } from "virtual:pwa-info";
+  import { channelListStore } from "$lib/store/channel";
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
@@ -81,6 +82,7 @@
     on:drawer={() => {
       onChangeDrawer();
     }}
+    channelList={$channelListStore}
   >
     <Header
       on:drawer={() => {

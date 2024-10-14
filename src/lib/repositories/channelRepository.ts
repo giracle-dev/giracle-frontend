@@ -19,7 +19,7 @@ export default {
     const responseData: IResponseChannelList = await response.json();
     return await responseData;
   },
-  deleteChannel: async (id: string): Promise<void> => {
+  deleteChannel: async (id: string) => {
     const response = await fetch("/api/channel/", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
