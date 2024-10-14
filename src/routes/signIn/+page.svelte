@@ -12,7 +12,7 @@
     const userRepository = repositoryFactory.get("user");
     const response = await userRepository.signIn(username, password);
 
-    if (response.success) {
+    if (response.message === "Token is valid") {
       initWS();
       //自分のユーザーIdをストアにセット
       myUserStore.set({ ...get(myUserStore), id: response.data.userId });

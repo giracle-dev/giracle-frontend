@@ -19,6 +19,7 @@ export const initWS = () => {
   ws.onerror = (event) => {
     console.log("INIT.ws :: initWS : error->", event);
   }
+
   ws.onmessage = (event) => {
     console.log("INIT.ws :: initWS : event->", event.data);
 
@@ -28,6 +29,7 @@ export const initWS = () => {
       FLAGwsError = true;
     }
   }
+  
   ws.onclose = (event) => {
     console.log("INIT.ws :: initWS : close->", event);
 
