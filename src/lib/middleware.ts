@@ -56,18 +56,13 @@ export const authMiddleware = async () => {
 
   // ログイン画面で認証できる場合はリダイレクトする
   if (noRedirectList.includes(location.pathname)) {
-    await userRepository
-      .verifyToken()
-      .then((response) => {
-        if (response.success) {
-          initWS();
-          init();
-          goto("/channel");
-        }
-      })
-      .catch((e) => {
-        console.log("error->", e);
-      });
+    await userRepository.verifyToken().then((response) => {
+      if (response) {
+        initWS();
+        init();
+        goto("/channel");
+      }
+    });
   }
 
   // 認証処理
@@ -83,7 +78,7 @@ export const authMiddleware = async () => {
         myUserStore.set({ ...get(myUserStore), id: response.data.userId });
 
         // ログインしていない場合はログインページにリダイレクト
-        if (!response.success && !noRedirectList.includes(location.pathname)) {
+        if (!response && !noRedirectList.includes(location.pathname)) {
           goto("/signIn");
         } else {
           init();
