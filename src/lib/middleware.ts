@@ -29,11 +29,14 @@ export const pwaMiddleware = async () => {
 const init = async () => {
   //自分のユーザー情報の取得
   userRepository.getUserInfo(get(myUserStore).id).then((response) => {
-    console.log("middleware :: authMiddleware : response(getUserInfo)->", response);
+    console.log(
+      "middleware :: authMiddleware : response(getUserInfo)->",
+      response,
+    );
     myUserStore.set({
       ...get(myUserStore),
       name: response.data.name,
-      selfIntroduction: response.data.selfIntroduction
+      selfIntroduction: response.data.selfIntroduction,
     });
   });
   // チャンネル一覧を取得
@@ -71,13 +74,13 @@ export const authMiddleware = async () => {
   if (!noRedirectList.includes(location.pathname)) {
     await userRepository
       .verifyToken()
-      .then((response: IResponseUSerVerifyToken ) => {
+      .then((response: IResponseUSerVerifyToken) => {
         console.log("middleware :: authMiddleware : response->", response);
 
         //WebSocketの初期化
         initWS();
         //自分のユーザーIdをストアにセット
-        myUserStore.set({...get(myUserStore), id: response.data.userId});
+        myUserStore.set({ ...get(myUserStore), id: response.data.userId });
 
         // ログインしていない場合はログインページにリダイレクト
         if (!response.success && !noRedirectList.includes(location.pathname)) {
