@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
+  import { ws } from "$lib/wsHandler/INIT.ws";
   import { IconSearch, IconPlus } from "@tabler/icons-svelte";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { channelListStore } from "$lib/store/channel";
@@ -17,6 +18,17 @@
     channels = (await channelRepository.getChannel()).data;
     console.log("/channel :: channels->", channels);
   });
+
+  /**
+   * チャンネルへ参加する
+   * @param channelId
+   */
+  const joinChannel = (channelId: string) => {
+    ws.send(JSON.stringify({
+      signal: "channel::JoinChannel",
+      data: { channelId }
+    }));
+  }
 
   const channelCreate = async () => {
     await channelRepository
@@ -100,7 +112,7 @@
       <div class="w-full card bg-base-200">
         <div class="flex flex-row item-center card-body">
           <p>{ channel.name }</p>
-          <button class="btn btn-primary">参加</button>
+          <button on:click={()=>joinChannel(channel.id)} class="btn btn-primary">参加</button>
         </div>
       </div>
     {/each}
