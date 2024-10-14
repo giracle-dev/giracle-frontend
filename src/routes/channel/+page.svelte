@@ -4,11 +4,18 @@
   import { IconSearch, IconPlus } from "@tabler/icons-svelte";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { channelListStore } from "$lib/store/channel";
+  import type { IChannel } from "$lib/types/IChannel";
   const channelRepository = repositoryFactory.get("channel");
+
   let my_modal_5: HTMLDialogElement;
   let channelName = "";
-  onMount(() => {
+  let channels: IChannel[] = [];
+
+  onMount(async () => {
     my_modal_5 = document.getElementById("my_modal_5") as HTMLDialogElement;
+
+    channels = (await channelRepository.getChannel()).data;
+    console.log("/channel :: channels->", channels);
   });
 
   const channelCreate = async () => {
@@ -87,6 +94,16 @@
         <div class="hidden md:block">チャンネルを作成する</div>
       </button>
     </div>
+  </div>
+  <div class="mt-3 pb-3">
+    {#each channels as channel}
+      <div class="w-full card bg-base-200">
+        <div class="flex flex-row item-center card-body">
+          <p>{ channel.name }</p>
+          <button class="btn btn-primary">参加</button>
+        </div>
+      </div>
+    {/each}
   </div>
 </div>
 
