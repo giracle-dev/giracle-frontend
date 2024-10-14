@@ -30,6 +30,17 @@
     }));
   }
 
+  /**
+   * チャンネルから脱退する
+   * @param channelId
+   */
+  const leaveChannel = (channelId: string) => {
+    ws.send(JSON.stringify({
+      signal: "channel::LeaveChannel",
+      data: { channelId }
+    }));
+  }
+
   const channelCreate = async () => {
     await channelRepository
       .createChannel(channelName)
@@ -113,6 +124,7 @@
         <div class="flex flex-row item-center card-body">
           <p>{ channel.name }</p>
           <button on:click={()=>joinChannel(channel.id)} class="btn btn-primary">参加</button>
+          <button on:click={()=>leaveChannel(channel.id)} class="btn btn-primary">脱退</button>
         </div>
       </div>
     {/each}
