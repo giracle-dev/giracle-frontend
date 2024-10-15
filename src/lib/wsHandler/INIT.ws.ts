@@ -16,12 +16,17 @@ export const initWS = () => {
   }
 
   ws.onmessage = (event) => {
-    const json = JSON.parse(event.data);
-    console.log("INIT.ws :: initWS : event->", json);
+    try {
+      const json = JSON.parse(event.data);
 
-    //トークンが無効な場合のフラグ設定
-    if (json.signal === "ERROR" && json.data === "token not valid") {
-      FLAGwsError = true;
+      console.log("INIT.ws :: initWS : event->", json);
+
+      //トークンが無効な場合のフラグ設定
+      if (json.signal === "ERROR" && json.data === "token not valid") {
+        FLAGwsError = true;
+      }
+    } catch(e) {
+      console.log("INIT.ws :: initWS : data->", event.data, " error->", e);
     }
   }
 
