@@ -8,11 +8,6 @@ export const initWS = () => {
   ws = new WebSocket("/ws");
 
   ws.onopen = (event) => {
-    //テスト
-    ws.send(JSON.stringify({
-      signal: "ping",
-      data: null
-    }));
     console.log("INIT.ws :: initWS : open->", event);
   }
 
