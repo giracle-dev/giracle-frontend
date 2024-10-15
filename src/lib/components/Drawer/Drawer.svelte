@@ -39,8 +39,8 @@
     >
       <div class="h-[64px] border-b">serverInfo elements</div>
       <!-- Sidebar content here -->
-      <li><a href="/channel">チャンネル一覧</a></li>
       <ul class="h-[calc(100svh-144px)] overflow-y-auto py-2">
+        <li><a href="/channel">チャンネル一覧</a></li>
         {#if channelList && channelList.length > 0}
           {#each channelList as channel}
             <li>
