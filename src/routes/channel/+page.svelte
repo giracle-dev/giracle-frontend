@@ -135,14 +135,20 @@
       <div class="w-full card bg-base-200">
         <div class="flex flex-row item-center card-body">
           <p>{channel.name}</p>
-          <button
-            on:click={() => joinChannel(channel.id)}
-            class="btn btn-primary">参加</button
-          >
-          <button
-            on:click={() => leaveChannel(channel.id)}
-            class="btn btn-primary">脱退</button
-          >
+          <div class="join">
+            <button
+              on:click={() => joinChannel(channel.id)}
+              class="btn btn-primary join-item">参加</button
+            >
+            <button
+              on:click={() => leaveChannel(channel.id)}
+              class="btn btn-primary join-item">脱退</button
+            >
+          </div>
+          <div class="join">
+            <button class="btn btn-primary join-item">archive</button>
+            <button class="btn btn-primary join-item">archive解除</button>
+          </div>
         </div>
       </div>
     {/each}
