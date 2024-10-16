@@ -79,6 +79,18 @@
     console.log("channelCreate");
   };
 
+  const toggleArchiveChannel = async (channelId: string, value: boolean) => {
+    ws.send(
+      JSON.stringify({
+        signal: "channel::UpdateChannel",
+        data: {
+          channelId,
+          isArchived: value,
+        },
+      }),
+    );
+  };
+
   const deleteChannel = async (id: string) => {
     await channelRepository
       .deleteChannel(id)
@@ -149,8 +161,16 @@
             >
           </div>
           <div class="join">
-            <button class="btn btn-primary join-item">archive</button>
-            <button class="btn btn-primary join-item">archive解除</button>
+            <button
+              on:click={() => toggleArchiveChannel(channel.id, true)}
+              disabled={channel.isArchived}
+              class="btn btn-primary join-item">archive</button
+            >
+            <button
+              on:click={() => toggleArchiveChannel(channel.id, false)}
+              disabled={!channel.isArchived}
+              class="btn btn-primary join-item">archive解除</button
+            >
           </div>
         </div>
       </div>
