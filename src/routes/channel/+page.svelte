@@ -58,6 +58,9 @@
           await channelRepository
             .getChannel()
             .then((response) => {
+              //表示しているチャンネルリストを更新
+              channels = response.data;
+              //チャンネルリストをストアに保存
               channelListStore.set(response.data);
             })
             .catch((error) => {
