@@ -24,7 +24,7 @@
 
   onMount(() => {
     const userId = $page.params.id;
-    console.log(userId);
+    console.log("/user/[id] :: onMount : userId->", userId);
 
     //編集用にユーザー情報を取得
     selfIntroduction = get(myUserStore).selfIntroduction;
