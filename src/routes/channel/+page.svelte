@@ -101,15 +101,14 @@
    * @param value
    */
   const toggleArchiveChannel = async (channelId: string, value: boolean) => {
-    ws.send(
-      JSON.stringify({
-        signal: "channel::UpdateChannel",
-        data: {
-          channelId,
-          isArchived: value,
-        },
-      }),
-    );
+    await channelRepository
+      .updateChannel({ channelId, isArchived: value })
+      .then((res) => {
+        console.log("/channel :: toggleArchiveChannel : res->", res);
+      })
+      .catch((error) => {
+        console.error("/channel :: toggleArchiveChannel : error->", error);
+      });
   };
 
   //更新されたチャンネルデータの受け取り
