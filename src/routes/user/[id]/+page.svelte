@@ -35,6 +35,12 @@
 <div>
   <h1>ユーザー</h1>
   <p>name: {name}</p>
+  <input
+    bind:value={name}
+    type="text"
+    placeholder="あなたの名前"
+    class="input input-bordered w-full"
+  />
   <p>id: {$page.params.id}</p>
 
   <div>
