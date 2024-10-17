@@ -27,13 +27,21 @@
    * チャンネルへ参加する
    * @param channelId
    */
-  const joinChannel = (channelId: string) => {
-    ws.send(
-      JSON.stringify({
-        signal: "channel::JoinChannel",
-        data: { channelId },
-      }),
-    );
+  const joinChannel = async (channelId: string) => {
+    await channelRepository
+      .joinChannel(channelId)
+      .then((response) => {
+        console.log(
+          "/channel :: joinChannel : チャンネル参加に成功しました！",
+          response,
+        );
+      })
+      .catch((error) => {
+        console.error(
+          "/channel :: joinChannel : チャンネルリスト取得に失敗しました。",
+          error,
+        );
+      });
   };
 
   /**
