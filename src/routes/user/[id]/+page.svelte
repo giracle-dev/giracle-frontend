@@ -8,9 +8,12 @@
 
   let name = "";
   let selfIntroduction = "";
+  let processing = false;
 
   //ユーザー情報を更新させる
   const updateIt = async () => {
+    //処理中フラグを立てる
+    processing = true;
     //情報更新と取得
     const newUserinfo = await userRepository.updateProfile(
       name,
@@ -20,6 +23,8 @@
 
     //自分情報用のStoreへ格納
     myUserStore.set(newUserinfo.data);
+    //処理中フラグを下げる
+    processing = false;
   };
 
   onMount(() => {
@@ -56,7 +61,12 @@
   <button
     on:click={updateIt}
     class="btn"
-    disabled={selfIntroduction === get(myUserStore).selfIntroduction &&
-      name === get(myUserStore).name}>更新</button
+    disabled={(selfIntroduction === get(myUserStore).selfIntroduction &&
+      name === get(myUserStore).name) ||
+      name === "" ||
+      selfIntroduction === "" ||
+      processing}
   >
+    {processing ? "処理中..." : "更新"}
+  </button>
 </div>
