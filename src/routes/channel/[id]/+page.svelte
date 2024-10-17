@@ -1,7 +1,4 @@
 <script lang="ts">
-  import { ws } from "$lib/wsHandler/INIT.ws";
-  import { myUserStore } from "$lib/store/myuser";
-  import { get } from "svelte/store";
   import { page } from "$app/stores";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   const messageRepository = repositoryFactory.get("message");
