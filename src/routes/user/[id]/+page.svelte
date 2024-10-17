@@ -1,19 +1,25 @@
 <script lang="ts">
   import { myUserStore } from "$lib/store/myuser";
-  import profileUpdate from "$lib/wsHandler/User/profileUpdate.ws";
   import { page } from "$app/stores";
   import { onMount } from "svelte";
   import { get } from "svelte/store";
+  import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
+  const userRepository = repositoryFactory.get("user");
 
   let name = "";
   let selfIntroduction = "";
 
   //ユーザー情報を更新させる
-  const updateIt = () => {
-    profileUpdate({
+  const updateIt = async () => {
+    //情報更新と取得
+    const newUserinfo = await userRepository.updateProfile(
       name,
       selfIntroduction,
-    });
+    );
+    //console.log("/user/[id] :: updateIt : newUserinfo->", newUserinfo);
+
+    //自分情報用のStoreへ格納
+    myUserStore.set(newUserinfo.data);
   };
 
   onMount(() => {
