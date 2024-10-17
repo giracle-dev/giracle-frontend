@@ -3,6 +3,7 @@ export interface IChannel {
   id: string;
   description: string;
   createdUserId: string;
+  isArchived: boolean;
 }
 
 export interface IResponseChannelList {

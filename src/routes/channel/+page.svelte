@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { ws } from "$lib/wsHandler/INIT.ws";
   import { IconSearch, IconPlus } from "@tabler/icons-svelte";
@@ -58,6 +58,9 @@
           await channelRepository
             .getChannel()
             .then((response) => {
+              //表示しているチャンネルリストを更新
+              channels = response.data;
+              //チャンネルリストをストアに保存
               channelListStore.set(response.data);
             })
             .catch((error) => {
@@ -75,6 +78,48 @@
       });
     console.log("channelCreate");
   };
+
+  /**
+   * アーカイブ設定をトグルする
+   * @param channelId
+   * @param value
+   */
+  const toggleArchiveChannel = async (channelId: string, value: boolean) => {
+    ws.send(
+      JSON.stringify({
+        signal: "channel::UpdateChannel",
+        data: {
+          channelId,
+          isArchived: value,
+        },
+      }),
+    );
+  };
+
+  //更新されたチャンネルデータの受け取り
+  const eventReceiver = (event: MessageEvent) => {
+    const dat: {
+      signal: string;
+      data: IChannel;
+    } = JSON.parse(event.data);
+    console.log("/channel :: eventReceiver :: data->", dat);
+
+    //signalが一致しているなら更新処理
+    if (dat.signal === "channel::UpdateChannel") {
+      //ループして一致するチャンネルデータを更新
+      for (const index in channels) {
+        if (channels[index].id === dat.data.id) {
+          channels[index] = dat.data;
+        }
+      }
+    }
+  };
+  ws.addEventListener("message", eventReceiver);
+
+  onDestroy(() => {
+    //イベントリスナーの削除
+    ws.removeEventListener("message", eventReceiver);
+  });
 
   const deleteChannel = async (id: string) => {
     await channelRepository
@@ -126,7 +171,7 @@
       </button>
     </div>
   </div>
-  <div class="mt-3 pb-3">
+  <div class="mt-3 pb-3 flex flex-col gap-2">
     {#if processing}
       <progress class="progress w-full"></progress>
       <p class="text-center">処理中...</p>
@@ -135,14 +180,28 @@
       <div class="w-full card bg-base-200">
         <div class="flex flex-row item-center card-body">
           <p>{channel.name}</p>
-          <button
-            on:click={() => joinChannel(channel.id)}
-            class="btn btn-primary">参加</button
-          >
-          <button
-            on:click={() => leaveChannel(channel.id)}
-            class="btn btn-primary">脱退</button
-          >
+          <div class="join">
+            <button
+              on:click={() => joinChannel(channel.id)}
+              class="btn btn-primary join-item">参加</button
+            >
+            <button
+              on:click={() => leaveChannel(channel.id)}
+              class="btn btn-primary join-item">脱退</button
+            >
+          </div>
+          <div class="join">
+            <button
+              on:click={() => toggleArchiveChannel(channel.id, true)}
+              disabled={channel.isArchived}
+              class="btn btn-primary join-item">archive</button
+            >
+            <button
+              on:click={() => toggleArchiveChannel(channel.id, false)}
+              disabled={!channel.isArchived}
+              class="btn btn-primary join-item">archive解除</button
+            >
+          </div>
         </div>
       </div>
     {/each}

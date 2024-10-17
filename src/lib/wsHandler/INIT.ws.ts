@@ -1,11 +1,9 @@
-export let ws: WebSocket;
+export let ws: WebSocket = new WebSocket("/ws");
 
 //WS接続がエラーで閉じられた場合のフラグ
 let FLAGwsError = false;
 
 export const initWS = () => {
-  //WebSocketの接続確率
-  ws = new WebSocket("/ws");
 
   ws.onopen = (event) => {
     console.log("INIT.ws :: initWS : open->", event);
