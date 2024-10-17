@@ -10,3 +10,11 @@ export interface IResponseChannelList {
   message: string;
   data: IChannel[];
 }
+
+export interface IResponseChannelJoin {
+  message: string;
+  data: {
+    channelId: string;
+  };
+}
+

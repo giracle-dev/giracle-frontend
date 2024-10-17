@@ -1,4 +1,4 @@
-import type { IChannel, IResponseChannelList } from "$lib/types/IChannel";
+import type { IChannel, IResponseChannelJoin, IResponseChannelLeave, IResponseChannelList } from "$lib/types/IChannel";
 
 export default {
   createChannel: async (name: string): Promise<IChannel> => {
@@ -28,7 +28,7 @@ export default {
     });
     return await response.json();
   },
-  joinChannel: async (id: string): Promise<void> => {
+  joinChannel: async (id: string): Promise<IResponseChannelJoin> => {
     const response = await fetch("/api/channel/join", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
