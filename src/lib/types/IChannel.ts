@@ -18,3 +18,6 @@ export interface IResponseChannelJoin {
   };
 }
 
+export interface IResponseChannelLeave {
+  message: string;
+}

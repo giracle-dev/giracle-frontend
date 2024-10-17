@@ -37,7 +37,7 @@ export default {
     });
     return await response.json();
   },
-  leaveChannel: async (id: string): Promise<void> => {
+  leaveChannel: async (id: string): Promise<IResponseChannelLeave> => {
     const response = await fetch("/api/channel/leave", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

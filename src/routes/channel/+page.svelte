@@ -48,13 +48,21 @@
    * チャンネルから脱退する
    * @param channelId
    */
-  const leaveChannel = (channelId: string) => {
-    ws.send(
-      JSON.stringify({
-        signal: "channel::LeaveChannel",
-        data: { channelId },
-      }),
-    );
+  const leaveChannel = async (channelId: string) => {
+    await channelRepository
+      .leaveChannel(channelId)
+      .then((response) => {
+        console.log(
+          "/channel :: leaveChannel : チャンネル脱退に成功しました！",
+          response,
+        );
+      })
+      .catch((error) => {
+        console.error(
+          "/channel :: leaveChannel : チャンネル脱退に失敗しました。",
+          error,
+        );
+      });
   };
 
   const channelCreate = async () => {
