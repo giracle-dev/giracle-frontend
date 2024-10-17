@@ -28,6 +28,20 @@ export default {
     });
     return await response.json();
   },
+  updateChannel: async (dat: {
+    channelId: string;
+    name?: string;
+    description?: string;
+    isArchived?: boolean;
+  }) => {
+    const response = await fetch("/api/channel/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...dat }),
+      credentials: "include",
+    });
+    return await response.json();
+  },
   joinChannel: async (id: string): Promise<IResponseChannelJoin> => {
     const response = await fetch("/api/channel/join", {
       method: "POST",
