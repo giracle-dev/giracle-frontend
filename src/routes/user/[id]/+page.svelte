@@ -6,6 +6,7 @@
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   const userRepository = repositoryFactory.get("user");
 
+  let iconObj: File | null = null;
   let name = "";
   let selfIntroduction = "";
   let processing = false;
@@ -27,6 +28,26 @@
     processing = false;
   };
 
+  const changeProfileIcon = () => {
+    if (iconObj !== null)
+      userRepository.changeIcon(iconObj).then((response) => {
+        console.log(
+          "/user/[id] :: changeProfileIcon : アイコン変更に成功しました！",
+          response,
+        );
+      });
+  };
+
+  //画像ファイル受け取り
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log("Selected file:", file);
+      // ファイル処理をここに追加
+      iconObj = file;
+    }
+  };
+
   onMount(() => {
     const userId = $page.params.id;
     console.log("/user/[id] :: onMount : userId->", userId);
@@ -38,7 +59,31 @@
 </script>
 
 <div>
-  <h1>ユーザー</h1>
+  <h1 class="text-2xl font-bold">ユーザー</h1>
+
+  <hr />
+
+  <div class="card bg-base-200 max-w-[350px] mx-auto m-2">
+    <div class="card-body">
+      <p>アバター</p>
+      <div class="avatar mx-auto">
+        <div class="w-24 rounded-xl">
+          <img src={`/api/user/icon/${get(myUserStore).id}`} alt="icon" />
+        </div>
+      </div>
+      <input
+        on:change={handleFileChange}
+        type="file"
+        class="file-input file-input-bordered w-full"
+      />
+      <div class="card-actions justify-end">
+        <button on:click={changeProfileIcon} class="btn btn-primary"
+          >アップロード</button
+        >
+      </div>
+    </div>
+  </div>
+
   <p>name: {name}</p>
   <input
     bind:value={name}
