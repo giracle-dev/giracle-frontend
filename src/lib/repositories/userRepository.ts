@@ -65,4 +65,14 @@ export default {
     });
     return await response.json();
   },
+  changeIcon: async (icon: File):Promise<IResponseGetUserinfo> => {
+    const formData = new FormData();
+    formData.append("icon", icon);
+    const response = await fetch("/api/user/change-icon", {
+      method: "POST",
+      credentials: "include",
+      body: formData
+    });
+    return await response.json();
+  },
 };
