@@ -38,7 +38,20 @@
 </script>
 
 <div>
-  <h1>ユーザー</h1>
+  <h1 class="text-2xl font-bold">ユーザー</h1>
+
+  <hr />
+
+  <div class="card bg-base-200 max-w-[350px] mx-auto m-2">
+    <div class="card-body">
+      <p>アバター</p>
+      <input type="file" class="file-input file-input-bordered w-full" />
+      <div class="card-actions justify-end">
+        <button class="btn btn-primary">アップロード</button>
+      </div>
+    </div>
+  </div>
+
   <p>name: {name}</p>
   <input
     bind:value={name}
