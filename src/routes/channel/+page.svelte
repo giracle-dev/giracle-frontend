@@ -27,26 +27,42 @@
    * チャンネルへ参加する
    * @param channelId
    */
-  const joinChannel = (channelId: string) => {
-    ws.send(
-      JSON.stringify({
-        signal: "channel::JoinChannel",
-        data: { channelId },
-      }),
-    );
+  const joinChannel = async (channelId: string) => {
+    await channelRepository
+      .joinChannel(channelId)
+      .then((response) => {
+        console.log(
+          "/channel :: joinChannel : チャンネル参加に成功しました！",
+          response,
+        );
+      })
+      .catch((error) => {
+        console.error(
+          "/channel :: joinChannel : チャンネルリスト取得に失敗しました。",
+          error,
+        );
+      });
   };
 
   /**
    * チャンネルから脱退する
    * @param channelId
    */
-  const leaveChannel = (channelId: string) => {
-    ws.send(
-      JSON.stringify({
-        signal: "channel::LeaveChannel",
-        data: { channelId },
-      }),
-    );
+  const leaveChannel = async (channelId: string) => {
+    await channelRepository
+      .leaveChannel(channelId)
+      .then((response) => {
+        console.log(
+          "/channel :: leaveChannel : チャンネル脱退に成功しました！",
+          response,
+        );
+      })
+      .catch((error) => {
+        console.error(
+          "/channel :: leaveChannel : チャンネル脱退に失敗しました。",
+          error,
+        );
+      });
   };
 
   const channelCreate = async () => {
@@ -85,15 +101,14 @@
    * @param value
    */
   const toggleArchiveChannel = async (channelId: string, value: boolean) => {
-    ws.send(
-      JSON.stringify({
-        signal: "channel::UpdateChannel",
-        data: {
-          channelId,
-          isArchived: value,
-        },
-      }),
-    );
+    await channelRepository
+      .updateChannel({ channelId, isArchived: value })
+      .then((res) => {
+        console.log("/channel :: toggleArchiveChannel : res->", res);
+      })
+      .catch((error) => {
+        console.error("/channel :: toggleArchiveChannel : error->", error);
+      });
   };
 
   //更新されたチャンネルデータの受け取り

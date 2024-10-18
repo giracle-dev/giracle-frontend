@@ -1,24 +1,20 @@
 <script lang="ts">
-  import { ws } from "$lib/wsHandler/INIT.ws";
-  import { myUserStore } from "$lib/store/myuser";
-  import { get } from "svelte/store";
   import { page } from "$app/stores";
+  import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
+  const messageRepository = repositoryFactory.get("message");
 
   let message = "";
 
   /**
    * メッセージを送信する
    */
-  const sendMessage = () => {
-    ws.send(
-      JSON.stringify({
-        signal: "message::SendMessage",
-        data: {
-          channelId: $page.params.id,
-          content: message,
-        },
-      }),
-    );
+  const sendMessage = async () => {
+    await messageRepository
+      .sendMessage($page.params.id, message)
+      .then((res) => {
+        console.log("/channel/[id] :: sendMessage : res->", res);
+      });
+
     //メッセージを初期化
     message = "";
   };

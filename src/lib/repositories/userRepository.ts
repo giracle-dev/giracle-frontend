@@ -56,4 +56,13 @@ export default {
     });
     return await response.json();
   },
+  updateProfile: async (name?: string, selfIntroduction?: string):Promise<IResponseGetUserinfo> => {
+    const response = await fetch("/api/user/profile-update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ name, selfIntroduction }),
+    });
+    return await response.json();
+  },
 };
