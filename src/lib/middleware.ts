@@ -3,7 +3,7 @@ import { browser } from "$app/environment";
 import { repositoryFactory } from "./repositories/RepositoryFactory";
 import { channelListStore } from "./store/channel";
 import { initWS } from "./wsHandler/INIT.ws";
-import { myUserStore } from "./store/myuser";
+import { myUserStore, userListStore } from "./store/user";
 import { get } from "svelte/store";
 import type { IResponseUSerVerifyToken } from "./types/IUser";
 
@@ -26,7 +26,7 @@ export const pwaMiddleware = async () => {
 /**
  * 認証クリア後の初期実行処理
  */
-const init = async () => {
+export const init = async () => {
   //自分のユーザー情報の取得
   userRepository.getUserInfo(get(myUserStore).id).then((response) => {
     console.log(
@@ -39,6 +39,10 @@ const init = async () => {
   await channelRepository.getChannel().then((response) => {
     console.log(response);
     channelListStore.set(response.data);
+  });
+  // ユーザー一覧取得
+  await userRepository.userList().then((response) => {
+    userListStore.set(response.data);
   });
 };
 

@@ -5,9 +5,14 @@ export interface IResponseUSerVerifyToken {
   };
 }
 
-export interface IResponseGetUserinfo {
+export interface IResponseUserinfo {
   message: string;
   data: IUser;
+}
+
+export interface IResponseUserList {
+  message: string;
+  data: IUser[];
 }
 
 export interface IUser {

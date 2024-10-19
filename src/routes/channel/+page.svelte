@@ -6,7 +6,7 @@
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { channelListStore } from "$lib/store/channel";
   import type { IChannel } from "$lib/types/IChannel";
-  import { myUserStore } from "$lib/store/myuser";
+  import { myUserStore } from "$lib/store/user";
   import { IconDotsVertical } from "@tabler/icons-svelte";
   const channelRepository = repositoryFactory.get("channel");
 
