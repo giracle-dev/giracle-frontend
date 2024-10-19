@@ -45,11 +45,15 @@
     });
   };
 
+  const getInvite = async () => {
+    invites = (await serverRepository.getInvite()).data;
+  };
+
   onMount(async () => {
     modalCreateInvite = document.getElementById(
       "createInvite",
     ) as HTMLDialogElement;
-    invites = (await serverRepository.getInvite()).data;
+    getInvite();
   });
 </script>
 
