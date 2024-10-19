@@ -60,6 +60,10 @@
           >サインイン</button
         >
       </div>
+      <!-- サインアップページ -->
+      <div class="text-center">
+        <a href="/signUp" class="text-indigo-600">アカウントを作成する</a>
+      </div>
     </form>
   </div>
 </div>

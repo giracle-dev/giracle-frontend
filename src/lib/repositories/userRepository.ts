@@ -9,12 +9,14 @@ export default {
   signUp: async (
     username: string,
     password: string,
+    inviteCode: string,
   ): Promise<IResponseUSerVerifyToken> => {
     const response = await fetch("/api/user/sign-up", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, password, inviteCode }),
     });
+    if (!response.ok) throw new Error("userRepository :: signUp :: エラー");
     return await response.json();
   },
   signIn: async (
@@ -27,6 +29,7 @@ export default {
       credentials: "include",
       body: JSON.stringify({ username, password }),
     });
+    if (!response.ok) throw new Error("userRepository :: signIn :: エラー");
     return await response.json();
   },
   verifyToken: async (): Promise<IResponseUSerVerifyToken> => {
@@ -35,7 +38,8 @@ export default {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
-
+    if (!response.ok)
+      throw new Error("userRepository :: verifyToken :: エラー");
     return await response.json();
   },
   changePassword: async (
@@ -47,6 +51,8 @@ export default {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
+    if (!response.ok)
+      throw new Error("userRepository :: changePassword :: エラー");
     return await response.json();
   },
   getUserInfo: async (userId: string): Promise<IResponseUserinfo> => {
@@ -55,6 +61,8 @@ export default {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
+    if (!response.ok)
+      throw new Error("userRepository :: getUserInfo :: エラー");
     return await response.json();
   },
   updateProfile: async (
@@ -67,6 +75,8 @@ export default {
       credentials: "include",
       body: JSON.stringify({ name, selfIntroduction }),
     });
+    if (!response.ok)
+      throw new Error("userRepository :: updateProfile :: エラー");
     return await response.json();
   },
   changeIcon: async (icon: File): Promise<IResponseUserinfo> => {
@@ -77,6 +87,7 @@ export default {
       credentials: "include",
       body: formData,
     });
+    if (!response.ok) throw new Error("userRepository :: changeIcon :: エラー");
     return await response.json();
   },
   userList: async (): Promise<IResponseUserList> => {
@@ -85,6 +96,7 @@ export default {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
+    if (!response.ok) throw new Error("userRepository :: userList :: エラー");
     return await response.json();
   },
 };
