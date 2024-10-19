@@ -8,6 +8,7 @@
   // import { pwaAssetsHead } from "virtual:pwa-assets/head";
   import { pwaInfo } from "virtual:pwa-info";
   import { channelListStore } from "$lib/store/channel";
+  import type { IChannel } from "$lib/types/IChannel";
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
@@ -61,6 +62,21 @@
     await authMiddleware();
   });
 
+  /**
+   * チャンネル名を取得する
+   * @param id
+   */
+  const getChannelName = (id: string): string => {
+    let channel: IChannel | undefined;
+    channelListStore.subscribe((channels) => {
+      channel = channels.find((c) => c.id === id);
+    })();
+    if (channel) {
+      return channel.name;
+    }
+    return "None Channel";
+  };
+
   $: {
     switch ($page.url.pathname) {
       case "/channel":
@@ -68,7 +84,7 @@
         headerIcon = "channelList";
         break;
       case `/channel/${$page.params.id}`:
-        headerTitle = "Channel Detail";
+        headerTitle = getChannelName($page.params.id);
         headerIcon = "channel";
         break;
       case "/setting":

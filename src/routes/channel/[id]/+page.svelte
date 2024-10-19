@@ -3,26 +3,41 @@
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { channelHistoryStore } from "$lib/store/channelHistory";
   import { userListStore } from "$lib/store/user";
+  import {
+    getUserName,
+    formatDate,
+    getChannelHistory,
+    scrollHandler,
+  } from "./channelMessage";
+  import type {
+    IMessage,
+    IRequestChannelHistoryBody,
+  } from "$lib/types/IMessage";
+  import { onMount } from "svelte";
   import { get } from "svelte/store";
   const messageRepository = repositoryFactory.get("message");
   const channelRepository = repositoryFactory.get("channel");
 
   let message = "";
 
+  onMount(async () => {
+    console.log("/channel/[id] :: $page.params.id->", $page.params.id);
+    await getChannelHistory();
+    const MessageContainer = document.getElementById("messageContainer");
+    console.log(MessageContainer);
+    MessageContainer?.addEventListener("scroll", scrollHandler);
+  });
+
   $: (async () => {
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
-    await channelRepository
-      .getHistory({ channelId: $page.params.id })
-      .then((res) => {
-        channelHistoryStore.set(res.data);
-        console.log("/channel/[id] :: getHistory : res->", res);
-      });
+    await getChannelHistory();
   })();
 
   /**
    * メッセージを送信する
    */
   const sendMessage = async () => {
+    if (message === "") return;
     await messageRepository
       .sendMessage($page.params.id, message)
       .then((res) => {
@@ -34,31 +49,23 @@
   };
 
   /**
-   *  ユーザー名を取得する
+   * enterキーが押された時にメッセージを送信する
+   * @param event
    */
-  const getUserName = (userId: string) => {
-    const getUserList = get(userListStore);
-    const user = getUserList.find((user) => user.id === userId);
-    return user?.name ?? "名無し";
-  };
-
-  /**
-   *　日付をフォーマットする
-   *  @param date
-   * @returns "YYYY-MM-DD HH:mm:ss"
-   */
-  const formatDate = (date: Date): string => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = d.getMonth() + 1;
-    const day = d.getDate();
-    return year + "-" + month + "-" + day + " " + d.toLocaleTimeString();
-  };
+  function handleKeyDown(event: KeyboardEvent) {
+    if (event.key === "Enter") {
+      sendMessage();
+      event.preventDefault(); // デフォルトの動作を防ぐ
+    }
+  }
 </script>
 
 <div class="h-full flex flex-col px-1 pb-2">
-  <div class="flex-grow flex flex-col-reverse overflow-y-auto">
-    {#each $channelHistoryStore as message}
+  <div
+    id="messageContainer"
+    class="flex-grow flex flex-col-reverse overflow-y-auto"
+  >
+    {#each $channelHistoryStore.history as message}
       <div class="flex items-start mb-4 gap-2 w-full">
         <img
           src={"/api/user/icon/" + message.userId}
@@ -84,6 +91,7 @@
       type="text"
       placeholder="メッセージを送信"
       class="input input-bordered w-full flex-grow"
+      on:keydown={handleKeyDown}
     />
     <button on:click={sendMessage} class="btn">送信</button>
   </div>

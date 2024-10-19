@@ -68,16 +68,15 @@ export default {
     return await response.json();
   },
   getHistory: async (
+    channelId: string,
     requestBody: IRequestChannelHistoryBody,
   ): Promise<IResponseChannelHistory> => {
-    const response = await fetch(
-      "/api/channel/get-history/" + requestBody.channelId,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      },
-    );
+    const response = await fetch("/api/channel/get-history/" + channelId, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(requestBody),
+    });
     return await response.json();
   },
 };

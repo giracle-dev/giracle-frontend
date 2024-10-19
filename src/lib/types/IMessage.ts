@@ -8,7 +8,6 @@ export interface IMessage {
 }
 
 export interface IRequestChannelHistoryBody {
-  channelId: string;
   messageIdFrom?: string;
   messageTimeFrom?: Date;
   fetchLength?: number;
