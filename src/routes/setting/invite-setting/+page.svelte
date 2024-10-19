@@ -25,6 +25,7 @@
       .createInvite(newInviteCode)
       .then((response) => {
         //console.log("createInvite : response->", response);
+        getInvite();
         //モーダルを閉じる
         modalCreateInvite?.close();
       })
