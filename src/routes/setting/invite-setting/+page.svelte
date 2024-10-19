@@ -46,6 +46,7 @@
     });
   };
 
+  //招待データを取得
   const getInvite = async () => {
     invites = (await serverRepository.getInvite()).data;
   };

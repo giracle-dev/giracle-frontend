@@ -1,4 +1,4 @@
-import type { IResponseCreateInvite, IResponseGetInvite, IResponseUpdateInvite } from "$lib/types/IServer";
+import type { IResponseCreateInvite, IResponseGetInvite, IResponseDeleteInvite } from "$lib/types/IServer";
 
 export default {
   getInvite: async (): Promise<IResponseGetInvite> => {
@@ -22,7 +22,7 @@ export default {
     if (!response.ok) throw new Error("serverRepository :: createInvite :: エラー");
     return await response.json();
   },
-  deleteInvite: async (inviteId: number): Promise<IResponseUpdateInvite> => {
+  deleteInvite: async (inviteId: number): Promise<IResponseDeleteInvite> => {
     const response = await fetch("/api/server/delete-invite", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
