@@ -46,6 +46,7 @@
       .then((res) => {
         serverConfigNow = structuredClone(res.data);
         serverConfig = res.data;
+        setChanged();
       })
       .catch((err) => {
         console.log(
@@ -53,6 +54,38 @@
           err,
         );
         alert("サーバー設定の取得に失敗しました!\n" + err);
+      });
+  };
+
+  //サーバー設定を更新
+  const updateServerConfig = async () => {
+    await serverRepository
+      .changeInfo(serverConfig.name, serverConfig.introduction)
+      .then((res) => {
+        fetchServerConfig();
+      })
+      .catch((err) => {
+        console.log(
+          "/setting/server-manage :: updateServerConfig(changeInfo) : エラー->",
+          err,
+        );
+        alert("サーバー設定の更新に失敗しました!\n" + err);
+      });
+    await serverRepository
+      .changeConfig(
+        serverConfig.RegisterAvailable,
+        serverConfig.RegisterInviteOnly,
+        serverConfig.MessageMaxLength,
+      )
+      .then((res) => {
+        fetchServerConfig();
+      })
+      .catch((err) => {
+        console.log(
+          "/setting/server-manage :: updateServerConfig(changeConfig) : エラー->",
+          err,
+        );
+        alert("サーバー設定の更新に失敗しました!\n" + err);
       });
   };
 
@@ -166,18 +199,19 @@
     </div>
   </div>
 
-  {#if true}
-    <div class="card bg-base-200">
-      configChanged: {configChanged}
-      <div class="card-body flex xs:flex-col sm:flex-row gap-3">
+  {#if configChanged}
+    <div class="card bg-base-200 mx-auto w-full max-w-[500px]">
+      <div class="card-body w-full flex xs:flex-col sm:flex-row gap-3">
         <button
           on:click={() => {
             serverConfig = structuredClone(serverConfigNow);
             setChanged();
           }}
-          class="btn w-full">元に戻す</button
+          class="btn grow">元に戻す</button
         >
-        <button class="btn btn-primary w-full">更新</button>
+        <button on:click={updateServerConfig} class="btn btn-primary grow"
+          >更新</button
+        >
       </div>
     </div>
   {/if}
