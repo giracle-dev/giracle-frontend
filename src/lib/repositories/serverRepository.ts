@@ -43,6 +43,26 @@ export default {
     if (!response.ok) throw new Error("serverRepository :: changeInfo :: エラー");
     return await response.json();
   },
+  getBanner: async (): Promise<File> => {
+    const response = await fetch("/api/server/banner", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("serverRepository :: getBanner :: エラー");
+    return await response.json();
+  },
+  changeBanner: async (banner: File): Promise<{ message: "Server banner changed" }> => {
+    const formData = new FormData();
+    formData.append("banner", banner);
+    const response = await fetch("/api/server/change-banner", {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    });
+    if (!response.ok) throw new Error("serverRepository :: changeBanner :: エラー");
+    return await response.json();
+  },
   getInvite: async (): Promise<IResponseGetInvite> => {
     const response = await fetch("/api/server/get-invite", {
       method: "GET",
