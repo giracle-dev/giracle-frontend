@@ -121,7 +121,7 @@
 
   <div class="card bg-base-200">
     <div class="card-body">
-      <p class="text-xl text-bold">サーバー紹介文</p>
+      <p class="text-xl font-bold">サーバー紹介文</p>
       <textarea
         bind:value={serverConfig.introduction}
         on:change={setChanged}
@@ -133,9 +133,9 @@
 
   <div class="card bg-base-200">
     <div class="card-body">
-      <span class="text-xl"> サーバー設定 </span>
+      <div class="text-xl font-bold">サーバー設定</div>
 
-      <span class="text-xl text-bold flex flex-row items-center">
+      <span class="text-xl font-bold flex flex-row items-center">
         <IconEggFilled size={24} />
         新規登録
       </span>
@@ -168,7 +168,7 @@
 
       <div class="divider" />
 
-      <span class="text-xl text-bold flex flex-row items-center">
+      <span class="text-xl font-bold flex flex-row items-center">
         <IconMessageChatbotFilled size={24} />
         メッセージ
       </span>
