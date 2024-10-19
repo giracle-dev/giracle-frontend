@@ -11,6 +11,8 @@
   import { goto } from "$app/navigation";
   const serverRepository = repositoryFactory.get("server");
 
+  //バナー画像
+  let bannerImageObj: FileList | null = null;
   //比較用の元データ
   let serverConfigNow: IServer = {
     name: "サンプルサーバー",
@@ -132,6 +134,33 @@
       });
   };
 
+  //サーバーバナーを変更する
+  const changeServerBanner = async () => {
+    if (bannerImageObj) {
+      console.log("changeServerBanner", bannerImageObj[0]);
+      await serverRepository
+        .changeBanner(bannerImageObj[0])
+        .then((res) => {
+          toastStore.update((t) => {
+            return [
+              ...t,
+              {
+                message: "サーバーバナーを更新しました!",
+                type: "success",
+              },
+            ];
+          });
+        })
+        .catch((err) => {
+          alert("サーバーバナーの更新に失敗しました!" + err);
+          console.log(
+            "/setting/server-manage :: changeServerBanner : エラー->",
+            err,
+          );
+        });
+    }
+  };
+
   onMount(() => {
     fetchServerConfig();
   });
@@ -159,6 +188,25 @@
         type="text"
         class="input input-bordered"
       />
+    </div>
+  </div>
+
+  <div
+    class="card bg-base-200 image-full shadow-xl max-h-[250px] overflow-hidden w-full bg-[url('/api/server/banner')]"
+  >
+    <div
+      class="card-body flex w-min flex-col items-center justify-center mx-auto"
+    >
+      <p class="font-bold">サーバーバナーを変更する</p>
+      <input
+        bind:files={bannerImageObj}
+        type="file"
+        accept="image/*"
+        class="file-input w-fit file-input-ghost max-w-[250px]"
+      />
+      <button on:click={changeServerBanner} class="btn glass mt-2">
+        変更する!
+      </button>
     </div>
   </div>
 
