@@ -4,19 +4,13 @@
   import { channelHistoryStore } from "$lib/store/channelHistory";
   import { userListStore } from "$lib/store/user";
   import {
-    getUserName,
     formatDate,
     getChannelHistory,
     scrollHandler,
   } from "./channelMessage";
-  import type {
-    IMessage,
-    IRequestChannelHistoryBody,
-  } from "$lib/types/IMessage";
   import { onMount } from "svelte";
-  import { get } from "svelte/store";
+  import UserProfile from "$lib/components/unique/userProfile.svelte";
   const messageRepository = repositoryFactory.get("message");
-  const channelRepository = repositoryFactory.get("channel");
 
   let message = "";
 
@@ -65,16 +59,29 @@
     id="messageContainer"
     class="flex-grow flex flex-col-reverse overflow-y-auto"
   >
-    {#each $channelHistoryStore.history as message}
-      <div class="flex items-start mb-4 gap-2 w-full">
-        <img
-          src={"/api/user/icon/" + message.userId}
-          alt="avatar"
-          class="avater rounded-full w-8 h-8 object-cover"
-        />
-        <div class="flex flex-col gap-1">
+    {#each $channelHistoryStore.history as message, index}
+      <div class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300">
+        <div class="dropdown dropdown-right dropdown-end">
+          <div tabindex={index} role="button" class="w-8">
+            <img
+              src={"/api/user/icon/" + message.userId}
+              alt="avatar"
+              class="avater rounded-full w-8 h-8 object-cover"
+            />
+          </div>
+          <div
+            class="shadow menu dropdown-content bg-base-100 rounded-box w-52"
+          >
+            <UserProfile userId={message.userId} />
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1 w-full">
           <div class="flex gap-2 items-center">
-            {getUserName(message.userId)}
+            <span class="font-bold text-sm">
+              {$userListStore.find((user) => user.id === message.userId)?.name}
+            </span>
+
             <span class="text-xs text-gray-500"
               >{formatDate(message.createdAt)}</span
             >
