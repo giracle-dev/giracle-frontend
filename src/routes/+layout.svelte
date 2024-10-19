@@ -10,6 +10,9 @@
   import { channelListStore } from "$lib/store/channel";
   import type { IChannel } from "$lib/types/IChannel";
   import Toast from "$lib/components/unique/toast.svelte";
+  import { themaStore } from "$lib/store/thema";
+  import type { Theme } from "daisyui";
+  import { changeThema } from "$lib/utils/thema";
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
@@ -57,9 +60,27 @@
       openDrawer = true;
     }
   };
+
   onMount(async () => {
     //middleware
     // await pwaMiddleware();
+
+    // localStorageに保存されているテーマを取得
+    const lightTheme = localStorage.getItem("lightTheme") as Theme | null;
+    const darkTheme = localStorage.getItem("darkTheme") as Theme | null;
+    await themaStore.update((t) => {
+      t.lightTheme = lightTheme ?? "light";
+      t.darkTheme = darkTheme ?? "dark";
+      return t;
+    });
+
+    await changeThema();
+
+    //  Themaの設定
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", changeThema);
+
     console.log("layoutMiddlewareを実行します");
     await authMiddleware();
   });
