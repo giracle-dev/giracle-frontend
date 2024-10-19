@@ -12,7 +12,7 @@
   const signUp = async () => {
     try {
       const response = await userRepository.signUp(username, password);
-      if (response.success) {
+      if (response) {
         message = "サインアップに成功しました！";
         goto("/signIn");
       } else {

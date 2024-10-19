@@ -11,7 +11,19 @@
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
-  const hiddenDefaultLayout = ["/signIn", "/signUp", "/setting"];
+  const hiddenDefaultLayout = ["/signIn", "/signUp"];
+
+  // パスを/で分割して配列にする
+
+  function isSettingPage(): boolean {
+    const pathArray = $page.url.pathname.split("/");
+    if ($page.url.pathname.startsWith("/setting") && pathArray.length > 2) {
+      console.log("isSettingPage", pathArray);
+      return true;
+    }
+    return false;
+  }
+
   let openDrawer = false;
 
   let touchStartX = 0;
@@ -59,6 +71,10 @@
         headerTitle = "Channel Detail";
         headerIcon = "channel";
         break;
+      case "/setting":
+        headerTitle = "Setting";
+        headerIcon = "channel";
+        break;
       default:
         headerTitle = "None Title";
         headerIcon = "channel";
@@ -74,7 +90,7 @@
   {@html webManifestLink}
 </svelte:head> -->
 
-{#if hiddenDefaultLayout.includes($page.url.pathname)}
+{#if hiddenDefaultLayout.includes($page.url.pathname) || isSettingPage()}
   <slot />
 {:else}
   <Drawer

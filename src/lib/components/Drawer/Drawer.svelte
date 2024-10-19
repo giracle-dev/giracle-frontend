@@ -6,7 +6,6 @@
   import { get } from "svelte/store";
   import type { IChannel } from "$lib/types/IChannel";
   import { page } from "$app/stores";
-  import { channelListStore } from "$lib/store/channel";
 
   export let openDrawer: boolean = false;
   export let channelList: IChannel[];
