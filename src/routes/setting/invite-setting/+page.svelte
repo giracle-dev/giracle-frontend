@@ -97,7 +97,7 @@
             <td class="text-xs">
               <button
                 on:click={() => deleteInvite(index)}
-                class="btn btn-sm hover:btn-primary"
+                class="btn btn-sm hover:btn-error"
               >
                 削除
               </button>
