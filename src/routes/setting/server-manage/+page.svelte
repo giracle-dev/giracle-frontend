@@ -7,6 +7,7 @@
     IconEggFilled,
     IconMessageChatbotFilled,
   } from "@tabler/icons-svelte";
+  import { toastStore } from "$lib/store/toast";
   import { goto } from "$app/navigation";
   const serverRepository = repositoryFactory.get("server");
 
@@ -53,7 +54,15 @@
           "/setting/server-manage :: fetchServerConfig : エラー->",
           err,
         );
-        alert("サーバー設定の取得に失敗しました!\n" + err);
+        toastStore.update((t) => {
+          return [
+            ...t,
+            {
+              message: "サーバー設定の取得に失敗しました!",
+              type: "error",
+            },
+          ];
+        });
       });
   };
 
@@ -63,13 +72,30 @@
       .changeInfo(serverConfig.name, serverConfig.introduction)
       .then((res) => {
         fetchServerConfig();
+        toastStore.update((t) => {
+          return [
+            ...t,
+            {
+              message: "サーバー設定を更新しました!",
+              type: "success",
+            },
+          ];
+        });
       })
       .catch((err) => {
         console.log(
           "/setting/server-manage :: updateServerConfig(changeInfo) : エラー->",
           err,
         );
-        alert("サーバー設定の更新に失敗しました!\n" + err);
+        toastStore.update((t) => {
+          return [
+            ...t,
+            {
+              message: "サーバー設定の更新に失敗しました!",
+              type: "error",
+            },
+          ];
+        });
       });
     await serverRepository
       .changeConfig(
@@ -79,13 +105,30 @@
       )
       .then((res) => {
         fetchServerConfig();
+        toastStore.update((t) => {
+          return [
+            ...t,
+            {
+              message: "サーバー設定を更新しました!",
+              type: "success",
+            },
+          ];
+        });
       })
       .catch((err) => {
         console.log(
           "/setting/server-manage :: updateServerConfig(changeConfig) : エラー->",
           err,
         );
-        alert("サーバー設定の更新に失敗しました!\n" + err);
+        toastStore.update((t) => {
+          return [
+            ...t,
+            {
+              message: "サーバー設定の更新に失敗しました!",
+              type: "error",
+            },
+          ];
+        });
       });
   };
 
