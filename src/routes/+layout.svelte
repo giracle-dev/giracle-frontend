@@ -59,6 +59,7 @@
   onMount(async () => {
     //middleware
     // await pwaMiddleware();
+    console.log("layoutMiddlewareを実行します");
     await authMiddleware();
   });
 

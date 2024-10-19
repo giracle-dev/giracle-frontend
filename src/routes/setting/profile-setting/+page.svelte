@@ -25,7 +25,13 @@
     //console.log("/user/[id] :: updateIt : newUserinfo->", newUserinfo);
 
     //自分情報用のStoreへ格納
-    myUserStore.set(newUserinfo.data);
+    myUserStore.update((user) => {
+      return {
+        ...user,
+        name: newUserinfo.data.name,
+        selfIntroduction: newUserinfo.data.selfIntroduction,
+      };
+    });
     //処理中フラグを下げる
     processing = false;
   };
@@ -51,12 +57,14 @@
   };
 
   onMount(() => {
-    const userId = $page.params.id;
-    console.log("/user/[id] :: onMount : userId->", userId);
-
     //編集用にユーザー情報を取得
     selfIntroduction = get(myUserStore).selfIntroduction;
     name = get(myUserStore).name;
+  });
+
+  myUserStore.subscribe((value) => {
+    name = value.name;
+    selfIntroduction = value.selfIntroduction;
   });
 </script>
 
@@ -80,7 +88,7 @@
       <p>アバター</p>
       <div class="avatar mx-auto">
         <div class="w-24 rounded-xl">
-          <img src={`/api/user/icon/${get(myUserStore).id}`} alt="icon" />
+          <img src={`/api/user/icon/${$myUserStore.id}`} alt="icon" />
         </div>
       </div>
       <input
