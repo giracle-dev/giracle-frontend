@@ -1,3 +1,4 @@
+import type { IMessage } from "./IMessage";
 export interface IChannel {
   name: string;
   id: string;
@@ -20,4 +21,9 @@ export interface IResponseChannelJoin {
 
 export interface IResponseChannelLeave {
   message: string;
+}
+
+export interface IResponseChannelHistory {
+  message: string;
+  data: IMessage[];
 }

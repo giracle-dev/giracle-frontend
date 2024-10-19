@@ -5,6 +5,8 @@ const initialMyUserValue: IUser = {
   id: "",
   name: "",
   selfIntroduction: "",
+  ChannelJoin: [],
+  RoleLink: [],
 };
 
 export const myUserStore = writable<IUser>(initialMyUserValue);

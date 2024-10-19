@@ -6,6 +6,8 @@
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { channelListStore } from "$lib/store/channel";
   import type { IChannel } from "$lib/types/IChannel";
+  import { myUserStore } from "$lib/store/myuser";
+  import { IconDotsVertical } from "@tabler/icons-svelte";
   const channelRepository = repositoryFactory.get("channel");
 
   let my_modal_5: HTMLDialogElement;
@@ -35,6 +37,15 @@
           "/channel :: joinChannel : チャンネル参加に成功しました！",
           response,
         );
+        myUserStore.update((user) => {
+          user.ChannelJoin = [
+            ...user.ChannelJoin,
+            {
+              channelId: channelId,
+            },
+          ];
+          return user;
+        });
       })
       .catch((error) => {
         console.error(
@@ -56,6 +67,12 @@
           "/channel :: leaveChannel : チャンネル脱退に成功しました！",
           response,
         );
+        myUserStore.update((user) => {
+          user.ChannelJoin = user.ChannelJoin.filter(
+            (c) => c.channelId !== channelId,
+          );
+          return user;
+        });
       })
       .catch((error) => {
         console.error(
@@ -191,21 +208,63 @@
       <progress class="progress w-full"></progress>
       <p class="text-center">処理中...</p>
     {/if}
-    {#each channels as channel}
-      <div class="w-full card bg-base-200">
-        <div class="flex flex-row item-center card-body">
-          <p>{channel.name}</p>
-          <div class="join">
+    {#each channels as channel, index}
+      <div class="w-full card shadow-xl">
+        <div class="flex flex-row items-center p-2 px-8 gap-2">
+          <div class="flex-1 divide-y divide-slate-700">
+            <div class="flex items-center gap-2">
+              <p class="font-bold">{channel.name}</p>
+              {#if channel.isArchived}
+                <span class="badge badge-warning gap-2">
+                  <span>アーカイブ済み</span>
+                </span>
+              {/if}
+            </div>
+            <p>{channel.description}asdf</p>
+          </div>
+          {#if !$myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
             <button
               on:click={() => joinChannel(channel.id)}
-              class="btn btn-primary join-item">参加</button
+              class="btn btn-outline">参加</button
             >
+          {:else}
             <button
               on:click={() => leaveChannel(channel.id)}
-              class="btn btn-primary join-item">脱退</button
+              class="btn btn-error btn-link">脱退</button
             >
+          {/if}
+          <div class="dropdown dropdown-bottom dropdown-end">
+            <button class="m-1 btn btn-ghost">
+              <IconDotsVertical size={15} />
+            </button>
+            <ul
+              class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+            >
+              {#if !channel.isArchived}
+                <li>
+                  <button
+                    on:click={() => toggleArchiveChannel(channel.id, true)}
+                    class="btn btn-link"
+                    aria-disabled={channel.isArchived}
+                  >
+                    archive
+                  </button>
+                </li>
+              {:else}
+                <li>
+                  <button
+                    on:click={() => toggleArchiveChannel(channel.id, false)}
+                    class="btn btn-link"
+                    aria-disabled={!channel.isArchived}
+                  >
+                    archive解除
+                  </button>
+                </li>
+              {/if}
+            </ul>
           </div>
-          <div class="join">
+
+          <!-- <div class="join">
             <button
               on:click={() => toggleArchiveChannel(channel.id, true)}
               disabled={channel.isArchived}
@@ -216,7 +275,7 @@
               disabled={!channel.isArchived}
               class="btn btn-primary join-item">archive解除</button
             >
-          </div>
+          </div> -->
         </div>
       </div>
     {/each}

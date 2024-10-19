@@ -39,8 +39,8 @@
   };
 
   //画像ファイル受け取り
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
+  const handleFileChange = (event: Event) => {
+    const file = (event.target as HTMLInputElement)?.files?.[0];
     if (file) {
       console.log("Selected file:", file);
       // ファイル処理をここに追加

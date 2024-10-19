@@ -1,4 +1,11 @@
-import type { IChannel, IResponseChannelJoin, IResponseChannelLeave, IResponseChannelList } from "$lib/types/IChannel";
+import type {
+  IChannel,
+  IResponseChannelHistory,
+  IResponseChannelJoin,
+  IResponseChannelLeave,
+  IResponseChannelList,
+} from "$lib/types/IChannel";
+import type { IMessage, IRequestChannelHistoryBody } from "$lib/types/IMessage";
 
 export default {
   createChannel: async (name: string): Promise<IChannel> => {
@@ -58,6 +65,19 @@ export default {
       body: JSON.stringify({ channelId: id }),
       credentials: "include",
     });
+    return await response.json();
+  },
+  getHistory: async (
+    requestBody: IRequestChannelHistoryBody,
+  ): Promise<IResponseChannelHistory> => {
+    const response = await fetch(
+      "/api/channel/get-history/" + requestBody.channelId,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      },
+    );
     return await response.json();
   },
 };

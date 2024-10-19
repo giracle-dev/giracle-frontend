@@ -2,7 +2,7 @@ export interface IResponseUSerVerifyToken {
   message: string;
   data: {
     userId: string;
-  }
+  };
 }
 
 export interface IResponseGetUserinfo {
@@ -14,4 +14,10 @@ export interface IUser {
   id: string;
   name: string;
   selfIntroduction: string;
+  ChannelJoin: {
+    channelId: string;
+  }[];
+  RoleLink: {
+    roleId: string;
+  }[];
 }

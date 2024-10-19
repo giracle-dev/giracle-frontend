@@ -6,6 +6,7 @@
   import { get } from "svelte/store";
   import type { IChannel } from "$lib/types/IChannel";
   import { page } from "$app/stores";
+  import { channelListStore } from "$lib/store/channel";
 
   export let openDrawer: boolean = false;
   export let channelList: IChannel[];
@@ -43,38 +44,70 @@
         <li><a href="/channel">チャンネル一覧</a></li>
         {#if channelList && channelList.length > 0}
           {#each channelList as channel}
-            <li>
-              <a href="/channel/{channel.id}"
-                >{channel.name}
-                {#if channel.id === $page.params.id}
-                  <span class="badge badge-primary">&larr;</span>
-                {/if}
-              </a>
-            </li>
+            {#if $myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
+              <li>
+                <a href="/channel/{channel.id}"
+                  >{channel.name}
+                  {#if channel.id === $page.params.id}
+                    <span class="badge badge-primary">&larr;</span>
+                  {/if}
+                </a>
+              </li>
+            {/if}
           {/each}
         {/if}
       </ul>
       <!-- user -->
-      <div
-        class="bg-base-700 pa-2 flex items-center gap-2 h-[64px]"
-        role="button"
-        tabindex="0"
-        on:click={() => {
-          console.log("test userId->", get(myUserStore).id);
-          goto("/user/" + get(myUserStore).id);
-        }}
-        on:keydown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            console.log("test");
-          }
-        }}
-      >
-        <img
-          src="https://media.tenor.com/SgHXpt3rKfYAAAAi/grant-yapping.gif"
-          alt="user"
-          class="w-10 h-10 rounded-full"
-        />
-        <div class="w-[120px] truncate">User Name asdfadfadfasdfdaf</div>
+      <div class="bg-base-700 pa-2 flex items-center gap-2 h-[64px]">
+        <details class="dropdown dropdown-top flex-1">
+          <summary
+            tabindex="0"
+            class="flex gap-2 items-center m-1 p-0 cursor-pointer"
+          >
+            <img
+              src={`/api/user/icon/${get(myUserStore).id}`}
+              alt="user"
+              class="w-10 h-10 rounded-full object-cover"
+            />
+            <div class=" truncate">
+              {$myUserStore.name}
+            </div>
+          </summary>
+          <div
+            class=" dropdown-content bg-base-100 rounded-md z-[1] w-56 shadow"
+          >
+            <div class="bg-base p-2">
+              <div class="relative w-full h-[100px]">
+                <div
+                  class="bg-primary w-full h-[80px] rounded-tl-lg rounded-tr-lg"
+                ></div>
+                <div class="avatar online absolute bottom-0 left-1">
+                  <div class="w-10 rounded-full relative">
+                    <img
+                      src={`/api/user/icon/${get(myUserStore).id}`}
+                      alt="user"
+                      class="w-10 h-10 rounded-full object-cover"
+                    />
+                  </div>
+
+                  <button
+                    class="rounded-full absolute top-0 left-0 right-0 bottom-0 m-0 p-0"
+                    on:click={(event) => {
+                      event.stopPropagation();
+                      goto("/user/" + get(myUserStore).id);
+                    }}
+                  >
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex flex-col">
+                <div class="text-lg font-bold">{$myUserStore.name}</div>
+                <div class="text-sm">{$myUserStore.selfIntroduction}</div>
+              </div>
+            </div>
+          </div>
+        </details>
         <div class="flex gap-2">
           <button
             class="btn btn-ghost btn-circle"

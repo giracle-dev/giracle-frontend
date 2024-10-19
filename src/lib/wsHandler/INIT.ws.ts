@@ -4,14 +4,13 @@ export let ws: WebSocket = new WebSocket("/ws");
 let FLAGwsError = false;
 
 export const initWS = () => {
-
   ws.onopen = (event) => {
     console.log("INIT.ws :: initWS : open->", event);
-  }
+  };
 
   ws.onerror = (event) => {
     console.log("INIT.ws :: initWS : error->", event);
-  }
+  };
 
   ws.onmessage = (event) => {
     try {
@@ -23,10 +22,10 @@ export const initWS = () => {
       if (json.signal === "ERROR" && json.data === "token not valid") {
         FLAGwsError = true;
       }
-    } catch(e) {
+    } catch (e) {
       console.log("INIT.ws :: initWS : data->", event.data, " error->", e);
     }
-  }
+  };
 
   ws.onclose = (event) => {
     console.log("INIT.ws :: initWS : close->", event);
@@ -35,8 +34,11 @@ export const initWS = () => {
     if (FLAGwsError) return;
 
     //再接続
-    setTimeout(() => {
-      initWS();
-    }, Math.random() * 500 + 1000);
-  }
+    setTimeout(
+      () => {
+        initWS();
+      },
+      Math.random() * 500 + 1000,
+    );
+  };
 };

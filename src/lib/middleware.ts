@@ -33,11 +33,7 @@ const init = async () => {
       "middleware :: authMiddleware : response(getUserInfo)->",
       response,
     );
-    myUserStore.set({
-      ...get(myUserStore),
-      name: response.data.name,
-      selfIntroduction: response.data.selfIntroduction,
-    });
+    myUserStore.set({ ...get(myUserStore), ...response.data });
   });
   // チャンネル一覧を取得
   await channelRepository.getChannel().then((response) => {

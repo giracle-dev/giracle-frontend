@@ -2,8 +2,18 @@
   import { page } from "$app/stores";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   const messageRepository = repositoryFactory.get("message");
+  const channelRepository = repositoryFactory.get("channel");
 
   let message = "";
+
+  $: (async () => {
+    console.log("/channel/[id] :: $page.params.id->", $page.params.id);
+    await channelRepository
+      .getHistory({ channelId: $page.params.id })
+      .then((res) => {
+        console.log("/channel/[id] :: getHistory : res->", res);
+      });
+  })();
 
   /**
    * メッセージを送信する
