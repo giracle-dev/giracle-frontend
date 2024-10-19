@@ -22,17 +22,16 @@ export default {
     if (!response.ok) throw new Error("serverRepository :: createInvite :: エラー");
     return await response.json();
   },
-  updateInvite: async (inviteId: number, isActive: boolean): Promise<IResponseUpdateInvite> => {
-    const response = await fetch("/api/server/update-invite", {
-      method: "POST",
+  deleteInvite: async (inviteId: number): Promise<IResponseUpdateInvite> => {
+    const response = await fetch("/api/server/delete-invite", {
+      method: "DELETE",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({
         inviteId,
-        isActive,
       }),
     });
-    if (!response.ok) throw new Error("serverRepository :: updateInvite :: エラー");
+    if (!response.ok) throw new Error("serverRepository :: deleteInvite :: エラー");
     return await response.json();
   }
 };

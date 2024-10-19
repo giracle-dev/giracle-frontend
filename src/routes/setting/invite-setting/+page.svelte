@@ -36,13 +36,13 @@
     processingCreateInvite = false;
   };
 
-  //招待の状態を更新する
-  const updateInvite = async (index: number) => {
-    await serverRepository
-      .updateInvite(invites[index].id, !invites[index].isActive)
-      .then((res) => {
-        invites[index].isActive = res.data.isActive;
-      });
+  //招待を削除する
+  const deleteInvite = async (index: number) => {
+    await serverRepository.deleteInvite(invites[index].id).then((res) => {
+      //削除
+      invites.splice(index, 1);
+      console.log("res->", res);
+    });
   };
 
   onMount(async () => {
@@ -53,7 +53,7 @@
   });
 </script>
 
-<div class="p-2 flex flex-col gap-2 mx-auto max-w-[950px]">
+<div class="p-2 flex flex-col gap-3 mx-auto max-w-[950px]">
   <div class="card bg-base-200 shadow-xl">
     <div class="card-body flex flex-row">
       <button
@@ -68,17 +68,39 @@
     </div>
   </div>
 
-  <div class="card bg-base-200 shadow-xl">
-    <div class="card-body">
-      {#each invites as inv, index}
-        <div class="flex items-center gap-5 m-5">
-          <div class=" flex flex-col">
-            <div class="text-xs">招待コード</div>
-            <div class="text-xs">{inv.inviteCode}</div>
-          </div>
-        </div>
-      {/each}
-    </div>
+  <div class="card bg-base-200 shadow-xl overflow-x-auto">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>招待コード</th>
+          <th>作成者</th>
+          <th>使用回数</th>
+          <th>有効期限</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each invites as inv, index}
+          <tr class="hover bg-base-300">
+            <td class="text-xs">{inv.inviteCode}</td>
+            <td class="text-xs">
+              <p class="truncate w-12">
+                {inv.createdUserId}
+              </p>
+            </td>
+            <td class="text-xs">{inv.usedCount}</td>
+            <td class="text-xs">{new Date(inv.expireDate).toLocaleString()}</td>
+            <td class="text-xs">
+              <button
+                on:click={() => deleteInvite(index)}
+                class="btn btn-sm hover:btn-primary"
+              >
+                削除
+              </button>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
   </div>
 </div>
 
