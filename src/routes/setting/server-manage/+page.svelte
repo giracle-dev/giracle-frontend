@@ -150,7 +150,12 @@
           />
         </label>
         <label class="label cursor-pointer">
-          <span class="label-text">登録を招待制にする</span>
+          <span class="label-text">
+            登録を招待制にする<br />
+            <a href="/setting/invite-setting" class="link text-sm">
+              招待コード管理へ
+            </a>
+          </span>
           <input
             type="checkbox"
             class="toggle"
