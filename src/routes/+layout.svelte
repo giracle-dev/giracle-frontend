@@ -13,6 +13,7 @@
   import { themaStore } from "$lib/store/thema";
   import type { Theme } from "daisyui";
   import { changeThema } from "$lib/utils/thema";
+  import { get } from "svelte/store";
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
@@ -91,14 +92,20 @@
    */
   const getChannelName = (id: string): string => {
     let channel: IChannel | undefined;
-    channelListStore.subscribe((channels) => {
-      channel = channels.find((c) => c.id === id);
-    })();
+    channel = $channelListStore.find((c) => c.id === id);
+    console.log("channel", channel);
     if (channel) {
       return channel.name;
     }
     return "None Channel";
   };
+
+  channelListStore.subscribe((value) => {
+    if ($page.url.pathname === `/channel/${$page.params.id}`) {
+      headerTitle = getChannelName($page.params.id);
+      headerIcon = "channel";
+    }
+  });
 
   $: {
     switch ($page.url.pathname) {
