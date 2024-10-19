@@ -1,4 +1,4 @@
-import type { IResponseCreateInvite, IResponseGetInvite } from "$lib/types/IServer";
+import type { IResponseCreateInvite, IResponseGetInvite, IResponseUpdateInvite } from "$lib/types/IServer";
 
 export default {
   getInvite: async (): Promise<IResponseGetInvite> => {
@@ -20,6 +20,19 @@ export default {
       }),
     });
     if (!response.ok) throw new Error("serverRepository :: createInvite :: エラー");
+    return await response.json();
+  },
+  updateInvite: async (inviteId: number, isActive: boolean): Promise<IResponseUpdateInvite> => {
+    const response = await fetch("/api/server/update-invite", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        inviteId,
+        isActive,
+      }),
+    });
+    if (!response.ok) throw new Error("serverRepository :: updateInvite :: エラー");
     return await response.json();
   }
 };

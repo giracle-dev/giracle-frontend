@@ -8,6 +8,11 @@ export interface IResponseCreateInvite {
   data: IInvite;
 }
 
+export interface IResponseUpdateInvite {
+  message: "Server invite updated";
+  data: IInvite;
+}
+
 export interface IInvite {
   inviteCode: string;
   id: number;
