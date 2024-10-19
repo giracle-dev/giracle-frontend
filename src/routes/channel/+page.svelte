@@ -187,9 +187,32 @@
       .updateChannel({ channelId, isArchived: value })
       .then((res) => {
         console.log("/channel :: toggleArchiveChannel : res->", res);
+
+        toastStore.update((toast) => {
+          return [
+            ...toast,
+            {
+              message: value
+                ? "チャンネルをアーカイブしました。"
+                : "チャンネルのアーカイブを解除しました。",
+              type: "success",
+            },
+          ];
+        });
       })
       .catch((error) => {
         console.error("/channel :: toggleArchiveChannel : error->", error);
+        toastStore.update((toast) => {
+          return [
+            ...toast,
+            {
+              message: value
+                ? "チャンネルのアーカイブに失敗しました。"
+                : "チャンネルのアーカイブ解除に失敗しました。",
+              type: "error",
+            },
+          ];
+        });
       });
   };
 
