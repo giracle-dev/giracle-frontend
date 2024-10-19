@@ -9,6 +9,7 @@
   import { pwaInfo } from "virtual:pwa-info";
   import { channelListStore } from "$lib/store/channel";
   import type { IChannel } from "$lib/types/IChannel";
+  import Toast from "$lib/components/unique/toast.svelte";
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
@@ -59,6 +60,7 @@
   onMount(async () => {
     //middleware
     // await pwaMiddleware();
+    console.log("layoutMiddlewareを実行します");
     await authMiddleware();
   });
 
@@ -105,6 +107,8 @@
   {/each}
   {@html webManifestLink}
 </svelte:head> -->
+
+<Toast />
 
 {#if hiddenDefaultLayout.includes($page.url.pathname) || isSettingPage()}
   <slot />

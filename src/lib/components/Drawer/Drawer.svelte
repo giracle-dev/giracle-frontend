@@ -43,7 +43,7 @@
         <li><a href="/channel">チャンネル一覧</a></li>
         {#if channelList && channelList.length > 0}
           {#each channelList as channel}
-            {#if $myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
+            {#if $myUserStore.ChannelJoin && $myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
               <li>
                 <a href="/channel/{channel.id}"
                   >{channel.name}
