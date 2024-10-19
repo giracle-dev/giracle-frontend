@@ -61,6 +61,7 @@
   >
     {#each $channelHistoryStore.history as message, index}
       <div class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300">
+        <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <div class="dropdown dropdown-right dropdown-end">
           <div tabindex={index} role="button" class="w-8">
             <img
@@ -70,7 +71,8 @@
             />
           </div>
           <div
-            class="shadow menu dropdown-content bg-base-100 rounded-box w-52"
+            tabindex={index}
+            class="shadow m-0 p-0 card card-compact dropdown-content bg-base-100 rounded-box w-64"
           >
             <UserProfile userId={message.userId} />
           </div>

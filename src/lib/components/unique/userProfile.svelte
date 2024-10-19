@@ -15,28 +15,32 @@
   {#if user === null}
     <div class="text-center">Loading...</div>
   {:else}
-    <div class="relative w-full h-[100px]">
-      <div class="bg-primary w-full h-[80px] rounded-tl-lg rounded-tr-lg">
-        <img
-          src={"/api/user/banner/" + user.id}
-          alt="banner"
-          class="object-cover w-full h-[80px] rounded-tl-lg rounded-tr-lg"
-        />
-      </div>
-      <div class="avatar online absolute bottom-0 left-1">
-        <div class="w-10 rounded-full relative">
+    <div class="w-58">
+      <div class="relative h-[100px]">
+        <div class="bg-primary w-full h-[80px] rounded-tl-lg rounded-tr-lg">
           <img
-            src={"/api/user/icon/" + user.id}
-            alt="user"
-            class="w-10 h-10 rounded-full object-cover"
+            src={"/api/user/banner/" + user.id}
+            alt="banner"
+            class="object-cover w-full h-[80px] rounded-tl-lg rounded-tr-lg"
           />
         </div>
+        <div class="avatar online absolute bottom-0 left-1">
+          <div class="w-10 rounded-full relative">
+            <img
+              src={"/api/user/icon/" + user.id}
+              alt="user"
+              class="w-10 h-10 rounded-full object-cover"
+            />
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="flex flex-col">
-      <div class="text-lg font-bold">{user.name}</div>
-      <div class="text-sm">{user.selfIntroduction}</div>
+      <div class="flex flex-col w-full">
+        <div class="text-lg font-bold">{user.name}</div>
+        <div class="text-sm max-w-64">
+          {user.selfIntroduction}
+        </div>
+      </div>
     </div>
   {/if}
 </div>
