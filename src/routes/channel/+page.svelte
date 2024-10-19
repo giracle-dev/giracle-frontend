@@ -8,6 +8,7 @@
   import type { IChannel } from "$lib/types/IChannel";
   import { myUserStore } from "$lib/store/user";
   import { IconDotsVertical } from "@tabler/icons-svelte";
+  import { IconArchive } from "@tabler/icons-svelte";
   const channelRepository = repositoryFactory.get("channel");
 
   let my_modal_5: HTMLDialogElement;
@@ -216,7 +217,7 @@
               <p class="font-bold">{channel.name}</p>
               {#if channel.isArchived}
                 <span class="badge badge-warning gap-2">
-                  <span>アーカイブ済み</span>
+                  <IconArchive size={15} />
                 </span>
               {/if}
             </div>
