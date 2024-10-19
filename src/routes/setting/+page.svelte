@@ -2,9 +2,9 @@
   import { goto } from "$app/navigation";
   import {
     IconUser,
-    IconSettings,
     IconCirclesRelation,
     IconMailFilled,
+    IconServer,
   } from "@tabler/icons-svelte";
 </script>
 
@@ -26,6 +26,17 @@
 
   <h3 class="w-full font-bold">サーバー管理設定</h3>
   <div class="flex items-center gap-5 m-5">
+    <div class=" flex flex-col">
+      <button
+        class="btn btn-ghost mx-auto btn-circle"
+        on:click={() => {
+          goto("/setting/server-manage");
+        }}
+      >
+        <IconServer size={16} />
+      </button>
+      <div class="text-xs">サーバー管理</div>
+    </div>
     <div class=" flex flex-col">
       <button
         class="btn btn-ghost mx-auto btn-circle"

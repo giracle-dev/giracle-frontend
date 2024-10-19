@@ -10,8 +10,10 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
   if (data.signal === "message::SendMessage") {
     console.log(data.data);
     // 一番下に追加
-    channelHistoryStore.update((channelHistory) => {
-      return [data.data, ...channelHistory];
-    });
+    channelHistoryStore.update((channelHistory) => ({
+      history: [data.data, ...channelHistory.history],
+      atTop: channelHistory.atTop,
+      atEnd: channelHistory.atEnd,
+    }));
   }
 };

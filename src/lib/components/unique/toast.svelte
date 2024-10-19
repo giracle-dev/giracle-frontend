@@ -12,7 +12,7 @@
             return value;
           });
         }
-      }, 1000);
+      }, 2000);
     }
   });
 </script>
@@ -25,11 +25,11 @@
       </div>
     {:else if toast.type === "error"}
       <div class="alert alert-error">
-        <span>toast.message</span>
+        <span>{toast.message}</span>
       </div>
     {:else if toast.type === "success"}
       <div class="alert alert-success">
-        <span></span>
+        <span>{toast.message}</span>
       </div>
     {/if}
   {/each}

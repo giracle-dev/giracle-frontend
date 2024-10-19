@@ -1,3 +1,8 @@
+export interface IResponseGetConfig {
+  message: "Server config fetched";
+  data: IServer;
+}
+
 export interface IResponseGetInvite {
   message: "Server invites fetched";
   data: IInvite[];
@@ -13,6 +18,14 @@ export interface IResponseDeleteInvite {
   data: {
     id: number;
   };
+}
+
+export interface IServer {
+  name: string;
+  introduction: string;
+  RegisterAvailable: boolean;
+  RegisterInviteOnly: boolean;
+  MessageMaxLength: number;
 }
 
 export interface IInvite {
