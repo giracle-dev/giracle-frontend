@@ -38,6 +38,8 @@ export const getChannelHistory = async (
   targetMessage?: IMessage,
   direction?: "older" | "newer",
 ) => {
+  if (direction === "older" && get(channelHistoryStore).atTop) return;
+  if (direction === "newer" && get(channelHistoryStore).atEnd) return;
   await channelRepository
     .getHistory(get(page).params.id, {
       messageIdFrom: targetMessage?.id ?? undefined,
@@ -55,7 +57,7 @@ export const getChannelHistory = async (
           // 既存メッセージを配列の最初に追加
           history: [...messages.history, ...newMessages],
           atTop: res.data.atTop,
-          atEnd: res.data.atEnd,
+          atEnd: messages.atEnd,
         }));
       } else if (direction === "newer") {
         // 取得した時にリクエストした時のIDも含まれるので、除外する
@@ -65,7 +67,7 @@ export const getChannelHistory = async (
         channelHistoryStore.update((messages) => ({
           // 既存メッセージを配列の最後に追加
           history: [...newMessages, ...messages.history],
-          atTop: res.data.atTop,
+          atTop: messages.atTop,
           atEnd: res.data.atEnd,
         }));
       } else {
