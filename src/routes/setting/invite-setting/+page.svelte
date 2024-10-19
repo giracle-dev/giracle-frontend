@@ -17,6 +17,7 @@
   let processingCreateInvite = false;
   let resultCreateInvite: "success" | "error" | "" = "";
 
+  //招待を作成
   const createInvite = async () => {
     processingCreateInvite = true;
     resultCreateInvite = "";
@@ -33,6 +34,15 @@
         resultCreateInvite = "error";
       });
     processingCreateInvite = false;
+  };
+
+  //招待の状態を更新する
+  const updateInvite = async (index: number) => {
+    await serverRepository
+      .updateInvite(invites[index].id, !invites[index].isActive)
+      .then((res) => {
+        invites[index].isActive = res.data.isActive;
+      });
   };
 
   onMount(async () => {
