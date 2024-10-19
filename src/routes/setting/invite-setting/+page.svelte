@@ -111,7 +111,7 @@
     <input
       bind:value={newInviteCode}
       type="text"
-      placeholder="Type here"
+      placeholder="abc123..."
       class="input input-bordered w-full"
     />
 
