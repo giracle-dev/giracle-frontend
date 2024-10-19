@@ -9,6 +9,7 @@
   import { myUserStore } from "$lib/store/user";
   import { IconDotsVertical } from "@tabler/icons-svelte";
   import { IconArchive } from "@tabler/icons-svelte";
+  import { toastStore } from "$lib/store/toast";
   const channelRepository = repositoryFactory.get("channel");
 
   let my_modal_5: HTMLDialogElement;
@@ -47,12 +48,30 @@
           ];
           return user;
         });
+        toastStore.update((toast) => {
+          return [
+            ...toast,
+            {
+              message: "チャンネルに参加しました。",
+              type: "success",
+            },
+          ];
+        });
       })
       .catch((error) => {
         console.error(
           "/channel :: joinChannel : チャンネルリスト取得に失敗しました。",
           error,
         );
+        toastStore.update((toast) => {
+          return [
+            ...toast,
+            {
+              message: "チャンネルに参加に失敗しました。",
+              type: "error",
+            },
+          ];
+        });
       });
   };
 
@@ -74,12 +93,30 @@
           );
           return user;
         });
+        toastStore.update((toast) => {
+          return [
+            ...toast,
+            {
+              message: "チャンネルから脱退しました。",
+              type: "success",
+            },
+          ];
+        });
       })
       .catch((error) => {
         console.error(
           "/channel :: leaveChannel : チャンネル脱退に失敗しました。",
           error,
         );
+        toastStore.update((toast) => {
+          return [
+            ...toast,
+            {
+              message: "チャンネルから脱退に失敗しました。",
+              type: "error",
+            },
+          ];
+        });
       });
   };
 
@@ -96,16 +133,43 @@
               channels = response.data;
               //チャンネルリストをストアに保存
               channelListStore.set(response.data);
+              toastStore.update((toast) => {
+                return [
+                  ...toast,
+                  {
+                    message: "チャンネルを作成しました。",
+                    type: "success",
+                  },
+                ];
+              });
             })
             .catch((error) => {
               console.error("チャンネルリスト取得に失敗しました。", error);
             });
         } else {
           console.log("チャンネル作成に失敗しました。");
+          toastStore.update((toast) => {
+            return [
+              ...toast,
+              {
+                message: "チャンネル作成に失敗しました。",
+                type: "error",
+              },
+            ];
+          });
         }
       })
       .catch((error) => {
         console.error("チャンネル作成に失敗しました。", error);
+        toastStore.update((toast) => {
+          return [
+            ...toast,
+            {
+              message: "チャンネル作成に失敗しました。",
+              type: "error",
+            },
+          ];
+        });
       })
       .finally(() => {
         channelName = "";

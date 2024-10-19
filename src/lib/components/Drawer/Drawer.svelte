@@ -49,12 +49,12 @@
       </div>
       <!-- Sidebar content here -->
       <ul class="h-[calc(100svh-144px)] overflow-y-auto py-2">
-        <li><a href="/channel">チャンネル一覧</a></li>
+        <li><a href="/channel" on:click={handleDrawer}>チャンネル一覧</a></li>
         {#if channelList && channelList.length > 0}
           {#each channelList as channel}
             {#if $myUserStore.ChannelJoin && $myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
               <li>
-                <a href="/channel/{channel.id}"
+                <a href="/channel/{channel.id}" on:click={handleDrawer}
                   >{channel.name}
                   {#if channel.id === $page.params.id}
                     <span class="badge badge-primary">&larr;</span>
@@ -108,6 +108,7 @@
                     class="rounded-full absolute top-0 left-0 right-0 bottom-0 m-0 p-0"
                     on:click={(event) => {
                       event.stopPropagation();
+                      handleDrawer();
                       goto("/setting/profile-setting");
                     }}
                   >
@@ -127,6 +128,7 @@
             class="btn btn-ghost btn-circle"
             on:click={(event) => {
               event.stopPropagation();
+              handleDrawer();
               goto("/setting");
             }}
           >

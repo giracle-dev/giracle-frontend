@@ -40,6 +40,8 @@
 
     //メッセージを初期化
     message = "";
+    // メッセージ入力欄にフォーカスを当てる
+    document.getElementById("messageInput")?.focus();
   };
 
   /**
@@ -48,8 +50,8 @@
    */
   function handleKeyDown(event: KeyboardEvent) {
     if (event.key === "Enter") {
-      sendMessage();
       event.preventDefault(); // デフォルトの動作を防ぐ
+      sendMessage();
     }
   }
 </script>
@@ -96,6 +98,7 @@
 
   <div class="flex gap-1">
     <input
+      id="messageInput"
       bind:value={message}
       type="text"
       placeholder="メッセージを送信"
