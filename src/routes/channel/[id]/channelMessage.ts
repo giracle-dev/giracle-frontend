@@ -3,7 +3,6 @@ import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
 import { channelHistoryStore } from "$lib/store/channelHistory";
 import { userListStore } from "$lib/store/user";
 import type { IMessage, IRequestChannelHistoryBody } from "$lib/types/IMessage";
-import { onMount } from "svelte";
 import { get } from "svelte/store";
 const messageRepository = repositoryFactory.get("message");
 const channelRepository = repositoryFactory.get("channel");

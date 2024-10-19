@@ -32,6 +32,15 @@ export default {
     if (!response.ok) throw new Error("userRepository :: signIn :: エラー");
     return await response.json();
   },
+  signOut: async (): Promise<void> => {
+    const response = await fetch("/api/user/sign-out", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("userRepository :: signOut :: エラー");
+    return await response.json();
+  },
   verifyToken: async (): Promise<IResponseUSerVerifyToken> => {
     const response = await fetch("/api/user/verify-token", {
       method: "GET",

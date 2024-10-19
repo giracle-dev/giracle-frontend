@@ -6,9 +6,11 @@ import { initWS } from "./wsHandler/INIT.ws";
 import { myUserStore, userListStore } from "./store/user";
 import { get } from "svelte/store";
 import type { IResponseUSerVerifyToken } from "./types/IUser";
+import { serverInfoStore } from "./store/serverInfo";
 
 const userRepository = repositoryFactory.get("user");
 const channelRepository = repositoryFactory.get("channel");
+const serverRepository = repositoryFactory.get("server");
 
 export const pwaMiddleware = async () => {
   if (browser && "serviceWorker" in navigator) {
@@ -43,6 +45,11 @@ export const init = async () => {
   // ユーザー一覧取得
   await userRepository.userList().then((response) => {
     userListStore.set(response.data);
+  });
+  // サーバー情報取得
+  await serverRepository.getConfig().then((response) => {
+    console.log(response);
+    serverInfoStore.set(response.data);
   });
 };
 

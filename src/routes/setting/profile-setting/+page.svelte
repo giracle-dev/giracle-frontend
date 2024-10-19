@@ -9,6 +9,7 @@
   import type { Theme } from "daisyui";
   import { changeThema } from "$lib/utils/thema";
   import { themaStore } from "$lib/store/thema";
+  import { sineInOut } from "svelte/easing";
   const userRepository = repositoryFactory.get("user");
 
   let iconObj: File | null = null;
@@ -306,5 +307,24 @@
       processing}
   >
     {processing ? "処理中..." : "更新"}
+  </button>
+
+  <!-- ログアウト -->
+  <button
+    on:click={async () => {
+      await userRepository
+        .signOut()
+        .then((response) => {
+          console.log("ログアウトしました。", response);
+          location.reload();
+        })
+        .catch((error) => {
+          console.log("ログアウトに失敗しました。", error);
+        });
+      // リロード
+    }}
+    class="btn btn-ghost"
+  >
+    ログアウト
   </button>
 </div>

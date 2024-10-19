@@ -25,8 +25,17 @@
   };
 </script>
 
-<div class="flex items-center justify-center min-h-screen">
-  <div class="w-full max-w-md p-8 space-y-6 rounded shadow-md">
+<div
+  class="flex items-center justify-center min-h-screen bg-base-300 bg-opacity-20"
+>
+  <div class="absolute top-0 right-0 z-[-1]">
+    <img
+      src="/api/server/banner"
+      alt="icon"
+      class="w-screen h-screen object-cover"
+    />
+  </div>
+  <div class="w-full max-w-md p-8 space-y-6 rounded shadow-md bg-base-100">
     <h2 class="text-2xl font-bold text-center">サインインページ</h2>
     <form class="space-y-6" on:submit|preventDefault={signIn}>
       <div>

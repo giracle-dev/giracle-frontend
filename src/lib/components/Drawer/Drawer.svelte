@@ -6,6 +6,7 @@
   import { get } from "svelte/store";
   import type { IChannel } from "$lib/types/IChannel";
   import { page } from "$app/stores";
+  import { serverInfoStore } from "$lib/store/serverInfo";
 
   export let openDrawer: boolean = false;
   export let channelList: IChannel[];
@@ -37,7 +38,15 @@
     <div
       class=" menu bg-base-200 text-base-content min-h-full w-60 md:w-60 p-2"
     >
-      <div class="h-[64px] border-b">serverInfo elements</div>
+      <div
+        class=" relative flex items-center justify-between h-[64px] bg-[url('/api/server/banner')] bg-center bg-cover"
+      >
+        <div
+          class="absolute top-0 px-1 text-primary-content text-xl font-bold w-full bg-opacity-70 bg-base-300"
+        >
+          {$serverInfoStore.name}
+        </div>
+      </div>
       <!-- Sidebar content here -->
       <ul class="h-[calc(100svh-144px)] overflow-y-auto py-2">
         <li><a href="/channel">チャンネル一覧</a></li>
