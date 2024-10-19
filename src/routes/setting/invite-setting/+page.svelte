@@ -40,9 +40,9 @@
   //招待を削除する
   const deleteInvite = async (index: number) => {
     await serverRepository.deleteInvite(invites[index].id).then((res) => {
-      //削除
-      invites.splice(index, 1);
-      console.log("res->", res);
+      //招待データから削除したものを取り除く
+      invites = invites.filter((inv) => inv.id !== res.data.id);
+      //console.log("/settings/invite-setting :: deletInvite : res->", res);
     });
   };
 
