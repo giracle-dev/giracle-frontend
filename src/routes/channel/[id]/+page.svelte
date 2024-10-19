@@ -54,7 +54,7 @@
   }
 </script>
 
-<div class="h-full flex flex-col px-1 pb-2">
+<div class="h-full w-full flex flex-col px-1 pb-2">
   <div
     id="messageContainer"
     class="flex-grow flex flex-col-reverse overflow-y-auto"

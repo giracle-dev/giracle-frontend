@@ -84,9 +84,10 @@ export const scrollHandler = async () => {
   // スクロールが一番上まで行ったかどうか
   if (MessageContainer) {
     let test = MessageContainer.scrollHeight - MessageContainer.clientHeight;
+    //100は誤差範囲のため
     const isScrolledToTop =
       Math.abs(MessageContainer.scrollTop) >=
-      MessageContainer.scrollHeight - MessageContainer.clientHeight;
+      MessageContainer.scrollHeight - MessageContainer.clientHeight - 100;
     const isBottom = MessageContainer?.scrollTop === 0;
 
     if (isScrolledToTop) {

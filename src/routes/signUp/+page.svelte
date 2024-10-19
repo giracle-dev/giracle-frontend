@@ -40,7 +40,9 @@
       class="w-screen h-screen object-cover"
     />
   </div>
-  <div class="w-full max-w-md p-8 space-y-6 rounded shadow-md m-5 bg-base-100">
+  <div
+    class="w-full max-w-md m-2 p-8 space-y-6 rounded shadow-md m-5 bg-base-100 bg-opacity-60 glass"
+  >
     <h2 class="text-2xl font-bold text-center">サインアップ</h2>
     <form on:submit|preventDefault={signUp} class="space-y-4">
       <div>

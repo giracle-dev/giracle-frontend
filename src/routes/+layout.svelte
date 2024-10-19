@@ -5,7 +5,7 @@
   import Drawer from "$lib/components/Drawer/Drawer.svelte";
   import Header from "$lib/components/Header/Header.svelte";
   import { page } from "$app/stores";
-  // import { pwaAssetsHead } from "virtual:pwa-assets/head";
+  import { pwaAssetsHead } from "virtual:pwa-assets/head";
   import { pwaInfo } from "virtual:pwa-info";
   import { channelListStore } from "$lib/store/channel";
   import type { IChannel } from "$lib/types/IChannel";
@@ -64,7 +64,7 @@
 
   onMount(async () => {
     //middleware
-    // await pwaMiddleware();
+    await pwaMiddleware();
 
     // localStorageに保存されているテーマを取得
     const lightTheme = localStorage.getItem("lightTheme") as Theme | null;
@@ -129,12 +129,12 @@
   }
 </script>
 
-<!-- <svelte:head>
+<svelte:head>
   {#each pwaAssetsHead.links as link}
     <link {...link} />
   {/each}
   {@html webManifestLink}
-</svelte:head> -->
+</svelte:head>
 
 <Toast />
 
@@ -148,18 +148,18 @@
     }}
     channelList={$channelListStore}
   >
-    <Header
-      on:drawer={() => {
-        onChangeDrawer();
-      }}
-      {headerTitle}
-      {headerIcon}
-    />
     <div
       on:touchstart={handleTouchStart}
       on:touchend={handleTouchEnd}
-      class="h-[calc(100vh-64px)] overflow-y-auto"
+      class="h-[calc(100svh-4rem)]"
     >
+      <Header
+        on:drawer={() => {
+          onChangeDrawer();
+        }}
+        {headerTitle}
+        {headerIcon}
+      />
       <slot />
     </div>
   </Drawer>
