@@ -6,13 +6,19 @@
   let username = "";
   let password = "";
   let message = "";
+  let inviteCode = "";
 
   const userRepository = repositoryFactory.get("user");
 
   const signUp = async () => {
     try {
-      const response = await userRepository.signUp(username, password);
+      const response = await userRepository.signUp(
+        username,
+        password,
+        inviteCode,
+      );
       if (response) {
+        console.log(response);
         message = "サインアップに成功しました！";
         goto("/signIn");
       } else {
@@ -28,6 +34,18 @@
   <div class="w-full max-w-md p-8 space-y-6 rounded shadow-md m-5">
     <h2 class="text-2xl font-bold text-center">サインアップ</h2>
     <form on:submit|preventDefault={signUp} class="space-y-4">
+      <div>
+        <label for="username" class="block text-sm font-medium"
+          >招待コード</label
+        >
+        <input
+          type="text"
+          id="inviteCode"
+          bind:value={inviteCode}
+          class="w-full px-3 py-2 mt-1 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          required
+        />
+      </div>
       <div>
         <label for="username" class="block text-sm font-medium"
           >ユーザー名</label
@@ -62,5 +80,9 @@
     {#if message}
       <p class="mt-4 text-center text-red-500">{message}</p>
     {/if}
+    <!-- サインインページ -->
+    <div class="text-center">
+      <a href="/signIn" class="text-indigo-600">既にアカウントがある</a>
+    </div>
   </div>
 </div>

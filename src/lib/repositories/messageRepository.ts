@@ -6,6 +6,8 @@ export default {
       credentials: "include",
       body: JSON.stringify({ channelId, message }),
     });
+    if (!response.ok)
+      throw new Error("messageRepository :: sendMessage :: エラー");
     return await response.json();
   },
 };

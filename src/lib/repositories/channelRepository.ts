@@ -15,6 +15,8 @@ export default {
       credentials: "include",
       body: JSON.stringify({ channelName: name }),
     });
+    if (!response.ok)
+      throw new Error("channelRepository :: createChannel :: エラー");
     return await response.json();
   },
   getChannel: async (): Promise<IResponseChannelList> => {
@@ -24,6 +26,8 @@ export default {
       credentials: "include",
     });
     const responseData: IResponseChannelList = await response.json();
+    if (!response.ok)
+      throw new Error("channelRepository :: getChannel :: エラー");
     return await responseData;
   },
   deleteChannel: async (id: string) => {
@@ -33,6 +37,8 @@ export default {
       body: JSON.stringify({ channelId: id }),
       credentials: "include",
     });
+    if (!response.ok)
+      throw new Error("channelRepository :: deleteChannel :: エラー");
     return await response.json();
   },
   updateChannel: async (dat: {
@@ -47,6 +53,8 @@ export default {
       body: JSON.stringify({ ...dat }),
       credentials: "include",
     });
+    if (!response.ok)
+      throw new Error("channelRepository :: updateChannel :: エラー");
     return await response.json();
   },
   joinChannel: async (id: string): Promise<IResponseChannelJoin> => {
@@ -56,6 +64,8 @@ export default {
       body: JSON.stringify({ channelId: id }),
       credentials: "include",
     });
+    if (!response.ok)
+      throw new Error("channelRepository :: joinChannel :: エラー");
     return await response.json();
   },
   leaveChannel: async (id: string): Promise<IResponseChannelLeave> => {
@@ -65,6 +75,8 @@ export default {
       body: JSON.stringify({ channelId: id }),
       credentials: "include",
     });
+    if (!response.ok)
+      throw new Error("channelRepository :: leaveChannel :: エラー");
     return await response.json();
   },
   getHistory: async (
@@ -77,6 +89,8 @@ export default {
       credentials: "include",
       body: JSON.stringify(requestBody),
     });
+    if (!response.ok)
+      throw new Error("channelRepository :: getHistory :: エラー");
     return await response.json();
   },
 };
