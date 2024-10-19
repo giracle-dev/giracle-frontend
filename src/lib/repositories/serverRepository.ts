@@ -10,7 +10,7 @@ export default {
     if (!response.ok) throw new Error("serverRepository :: getInvite :: エラー");
     return await response.json();
   },
-  createInvite: async (inviteCode: string): Promise<IResponseCreateInvite | Error> => {
+  createInvite: async (inviteCode: string): Promise<IResponseCreateInvite> => {
     const response = await fetch("/api/server/create-invite", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
