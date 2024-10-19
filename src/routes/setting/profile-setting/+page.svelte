@@ -136,6 +136,26 @@
     }
   };
 
+  const changeProfileBanner = () => {
+    if (iconObj !== null)
+      userRepository.changeBanner(iconObj).then((response) => {
+        console.log(
+          "/user/[id] :: changeProfileHeader : ヘッダ画像変更に成功しました！",
+          response,
+        );
+      });
+  };
+
+  // ヘッダ画像のファイル受け取り
+  const handleBannerFileChange = (event: Event) => {
+    const file = (event.target as HTMLInputElement)?.files?.[0];
+    if (file) {
+      console.log("Selected file:", file);
+      // ファイル処理をここに追加
+      iconObj = file;
+    }
+  };
+
   onMount(() => {
     //編集用にユーザー情報を取得
     selfIntroduction = get(myUserStore).selfIntroduction;
@@ -186,24 +206,50 @@
   </div>
 
   <hr />
-
-  <div class="card bg-base-200 max-w-[350px] mx-auto m-2">
-    <div class="card-body">
-      <p>アバター</p>
-      <div class="avatar mx-auto">
-        <div class="w-24 rounded-xl">
-          <img src={`/api/user/icon/${$myUserStore.id}`} alt="icon" />
+  <div class="flex gap-2">
+    <div class="card bg-base-200 max-w-[350px] mx-auto m-2">
+      <div class="card-body">
+        <p>アバター</p>
+        <div class="avatar mx-auto">
+          <div class="w-24 rounded-xl">
+            <img src={`/api/user/icon/${$myUserStore.id}`} alt="icon" />
+          </div>
+        </div>
+        <input
+          on:change={handleFileChange}
+          type="file"
+          class="file-input file-input-bordered w-full"
+        />
+        <div class="card-actions justify-end">
+          <button on:click={changeProfileIcon} class="btn btn-primary"
+            >アップロード</button
+          >
         </div>
       </div>
-      <input
-        on:change={handleFileChange}
-        type="file"
-        class="file-input file-input-bordered w-full"
-      />
-      <div class="card-actions justify-end">
-        <button on:click={changeProfileIcon} class="btn btn-primary"
-          >アップロード</button
-        >
+    </div>
+
+    <div class="card bg-base-200 max-w-[350px] mx-auto m-2">
+      <div class="card-body">
+        <p>バナー</p>
+        <div class="mx-auto">
+          <div class="">
+            <img
+              src={`/api/user/banner/${$myUserStore.id}`}
+              alt="banner"
+              class="object-cover h-32 w-full rounded-xl"
+            />
+          </div>
+        </div>
+        <input
+          on:change={handleBannerFileChange}
+          type="file"
+          class="file-input file-input-bordered w-full"
+        />
+        <div class="card-actions justify-end">
+          <button on:click={changeProfileBanner} class="btn btn-primary"
+            >アップロード</button
+          >
+        </div>
       </div>
     </div>
   </div>

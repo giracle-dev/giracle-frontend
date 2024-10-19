@@ -90,6 +90,19 @@ export default {
     if (!response.ok) throw new Error("userRepository :: changeIcon :: エラー");
     return await response.json();
   },
+  changeBanner: async (banner: File): Promise<IResponseUserinfo> => {
+    const formData = new FormData();
+    formData.append("banner", banner);
+    const response = await fetch("/api/user/change-banner", {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    });
+    if (!response.ok)
+      throw new Error("userRepository :: changeBanner :: エラー");
+    return await response.json();
+  },
+
   userList: async (): Promise<IResponseUserList> => {
     const response = await fetch("/api/user/list", {
       method: "GET",

@@ -79,7 +79,13 @@
               <div class="relative w-full h-[100px]">
                 <div
                   class="bg-primary w-full h-[80px] rounded-tl-lg rounded-tr-lg"
-                ></div>
+                >
+                  <img
+                    src={"/api/user/banner/" + $myUserStore.id}
+                    alt="banner"
+                    class="object-cover w-full h-[80px] rounded-tl-lg rounded-tr-lg"
+                  />
+                </div>
                 <div class="avatar online absolute bottom-0 left-1">
                   <div class="w-10 rounded-full relative">
                     <img
