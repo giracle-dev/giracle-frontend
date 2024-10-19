@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { myUserStore } from "$lib/store/myuser";
+  import { myUserStore } from "$lib/store/user";
   import { page } from "$app/stores";
   import { onMount } from "svelte";
   import { get } from "svelte/store";

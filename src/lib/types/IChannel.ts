@@ -23,7 +23,14 @@ export interface IResponseChannelLeave {
   message: string;
 }
 
+export interface IChannelHistory {
+  history: IMessage[];
+  atTop: boolean;
+  atEnd: boolean;
+}
+
 export interface IResponseChannelHistory {
+  history: any;
   message: string;
-  data: IMessage[];
+  data: IChannelHistory;
 }

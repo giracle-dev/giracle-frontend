@@ -2,7 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { IconSettings } from "@tabler/icons-svelte";
   import { goto } from "$app/navigation";
-  import { myUserStore } from "$lib/store/myuser";
+  import { myUserStore } from "$lib/store/user";
   import { get } from "svelte/store";
   import type { IChannel } from "$lib/types/IChannel";
   import { page } from "$app/stores";
@@ -64,7 +64,7 @@
             class="flex gap-2 items-center m-1 p-0 cursor-pointer"
           >
             <img
-              src={`/api/user/icon/${get(myUserStore).id}`}
+              src={"/api/user/icon/" + $myUserStore.id}
               alt="user"
               class="w-10 h-10 rounded-full object-cover"
             />
@@ -83,7 +83,7 @@
                 <div class="avatar online absolute bottom-0 left-1">
                   <div class="w-10 rounded-full relative">
                     <img
-                      src={`/api/user/icon/${get(myUserStore).id}`}
+                      src={"/api/user/icon/" + $myUserStore.id}
                       alt="user"
                       class="w-10 h-10 rounded-full object-cover"
                     />
@@ -93,7 +93,7 @@
                     class="rounded-full absolute top-0 left-0 right-0 bottom-0 m-0 p-0"
                     on:click={(event) => {
                       event.stopPropagation();
-                      goto("/user/" + get(myUserStore).id);
+                      goto("/setting/profile-setting");
                     }}
                   >
                   </button>

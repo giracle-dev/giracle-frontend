@@ -10,3 +10,7 @@ const initialMyUserValue: IUser = {
 };
 
 export const myUserStore = writable<IUser>(initialMyUserValue);
+
+const initialUserListValue: IUser[] = [];
+
+export const userListStore = writable<IUser[]>(initialUserListValue);

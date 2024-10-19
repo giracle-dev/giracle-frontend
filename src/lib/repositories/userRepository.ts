@@ -1,5 +1,6 @@
 import type {
-  IResponseGetUserinfo,
+  IResponseUserinfo,
+  IResponseUserList,
   IResponseUSerVerifyToken,
   IUser,
 } from "$lib/types/IUser";
@@ -48,7 +49,7 @@ export default {
     });
     return await response.json();
   },
-  getUserInfo: async (userId: string): Promise<IResponseGetUserinfo> => {
+  getUserInfo: async (userId: string): Promise<IResponseUserinfo> => {
     const response = await fetch("/api/user/info/" + userId, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
@@ -56,7 +57,10 @@ export default {
     });
     return await response.json();
   },
-  updateProfile: async (name?: string, selfIntroduction?: string):Promise<IResponseGetUserinfo> => {
+  updateProfile: async (
+    name?: string,
+    selfIntroduction?: string,
+  ): Promise<IResponseUserinfo> => {
     const response = await fetch("/api/user/profile-update", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -65,13 +69,21 @@ export default {
     });
     return await response.json();
   },
-  changeIcon: async (icon: File):Promise<IResponseGetUserinfo> => {
+  changeIcon: async (icon: File): Promise<IResponseUserinfo> => {
     const formData = new FormData();
     formData.append("icon", icon);
     const response = await fetch("/api/user/change-icon", {
       method: "POST",
       credentials: "include",
-      body: formData
+      body: formData,
+    });
+    return await response.json();
+  },
+  userList: async (): Promise<IResponseUserList> => {
+    const response = await fetch("/api/user/list", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
     });
     return await response.json();
   },
