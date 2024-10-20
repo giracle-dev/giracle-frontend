@@ -1,7 +1,9 @@
 import { page } from "$app/stores";
 import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
 import { channelHistoryStore } from "$lib/store/channelHistory";
+import { toastStore } from "$lib/store/toast";
 import { userListStore } from "$lib/store/user";
+import type { IChannel } from "$lib/types/IChannel";
 import type { IMessage, IRequestChannelHistoryBody } from "$lib/types/IMessage";
 import { get } from "svelte/store";
 const messageRepository = repositoryFactory.get("message");
@@ -103,4 +105,125 @@ export const scrollHandler = async () => {
       await getChannelHistory(targetMessage, "newer");
     }
   }
+};
+
+/**
+ *　メッセージをリンクに変換する
+ * @param text
+ * @returns string
+ */
+export const linkify = (text: string) => {
+  let channelList: IChannel[] = [];
+  const getUserList = get(userListStore);
+  const urlPattern =
+    /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+  const mentionPattern = /@<(\d+)>/g;
+  const scriptPattern = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
+  const htmlTagPattern = /<\/?[^>]+(>|$)/g;
+  const channelPattern = /#<(\d+)>/g;
+  const codeSnippetPattern = /```([^`]+)```/g;
+  const inlineCodePattern = /`([^`]+)`/g;
+
+  // スクリプトタグをエスケープ
+  text = text.replace(scriptPattern, (match) => {
+    return match.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  });
+
+  // プレースホルダーを使ってリンクとメンションを一時的に置き換え
+  const placeholders: { placeholder: string; content: string }[] = [];
+  let placeholderIndex = 0;
+
+  // メンションを変換
+  text = text.replace(mentionPattern, (match, userId) => {
+    const userInfo = getUserList[userId];
+    const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
+    placeholders.push({
+      placeholder,
+      content: userInfo
+        ? `<span class="w-fit inline-flex items-center glass px-1 rounded-lg">@<img src="${`/api/icon/${userInfo.id}`}" alt="${userInfo.id}" class="w-5 h-5 rounded-full object-cover"  /> ${userInfo.name}</span>`
+        : `<span class="w-fit inline-flex items-center glass px-1 rounded-lg">@Unknown User</span>`,
+    });
+    return placeholder;
+  });
+
+  // リンクを変換
+  text = text.replace(urlPattern, (match) => {
+    const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
+    placeholders.push({
+      placeholder,
+      content: `<a href="${match}" class="text-blue-700" target="_blank" rel="noopener noreferrer">${match}</a>`,
+    });
+    return placeholder;
+  });
+
+  // チャンネルIDを変換
+  text = text.replace(channelPattern, (match, channelId) => {
+    const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
+    // チャンネルリストからチャンネル名を取得
+    const channel = channelList.find((channel) => channel.id === channelId);
+    const channelName = channel ? channel.name : "Unknown Channel";
+    placeholders.push({
+      placeholder,
+      content: `<a href="/chat/${channelId}" class="w-fit inline-flex items-center glass px-1 rounded-lg" rel="noopener noreferrer">#${channelName}</a>`,
+    });
+    return placeholder;
+  });
+
+  // コードスニペットを変換
+  text = text.replace(codeSnippetPattern, (match, code) => {
+    const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
+    placeholders.push({
+      placeholder,
+      content: `<pre class="overflow-x-auto bg-gray-100 p-2 rounded"><code>${code}</code>`,
+    });
+    return placeholder;
+  });
+
+  // インラインコードを変換
+  text = text.replace(inlineCodePattern, (match, code) => {
+    const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
+    placeholders.push({
+      placeholder,
+      content: `<code class=" bg-gray-100 p-1 rounded">${code}</code>`,
+    });
+    return placeholder;
+  });
+
+  // その他のHTMLタグをエスケープ
+  text = text.replace(htmlTagPattern, (match) => {
+    return match.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  });
+
+  // プレースホルダーを元に戻す
+  placeholders.forEach(({ placeholder, content }) => {
+    text = text.replace(placeholder, content);
+  });
+
+  return text;
+};
+
+/**
+ * メッセージを送信する
+ */
+export const sendMessage = async (event: CustomEvent) => {
+  const message = event.detail.message;
+  if (message === "") return;
+  await messageRepository
+    .sendMessage(get(page).params.id, message)
+    .then((res) => {
+      console.log("/channel/[id] :: sendMessage : res->", res);
+    })
+    .catch((err) => {
+      console.error("/channel/[id] :: sendMessage : err->", err);
+
+      toastStore.update((toast) => {
+        return [
+          ...toast,
+          {
+            message: "メッセージの送信に失敗しました",
+            type: "error",
+          },
+        ];
+      });
+    });
 };

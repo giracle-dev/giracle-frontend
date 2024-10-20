@@ -7,12 +7,13 @@
     formatDate,
     getChannelHistory,
     scrollHandler,
+    linkify,
+    sendMessage,
   } from "./channelMessage";
   import { onMount } from "svelte";
   import UserProfile from "$lib/components/unique/userProfile.svelte";
+  import MessageInput from "./messageInput.svelte";
   const messageRepository = repositoryFactory.get("message");
-
-  let message = "";
 
   onMount(async () => {
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
@@ -26,34 +27,6 @@
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
     await getChannelHistory();
   })();
-
-  /**
-   * メッセージを送信する
-   */
-  const sendMessage = async () => {
-    if (message === "") return;
-    await messageRepository
-      .sendMessage($page.params.id, message)
-      .then((res) => {
-        console.log("/channel/[id] :: sendMessage : res->", res);
-      });
-
-    //メッセージを初期化
-    message = "";
-    // メッセージ入力欄にフォーカスを当てる
-    document.getElementById("messageInput")?.focus();
-  };
-
-  /**
-   * enterキーが押された時にメッセージを送信する
-   * @param event
-   */
-  function handleKeyDown(event: KeyboardEvent) {
-    if (event.key === "Enter") {
-      event.preventDefault(); // デフォルトの動作を防ぐ
-      sendMessage();
-    }
-  }
 </script>
 
 <div class="h-full w-full flex flex-col px-1 pb-2">
@@ -90,21 +63,51 @@
               >{formatDate(message.createdAt)}</span
             >
           </div>
-          <div class="message-text">{message.content}</div>
+          <div class="break-words break-all">
+            {@html linkify(message.content)}
+          </div>
+          {#if message.MessageUrlPreview && message.MessageUrlPreview.length > 0}
+            <div class="mt-2 p-2 border rounded-lg">
+              {#each message.MessageUrlPreview as preview}
+                <div class="md:flex flex-row">
+                  <div class="md:ml-4 md:flex-grow md:min-w-0 md:basis-1/2">
+                    <a
+                      href={preview.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-blue-700 md:flex-shrink-0 break-words break-all"
+                    >
+                      <img
+                        src={preview.faviconLink}
+                        alt="Favicon"
+                        class="inline w-4 h-4 mr-1"
+                      />
+                      {preview.title}
+                    </a>
+                    <div class="md:ml-4 md:flex-grow md:min-w-0 md:max-w-100">
+                      <p class="break-words break-all">{preview.description}</p>
+                    </div>
+                  </div>
+                  {#if preview.imageLink}
+                    <div
+                      class="h-30 sm:h-20 md:h-40 md:w-fit overflow-hidden md:ml-4"
+                    >
+                      <img
+                        src={preview.imageLink}
+                        alt={`Preview image for ${preview.title}`}
+                        class="mt-2 w-full h-full object-cover rounded-lg"
+                      />
+                    </div>
+                  {/if}
+                </div>
+              {/each}
+            </div>
+          {/if}
         </div>
       </div>
     {/each}
   </div>
-
   <div class="flex gap-1">
-    <input
-      id="messageInput"
-      bind:value={message}
-      type="text"
-      placeholder="メッセージを送信"
-      class="input input-bordered w-full flex-grow"
-      on:keydown={handleKeyDown}
-    />
-    <button on:click={sendMessage} class="btn">送信</button>
+    <MessageInput on:sendMessage={sendMessage} />
   </div>
 </div>

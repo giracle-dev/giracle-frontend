@@ -8,7 +8,7 @@ interface IResponseWsSendMessage {
 
 export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
   if (data.signal === "message::SendMessage") {
-    console.log(data.data);
+    console.log("message::SendMessage====>", data.data);
     // 一番下に追加
     channelHistoryStore.update((channelHistory) => ({
       history: [data.data, ...channelHistory.history],

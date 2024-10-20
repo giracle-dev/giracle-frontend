@@ -5,6 +5,17 @@ export interface IMessage {
   id: string;
   isSystemMessage: false;
   userId: string;
+  MessageUrlPreview: IMessageUrlPreview[];
+}
+
+export interface IMessageUrlPreview {
+  description: string;
+  faviconLink: string;
+  id: number;
+  imageLink: string;
+  title: string;
+  type: "article" | "video.other" | "UNKNOWN";
+  url: string;
 }
 
 export interface IRequestChannelHistoryBody {
