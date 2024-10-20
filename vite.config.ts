@@ -8,8 +8,8 @@ export default defineConfig({
     SvelteKitPWA({
       srcDir: "./src",
       manifest: {
-        short_name: "SvelteKit PWA",
-        name: "SvelteKit PWA",
+        short_name: "Giracle",
+        name: "Giracle",
         start_url: "/",
         scope: "/",
         display: "standalone",
