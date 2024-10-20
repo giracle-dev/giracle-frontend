@@ -26,3 +26,8 @@ export interface IUser {
     roleId: string;
   }[];
 }
+
+export interface IResponseOnlineUserList {
+  message: string;
+  data: string[];
+}

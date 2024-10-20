@@ -3,6 +3,7 @@ import type {
   IResponseUserList,
   IResponseUSerVerifyToken,
   IUser,
+  IResponseOnlineUserList,
 } from "$lib/types/IUser";
 
 export default {
@@ -111,7 +112,6 @@ export default {
       throw new Error("userRepository :: changeBanner :: エラー");
     return await response.json();
   },
-
   userList: async (): Promise<IResponseUserList> => {
     const response = await fetch("/api/user/list", {
       method: "GET",
@@ -119,6 +119,16 @@ export default {
       credentials: "include",
     });
     if (!response.ok) throw new Error("userRepository :: userList :: エラー");
+    return await response.json();
+  },
+  getOnline: async (): Promise<IResponseOnlineUserList> => {
+    const response = await fetch("/api/user/get-online", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok)
+      throw new Error("userRepository :: userGetOnline :: エラー");
     return await response.json();
   },
 };

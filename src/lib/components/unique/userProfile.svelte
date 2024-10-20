@@ -1,6 +1,7 @@
 <script lang="ts">
   import { userListStore } from "$lib/store/user";
   import type { IUser } from "$lib/types/IUser";
+  import { onlineUserListStore } from "$lib/store/user";
 
   export let userId: string | null = null;
 
@@ -24,7 +25,12 @@
             class="object-cover w-full h-[80px] rounded-tl-lg rounded-tr-lg"
           />
         </div>
-        <div class="avatar online absolute bottom-0 left-1">
+        <div
+          class="avatar absolute bottom-0 left-1
+          {$onlineUserListStore.find((v) => v === userId) !== undefined
+            ? 'online'
+            : 'offline'}"
+        >
           <div class="w-10 rounded-full relative">
             <img
               src={"/api/user/icon/" + user.id}

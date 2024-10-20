@@ -2,7 +2,11 @@
   import { createEventDispatcher } from "svelte";
   import { IconSettings } from "@tabler/icons-svelte";
   import { goto } from "$app/navigation";
-  import { myUserStore } from "$lib/store/user";
+  import {
+    myUserStore,
+    onlineUserListStore,
+    userListStore,
+  } from "$lib/store/user";
   import { get } from "svelte/store";
   import type { IChannel } from "$lib/types/IChannel";
   import { page } from "$app/stores";
@@ -47,8 +51,25 @@
           {$serverInfoStore.name}
         </div>
       </div>
+      <div class="text-sm p-2">オンラインユーザー</div>
+      <div class="avatar-group -space-x-6 rtl:space-x-reverse h-10">
+        {#each $onlineUserListStore as onlineUser, index}
+          <div class="avatar">
+            <div class="w-8">
+              <img src={"/api/user/icon/" + onlineUser} alt="Avatar" />
+            </div>
+          </div>
+        {/each}
+        <div class="avatar placeholder">
+          <div class="bg-neutral text-neutral-content w-8">
+            <span>{$onlineUserListStore.length}</span>
+          </div>
+        </div>
+      </div>
+      <!-- ボーダー -->
+      <div class="border-t border-base-300 my-2"></div>
       <!-- Sidebar content here -->
-      <ul class="h-[calc(100svh-144px)] overflow-y-auto py-2">
+      <ul class="h-[calc(100svh-240px)] overflow-y-auto py-2">
         <li><a href="/channel" on:click={handleDrawer}>チャンネル一覧</a></li>
         {#if channelList && channelList.length > 0}
           {#each channelList as channel}

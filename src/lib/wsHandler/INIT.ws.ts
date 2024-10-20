@@ -1,5 +1,7 @@
 import { sendMessageWsOn } from "./channel/sendMessage";
 import { updateMessageWsOn } from "./channel/updateMessage";
+import { userConnectWsOn } from "./user/userConnected";
+import { userDisconnectedWsOn } from "./user/userDisconnected";
 export let ws: WebSocket = new WebSocket("/ws");
 
 //WS接続がエラーで閉じられた場合のフラグ
@@ -28,6 +30,8 @@ export const initWS = () => {
       console.log("INIT.ws :: initWS : event->", json);
       sendMessageWsOn(json);
       updateMessageWsOn(json);
+      userConnectWsOn(json);
+      userDisconnectedWsOn(json);
 
       //トークンが無効な場合のフラグ設定
       if (json.signal === "ERROR" && json.data === "token not valid") {

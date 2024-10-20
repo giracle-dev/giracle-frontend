@@ -2,7 +2,7 @@
   import { page } from "$app/stores";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { channelHistoryStore } from "$lib/store/channelHistory";
-  import { userListStore } from "$lib/store/user";
+  import { onlineUserListStore, userListStore } from "$lib/store/user";
   import {
     formatDate,
     getChannelHistory,
@@ -38,12 +38,18 @@
       <div class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300">
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <div class="dropdown dropdown-right dropdown-end">
-          <div tabindex={index} role="button" class="w-8">
-            <img
-              src={"/api/user/icon/" + message.userId}
-              alt="avatar"
-              class="avater rounded-full w-8 h-8 object-cover"
-            />
+          <div tabindex={index} role="button" class="w-15">
+            <div
+              class="avatar {$onlineUserListStore.find(
+                (v) => v === message.userId,
+              ) !== undefined
+                ? 'online'
+                : 'offline'} "
+            >
+              <div class="w-8 rounded-full">
+                <img src="/api/user/icon/{message.userId}" alt="userIcon" />
+              </div>
+            </div>
           </div>
           <div
             tabindex={index}
@@ -111,3 +117,14 @@
     <MessageInput on:sendMessage={sendMessage} />
   </div>
 </div>
+
+<style>
+  /* サイドバーとかぶってしまうため */
+  /* 暫定対応 */
+  .avatar.offline:before {
+    z-index: 0 !important;
+  }
+  .avatar.online:before {
+    z-index: 0 !important;
+  }
+</style>

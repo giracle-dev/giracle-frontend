@@ -9,8 +9,12 @@ const initialMyUserValue: IUser = {
   RoleLink: [],
 };
 
-export const myUserStore = writable<IUser>(initialMyUserValue);
+const initialOnlineUserListValue: string[] = [];
 
 const initialUserListValue: IUser[] = [];
 
+export const myUserStore = writable<IUser>(initialMyUserValue);
 export const userListStore = writable<IUser[]>(initialUserListValue);
+export const onlineUserListStore = writable<string[]>(
+  initialOnlineUserListValue,
+);

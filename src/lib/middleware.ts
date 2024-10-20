@@ -3,7 +3,7 @@ import { browser } from "$app/environment";
 import { repositoryFactory } from "./repositories/RepositoryFactory";
 import { channelListStore } from "./store/channel";
 import { initWS } from "./wsHandler/INIT.ws";
-import { myUserStore, userListStore } from "./store/user";
+import { myUserStore, onlineUserListStore, userListStore } from "./store/user";
 import { get } from "svelte/store";
 import type { IResponseUSerVerifyToken } from "./types/IUser";
 import { serverInfoStore } from "./store/serverInfo";
@@ -50,6 +50,14 @@ export const init = async () => {
   await serverRepository.getConfig().then((response) => {
     console.log(response);
     serverInfoStore.set(response.data);
+  });
+  //オンラインユーザー情報取得
+  await userRepository.getOnline().then((response) => {
+    console.log(
+      "middleware :: authMiddleware : response(getOnline)->",
+      response,
+    );
+    onlineUserListStore.set(response.data);
   });
 };
 
