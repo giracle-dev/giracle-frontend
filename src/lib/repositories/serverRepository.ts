@@ -95,5 +95,14 @@ export default {
     });
     if (!response.ok) throw new Error("serverRepository :: deleteInvite :: エラー");
     return await response.json();
+  },
+  getRole: async () => {
+    const response = await fetch("/api/server/get-role", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("serverRepository :: getRole :: エラー");
+    return await response.json();
   }
 };
