@@ -1,6 +1,5 @@
 <script lang="ts">
   import { myUserStore } from "$lib/store/user";
-  import { page } from "$app/stores";
   import { onMount } from "svelte";
   import { get } from "svelte/store";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
@@ -207,124 +206,136 @@
   </div>
 
   <hr />
-  <div class="flex gap-2">
-    <div class="card bg-base-200 max-w-[350px] mx-auto m-2">
-      <div class="card-body">
-        <p>アバター</p>
-        <div class="avatar mx-auto">
-          <div class="w-24 rounded-xl">
-            <img src={`/api/user/icon/${$myUserStore.id}`} alt="icon" />
+  <div class="w-full my-14">
+    <div class="flex justify-center mx-auto gap-x-10 flex-wrap-reverse">
+      <div class="flex flex-auto flex-col gap-y-5 my-5 max-w-[350px]">
+        <p>名前</p>
+        <input
+          bind:value={name}
+          type="text"
+          placeholder="あなたの名前"
+          class="input input-bordered w-full"
+        />
+        <p>自己紹介文</p>
+        <div class="card-body px-0 py-0 flex-none">
+          <textarea
+            bind:value={selfIntroduction}
+            class="textarea card bg-base-200"
+            placeholder="自己紹介文"
+          ></textarea>
+        </div>
+        <p>id: {$myUserStore.id}</p>
+        <p>ロール</p>
+        <div class="card bg-base-200">
+          <div class="flex flex-row justify-center card-body p-2">
+            {#each $myUserStore.RoleLink as role}
+              <div class="badge badge-neutral">{role.roleId}</div>
+            {/each}
           </div>
         </div>
-        <input
-          on:change={handleFileChange}
-          type="file"
-          class="file-input file-input-bordered w-full"
-        />
-        <div class="card-actions justify-end">
-          <button on:click={changeProfileIcon} class="btn btn-primary"
-            >アップロード</button
-          >
-        </div>
+        <button
+          on:click={async () => {
+            await userRepository
+              .signOut()
+              .then((response) => {
+                console.log("ログアウトしました。", response);
+                location.reload();
+              })
+              .catch((error) => {
+                console.log("ログアウトに失敗しました。", error);
+              });
+            // リロード
+          }}
+          class="btn btn-error"
+        >
+          ログアウト
+        </button>
       </div>
-    </div>
-
-    <div class="card bg-base-200 max-w-[350px] mx-auto m-2">
-      <div class="card-body">
-        <p>バナー</p>
-        <div class="mx-auto">
-          <div class="">
-            <img
-              src={`/api/user/banner/${$myUserStore.id}`}
-              alt="banner"
-              class="object-cover h-32 w-full rounded-xl"
+      <div class="flex flex-col gap-2 my-5">
+        <div class="card bg-base-200 max-w-[350px] mx-auto m-2">
+          <div class="card-body">
+            <p>アバター</p>
+            <div class="avatar mx-auto">
+              <div class="w-24 rounded-xl">
+                <img src={`/api/user/icon/${$myUserStore.id}`} alt="icon" />
+              </div>
+            </div>
+            <input
+              on:change={handleFileChange}
+              type="file"
+              class="file-input file-input-bordered w-full"
             />
+            <div class="card-actions justify-end">
+              <button on:click={changeProfileIcon} class="btn btn-primary"
+                >アップロード</button
+              >
+            </div>
           </div>
         </div>
-        <input
-          on:change={handleBannerFileChange}
-          type="file"
-          class="file-input file-input-bordered w-full"
-        />
-        <div class="card-actions justify-end">
-          <button on:click={changeProfileBanner} class="btn btn-primary"
-            >アップロード</button
-          >
+
+        <div class="card bg-base-200 max-w-[350px] mx-auto m-2">
+          <div class="card-body">
+            <p>バナー</p>
+            <div class="mx-auto">
+              <div class="">
+                <img
+                  src={`/api/user/banner/${$myUserStore.id}`}
+                  alt="banner"
+                  class="object-cover h-32 w-full rounded-xl"
+                />
+              </div>
+            </div>
+            <input
+              on:change={handleBannerFileChange}
+              type="file"
+              class="file-input file-input-bordered w-full"
+            />
+            <div class="card-actions justify-end">
+              <button on:click={changeProfileBanner} class="btn btn-primary"
+                >アップロード</button
+              >
+            </div>
+          </div>
         </div>
       </div>
+
+      <!--  Thema設定 -->
+      <!--
+      <div>
+        <label>ライトテーマ</label>
+        <select
+          bind:value={selectedLightTheme}
+          on:change={() => handleLightThemeChange(selectedLightTheme)}
+        >
+          {#each lightThemes as theme}
+            <option value={theme}>{theme}</option>
+          {/each}
+        </select>
+
+        <label>ダークテーマ</label>
+        <select
+          bind:value={selectedDarkTheme}
+          on:change={() => handleDarkThemeChange(selectedDarkTheme)}
+        >
+          {#each darkThemes as theme}
+            <option value={theme}>{theme}</option>
+          {/each}
+        </select>
+      </div>
+      {$themaStore.darkTheme}
+
+      <button
+        on:click={updateIt}
+        class="btn"
+        disabled={(selfIntroduction === get(myUserStore).selfIntroduction &&
+          name === get(myUserStore).name) ||
+          name === "" ||
+          selfIntroduction === "" ||
+          processing}
+      >
+        {processing ? "処理中..." : "更新"}
+      </button>
+        -->
     </div>
   </div>
-
-  <p>name: {name}</p>
-  <input
-    bind:value={name}
-    type="text"
-    placeholder="あなたの名前"
-    class="input input-bordered w-full"
-  />
-  <p>id: {$page.params.id}</p>
-
-  <div>
-    <div class="card-body">
-      <textarea
-        bind:value={selfIntroduction}
-        class="textarea card bg-base-200"
-        placeholder="自己紹介文"
-      ></textarea>
-    </div>
-  </div>
-
-  <!--  Thema設定 -->
-  <div>
-    <label>ライトテーマ</label>
-    <select
-      bind:value={selectedLightTheme}
-      on:change={() => handleLightThemeChange(selectedLightTheme)}
-    >
-      {#each lightThemes as theme}
-        <option value={theme}>{theme}</option>
-      {/each}
-    </select>
-
-    <label>ダークテーマ</label>
-    <select
-      bind:value={selectedDarkTheme}
-      on:change={() => handleDarkThemeChange(selectedDarkTheme)}
-    >
-      {#each darkThemes as theme}
-        <option value={theme}>{theme}</option>
-      {/each}
-    </select>
-  </div>
-  {$themaStore.darkTheme}
-  <button
-    on:click={updateIt}
-    class="btn"
-    disabled={(selfIntroduction === get(myUserStore).selfIntroduction &&
-      name === get(myUserStore).name) ||
-      name === "" ||
-      selfIntroduction === "" ||
-      processing}
-  >
-    {processing ? "処理中..." : "更新"}
-  </button>
-
-  <!-- ログアウト -->
-  <button
-    on:click={async () => {
-      await userRepository
-        .signOut()
-        .then((response) => {
-          console.log("ログアウトしました。", response);
-          location.reload();
-        })
-        .catch((error) => {
-          console.log("ログアウトに失敗しました。", error);
-        });
-      // リロード
-    }}
-    class="btn btn-ghost"
-  >
-    ログアウト
-  </button>
 </div>
