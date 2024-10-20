@@ -50,4 +50,17 @@ export const initWS = () => {
       Math.random() * 500 + 1000,
     );
   };
+
+  // ブラウザの可視状態が変更されたときのイベントリスナー
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      // ブラウザがアクティブになったときに WebSocket の接続状態を確認
+      if (
+        ws.readyState !== WebSocket.OPEN &&
+        ws.readyState !== WebSocket.CONNECTING
+      ) {
+        initWS();
+      }
+    }
+  });
 };
