@@ -5,6 +5,11 @@ export let ws: WebSocket = new WebSocket("/ws");
 let FLAGwsError = false;
 
 export const initWS = () => {
+  //既に接続済みの場合は再接続しない
+  if (ws.readyState === ws.CLOSED) {
+    ws = new WebSocket("/ws");
+  }
+
   ws.onopen = (event) => {
     console.log("INIT.ws :: initWS : open->", event);
     //エラーフラグをリセット
