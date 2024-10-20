@@ -7,6 +7,8 @@ let FLAGwsError = false;
 export const initWS = () => {
   ws.onopen = (event) => {
     console.log("INIT.ws :: initWS : open->", event);
+    //エラーフラグをリセット
+    FLAGwsError = false;
   };
 
   ws.onerror = (event) => {
