@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import CreateRole from "$lib/components/role-setting/CreateRole.svelte";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { toastStore } from "$lib/store/toast";
   import type { IRole } from "$lib/types/IRole";
@@ -9,12 +10,15 @@
     IconTools,
     IconInfoCircleFilled,
     IconLockFilled,
+    IconPlus,
   } from "@tabler/icons-svelte";
   import { onMount } from "svelte";
 
   const roleRepository = repositoryFactory.get("role");
 
+  //ロール一覧
   let roles: IRole[] = [];
+  //設定中のロール
   let roleConfiguring: IRole = {
     id: "",
     name: "",
@@ -26,14 +30,18 @@
     manageRole: false,
     manageUser: false,
   };
+  //ロール設定が変更されたか
   let roleConfigChanged = false;
+  //ロール更新中フラグ
   let processing = false;
-
   $: {
     const roleOriginal = roles.find((role) => role.id === roleConfiguring.id);
     roleConfigChanged =
       JSON.stringify(roleConfiguring) !== JSON.stringify(roleOriginal);
   }
+
+  //ロール作成ダイアログを閉じる用
+  let openCreateRoleDialog = () => {};
 
   //ロールを更新する
   const updateRole = async () => {
@@ -102,6 +110,12 @@
         <IconSettings size={20} />
       </button>
       <h2 class="card-title">ロールの管理</h2>
+      <button
+        on:click={openCreateRoleDialog}
+        class="btn btn-primary btn-square ml-auto md:hidden"
+      >
+        <IconPlus size={20} />
+      </button>
     </div>
   </div>
 
@@ -231,3 +245,5 @@
     </div>
   </div>
 </div>
+
+<CreateRole display={false} bind:openDialog={openCreateRoleDialog} />
