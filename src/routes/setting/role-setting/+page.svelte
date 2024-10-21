@@ -129,7 +129,6 @@
           class="rounded-md"
         >
           <span style={`color:${role.color};`}>
-            <p>●</p>
             {role.name}
           </span>
         </option>
