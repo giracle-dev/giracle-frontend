@@ -1,5 +1,4 @@
 import type { IChannel } from "$lib/types/IChannel";
-import type { IMessage } from "$lib/types/IMessage";
 import { writable } from "svelte/store";
 
 //初期値
