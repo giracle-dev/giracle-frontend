@@ -258,7 +258,9 @@
       <div class="mt-3 flex flex-row justify-end gap-2 pb-3">
         <button
           on:click={() => PROXYopenDeleteRoleDialog(roleConfiguring)}
-          disabled={processing}
+          disabled={processing ||
+            roleConfiguring.id === "HOST" ||
+            roleConfiguring.id === "MEMBER"}
           class="btn btn-error"
         >
           削除
