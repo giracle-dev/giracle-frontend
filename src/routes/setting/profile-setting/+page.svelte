@@ -21,7 +21,6 @@
   let my_modal_5: HTMLDialogElement;
 
   let incorrectCurrentPassword: boolean = false;
-  let isCorrectNewPassword: boolean = false;
   let currentPassword: string = "";
   let newPassword: string = "";
   let newPasswordConfirm: string = "";
@@ -78,8 +77,6 @@
 
   //ユーザー情報を更新させる
   const updateIt = async () => {
-    //処理中フラグを立てる
-    processing = true;
     //情報更新と取得
     const newUserinfo = await userRepository.updateProfile(
       name,
