@@ -1,3 +1,5 @@
+import type { IChannel } from "./IChannel";
+
 export interface IMessage {
   channelId: string;
   content: string;
@@ -23,4 +25,11 @@ export interface IRequestChannelHistoryBody {
   messageTimeFrom?: Date;
   fetchLength?: number;
   fetchDirection?: "older" | "newer";
+}
+
+export interface IResponseHasNewMessage {
+  message: "Fetched news",
+  data: {
+    [key: IChannel["id"]]: boolean;
+  }
 }
