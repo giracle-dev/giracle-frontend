@@ -27,6 +27,7 @@
     manageUser: false,
   };
   let roleConfigChanged = false;
+  let processing = false;
 
   $: {
     const roleOriginal = roles.find((role) => role.id === roleConfiguring.id);
@@ -36,6 +37,7 @@
 
   //ロールを更新する
   const updateRole = async () => {
+    processing = true;
     await roleRepository
       .updateRole({ roleId: roleConfiguring.id, roleData: roleConfiguring })
       .then((res) => {
@@ -56,6 +58,7 @@
           ];
         });
       });
+    processing = false;
   };
 
   //設定変更用ロール変数を元に戻す
@@ -73,7 +76,8 @@
       .then((res) => {
         //console.log("/setting/role-setting :: fetchRoles : res->", res.data);
         roles = res.data;
-        roleConfiguring = structuredClone(roles[0]);
+        if (roleConfiguring.id === "")
+          roleConfiguring = structuredClone(roles[0]);
         roleConfigChanged = false;
       })
       .catch((err) => {
@@ -211,12 +215,12 @@
       <div class="mt-3 flex flex-row justify-end gap-2">
         <button
           on:click={restoreRoleConfig}
-          disabled={!roleConfigChanged}
+          disabled={!roleConfigChanged || processing}
           class="btn">元に戻す</button
         >
         <button
           on:click={updateRole}
-          disabled={!roleConfigChanged}
+          disabled={!roleConfigChanged || processing}
           class="btn btn-success">設定を更新する</button
         >
       </div>
