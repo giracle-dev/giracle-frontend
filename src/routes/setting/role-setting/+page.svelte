@@ -97,7 +97,7 @@
       });
   };
 
-  //更新されたチャンネルデータの受け取り
+  //更新されたロールデータの受け取り、ここでは削除のみ
   const roleUpdateReceiver = (event: MessageEvent) => {
     const dat: {
       signal: string;
