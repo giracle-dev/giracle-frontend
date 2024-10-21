@@ -98,7 +98,7 @@
   });
 </script>
 
-<div class="p-2 flex flex-col gap-5 mx-auto max-w-[950px] h-full">
+<div class="p-2 flex flex-col gap-5 mx-auto max-w-[1050px] h-screen">
   <div class="card bg-base-200 shadow-xl">
     <div class="card-body flex flex-row">
       <button
@@ -136,8 +136,11 @@
     </select>
   </div>
 
-  <div class="card bg-base-200 flex flex-row grow">
-    <div class="md:w-4/12 hidden p-2 md:inline flex flex-col gap-1">
+  <div class="card bg-base-200 h-full overflow-y-auto flex flex-row gap-3 grow">
+    <!-- サイドバー -->
+    <div
+      class="w-4/12 flex flex-col hidden overflow-y-auto h-full p-2 pb-6 md:inline gap-1"
+    >
       {#each roles as role}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -157,6 +160,7 @@
       {/each}
     </div>
 
+    <!-- ロール設定部分 -->
     <div class="grow px-3 py-3">
       {#if roleConfiguring.id === "HOST"}
         <div role="alert" class="alert alert-info mb-3">
