@@ -28,7 +28,6 @@
   let roleConfigChanged = false;
 
   $: {
-    console.log("roleConfiguringが変わった->", roleConfiguring);
     const roleOriginal = roles.find((role) => role.id === roleConfiguring.id);
     roleConfigChanged =
       JSON.stringify(roleConfiguring) !== JSON.stringify(roleOriginal);
@@ -40,7 +39,7 @@
     await roleRepository
       .getRoleList()
       .then((res) => {
-        console.log("/setting/role-setting :: fetchRoles : res->", res.data);
+        //console.log("/setting/role-setting :: fetchRoles : res->", res.data);
         roles = res.data;
         roleConfiguring = structuredClone(roles[0]);
         roleConfigChanged = false;
