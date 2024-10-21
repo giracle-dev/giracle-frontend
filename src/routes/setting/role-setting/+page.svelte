@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import CreateRole from "$lib/components/role-setting/CreateRole.svelte";
+  import DeleteRole from "$lib/components/role-setting/DeleteRole.svelte";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { toastStore } from "$lib/store/toast";
   import type { IRole } from "$lib/types/IRole";
@@ -40,8 +41,9 @@
       JSON.stringify(roleConfiguring) !== JSON.stringify(roleOriginal);
   }
 
-  //ロール作成ダイアログを閉じる用
-  let openCreateRoleDialog = () => {};
+  //ロール作成ダイアログを開く用
+  let PROXYopenCreateRoleDialog = () => {};
+  let PROXYopenDeleteRoleDialog = (role: IRole) => {};
 
   //ロールを更新する
   const updateRole = async () => {
@@ -111,7 +113,7 @@
       </button>
       <h2 class="card-title">ロールの管理</h2>
       <button
-        on:click={openCreateRoleDialog}
+        on:click={PROXYopenCreateRoleDialog}
         class="btn btn-primary btn-square ml-auto md:hidden"
       >
         <IconPlus size={20} />
@@ -119,7 +121,7 @@
     </div>
   </div>
 
-  <div class="card bg-base-200 md:hidden p-3 overflow-y-auto h-full">
+  <div class="card bg-base-200 md:hidden shrink-0 p-3 overflow-y-auto">
     <p class="my-2">管理するロール</p>
     <select value={roleConfiguring.name} class="select select-bordered w-full">
       {#each roles as role}
@@ -162,7 +164,7 @@
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <!-- svelte-ignore a11y-no-static-element-interactions -->
       <span
-        on:click={openCreateRoleDialog}
+        on:click={PROXYopenCreateRoleDialog}
         class="card bg-neutral flex flex-row gap-2 items-center self-end mt-1 cursor-pointer px-2 py-3 text-left w-full"
       >
         <IconPlus size={20} />
@@ -243,7 +245,15 @@
           </label>
         </div>
       </div>
-      <div class="mt-3 flex flex-row justify-end gap-2">
+      <div class="mt-3 flex flex-row justify-end gap-2 pb-3">
+        <button
+          on:click={() => PROXYopenDeleteRoleDialog(roleConfiguring)}
+          disabled={processing}
+          class="btn btn-error"
+        >
+          削除
+        </button>
+        <div class="divider divider-horizontal" />
         <button
           on:click={restoreRoleConfig}
           disabled={!roleConfigChanged || processing}
@@ -259,4 +269,11 @@
   </div>
 </div>
 
-<CreateRole display={false} bind:openDialog={openCreateRoleDialog} />
+<CreateRole
+  display={false}
+  bind:openCreateRoleDialog={PROXYopenCreateRoleDialog}
+/>
+<DeleteRole
+  display={false}
+  bind:openDeleteRoleDialog={PROXYopenDeleteRoleDialog}
+/>

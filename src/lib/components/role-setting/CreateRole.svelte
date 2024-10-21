@@ -6,7 +6,7 @@
   const roleRepository = repositoryFactory.get("role");
 
   export let display: boolean;
-  export const openDialog = () => {
+  export const openCreateRoleDialog = () => {
     modalCreateRole?.showModal();
   };
 

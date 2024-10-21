@@ -47,5 +47,17 @@ export default {
     });
     if (!response.ok) throw new Error("roleRepository :: updateRole :: エラー");
     return await response.json();
+  },
+  deleteRole: async(roleId: string) =>{
+    const response = await fetch("/api/role/delete", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        roleId
+      }),
+    });
+    if (!response.ok) throw new Error("roleRepository :: deleteRole :: エラー");
+    return await response.json();
   }
 }
