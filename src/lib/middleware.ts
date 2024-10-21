@@ -7,6 +7,8 @@ import { myUserStore, onlineUserListStore, userListStore } from "./store/user";
 import { get } from "svelte/store";
 import type { IResponseUSerVerifyToken } from "./types/IUser";
 import { serverInfoStore } from "./store/serverInfo";
+import messageRepository from "./repositories/messageRepository";
+import { hasNewMessageStore } from "./store/messageReadTime";
 
 const userRepository = repositoryFactory.get("user");
 const channelRepository = repositoryFactory.get("channel");
@@ -36,6 +38,11 @@ export const init = async () => {
       response,
     );
     myUserStore.set({ ...get(myUserStore), ...response.data });
+  });
+  //新着があるか調べる
+  await messageRepository.getHasNewMessage().then((response) => {
+    console.log("middleware :: init : response(getHasNewMessage)->", response);
+    hasNewMessageStore.set(response.data);
   });
   // チャンネル一覧を取得
   await channelRepository.getChannel().then((response) => {
