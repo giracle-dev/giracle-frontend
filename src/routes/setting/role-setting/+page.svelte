@@ -25,6 +25,16 @@
     manageRole: false,
     manageUser: false,
   };
+  let roleConfigChanged = false;
+
+  $: {
+    console.log("roleConfiguringが変わった->", roleConfiguring);
+    const roleOriginal = roles.find((role) => role.id === roleConfiguring.id);
+    roleConfigChanged =
+      JSON.stringify(roleConfiguring) !== JSON.stringify(roleOriginal);
+  }
+
+  const updateRole = async () => {};
 
   const fetchRoles = async () => {
     await roleRepository
@@ -33,6 +43,7 @@
         console.log("/setting/role-setting :: fetchRoles : res->", res.data);
         roles = res.data;
         roleConfiguring = structuredClone(roles[0]);
+        roleConfigChanged = false;
       })
       .catch((err) => {
         console.log(err);
@@ -63,7 +74,7 @@
     <p class="my-2">管理するロール</p>
     <select bind:value={roleConfiguring} class="select select-bordered w-full">
       {#each roles as role}
-        <option value={role} class="rounded-md">
+        <option value={structuredClone(role)} class="rounded-md">
           <span style={`color:${role.color};`}>
             <p>●</p>
             {role.name}
@@ -81,6 +92,7 @@
         <div
           on:click={() => {
             roleConfiguring = structuredClone(role);
+            roleConfigChanged = false;
           }}
           class={`card flex flex-row items-center cursor-pointer px-2 py-3 text-left w-full ${role.id === roleConfiguring.id ? "bg-secondary font-bold shadow-md" : null}`}
         >
@@ -165,9 +177,11 @@
           </label>
         </div>
       </div>
-      <div class="mt-3 flex flex-row justify-end">
-        <button class="btn">元に戻す</button>
-        <button class="btn btn-success">設定を更新する</button>
+      <div class="mt-3 flex flex-row justify-end gap-2">
+        <button disabled={!roleConfigChanged} class="btn">元に戻す</button>
+        <button disabled={!roleConfigChanged} class="btn btn-success"
+          >設定を更新する</button
+        >
       </div>
     </div>
   </div>
