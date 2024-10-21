@@ -9,5 +9,25 @@ export default {
     });
     if (!response.ok) throw new Error("roleRepository :: getRoleList :: エラー");
     return await response.json();
+  },
+  updateRole: async (dat: {
+    roleId: string,
+    roleData: {
+      name: string;
+      color: string;
+      manageServer: boolean;
+      manageChannel: boolean;
+      manageRole: boolean;
+      manageUser: boolean;
+    }
+  }) => {
+    const response = await fetch("/api/role/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(dat),
+    });
+    if (!response.ok) throw new Error("roleRepository :: updateRole :: エラー");
+    return await response.json();
   }
 }
