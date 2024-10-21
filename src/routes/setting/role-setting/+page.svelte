@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { ws } from "$lib/wsHandler/INIT.ws";
   import { goto } from "$app/navigation";
   import CreateRole from "$lib/components/role-setting/CreateRole.svelte";
   import DeleteRole from "$lib/components/role-setting/DeleteRole.svelte";
@@ -14,7 +15,7 @@
     IconPlus,
     IconUserFilled,
   } from "@tabler/icons-svelte";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
 
   const roleRepository = repositoryFactory.get("role");
 
@@ -96,8 +97,34 @@
       });
   };
 
+  //更新されたチャンネルデータの受け取り
+  const roleUpdateReceiver = (event: MessageEvent) => {
+    const dat: {
+      signal: string;
+      data: {
+        roleId: string;
+      };
+    } = JSON.parse(event.data);
+    console.log("/setting/role-setting :: roleUpdateReceiver :: data->", dat);
+
+    //signalが一致しているなら更新処理
+    if (dat.signal === "role::Deleted") {
+      //ループして一致するチャンネルデータを更新
+      for (const index in roles) {
+        if (roles[index].id === dat.data.roleId) {
+          roles.splice(parseInt(index), 1);
+        }
+      }
+    }
+  };
+  ws.addEventListener("message", roleUpdateReceiver);
+
   onMount(() => {
     fetchRoles();
+  });
+
+  onDestroy(() => {
+    ws.removeEventListener("message", roleUpdateReceiver);
   });
 </script>
 
