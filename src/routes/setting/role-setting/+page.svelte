@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
+  import { toastStore } from "$lib/store/toast";
   import type { IRole } from "$lib/types/IRole";
   import {
     IconSettings,
@@ -33,7 +34,38 @@
       JSON.stringify(roleConfiguring) !== JSON.stringify(roleOriginal);
   }
 
-  const updateRole = async () => {};
+  //ロールを更新する
+  const updateRole = async () => {
+    await roleRepository
+      .updateRole({ roleId: roleConfiguring.id, roleData: roleConfiguring })
+      .then((res) => {
+        console.log("/setting/role-setting :: updateRole : res->", res.data);
+        //ロールを再取得
+        fetchRoles();
+      })
+      .catch((err) => {
+        console.log("/setting/role-setting :: updateRole : res->", err);
+        //トースト表示
+        toastStore.update((t) => {
+          return [
+            ...t,
+            {
+              message: "ロール情報を更新できませんでした",
+              type: "error",
+            },
+          ];
+        });
+      });
+  };
+
+  //設定変更用ロール変数を元に戻す
+  const restoreRoleConfig = () => {
+    const roleOriginal = roles.find((role) => role.id === roleConfiguring.id);
+    if (roleOriginal === undefined) return;
+
+    roleConfiguring = structuredClone(roleOriginal);
+    roleConfigChanged = false;
+  };
 
   const fetchRoles = async () => {
     await roleRepository
@@ -177,9 +209,15 @@
         </div>
       </div>
       <div class="mt-3 flex flex-row justify-end gap-2">
-        <button disabled={!roleConfigChanged} class="btn">元に戻す</button>
-        <button disabled={!roleConfigChanged} class="btn btn-success"
-          >設定を更新する</button
+        <button
+          on:click={restoreRoleConfig}
+          disabled={!roleConfigChanged}
+          class="btn">元に戻す</button
+        >
+        <button
+          on:click={updateRole}
+          disabled={!roleConfigChanged}
+          class="btn btn-success">設定を更新する</button
         >
       </div>
     </div>
