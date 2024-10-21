@@ -107,9 +107,13 @@
 
   <div class="card bg-base-200 md:hidden p-3 overflow-y-auto h-full">
     <p class="my-2">管理するロール</p>
-    <select bind:value={roleConfiguring} class="select select-bordered w-full">
+    <select value={roleConfiguring.name} class="select select-bordered w-full">
       {#each roles as role}
-        <option value={structuredClone(role)} class="rounded-md">
+        <option
+          on:click={() => (roleConfiguring = structuredClone(role))}
+          value={role.name}
+          class="rounded-md"
+        >
           <span style={`color:${role.color};`}>
             <p>●</p>
             {role.name}
