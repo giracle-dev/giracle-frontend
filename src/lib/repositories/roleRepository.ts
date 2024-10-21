@@ -1,5 +1,7 @@
+import type { IResponseGetRoleList } from "$lib/types/IRole";
+
 export default {
-  getRoleList: async () => {
+  getRoleList: async (): Promise<IResponseGetRoleList> => {
     const response = await fetch("/api/role/list", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
