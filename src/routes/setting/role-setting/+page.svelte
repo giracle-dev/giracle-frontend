@@ -12,6 +12,7 @@
     IconInfoCircleFilled,
     IconLockFilled,
     IconPlus,
+    IconUserFilled,
   } from "@tabler/icons-svelte";
   import { onMount } from "svelte";
 
@@ -156,7 +157,10 @@
           <IconPointFilled size={28} color={role.color} />
           {role.name}
           {#if role.id === "HOST"}
-            <IconLockFilled size={20} class="ml-auto" />
+            <IconLockFilled size={20} class="ml-auto mr-2" />
+          {/if}
+          {#if role.id === "MEMBER"}
+            <IconUserFilled size={20} class="ml-auto mr-2" />
           {/if}
         </div>
       {/each}
@@ -178,6 +182,12 @@
         <div role="alert" class="alert alert-info mb-3">
           <IconInfoCircleFilled size={24} />
           <span>Hostロールを編集することはできません。</span>
+        </div>
+      {/if}
+      {#if roleConfiguring.id === "MEMBER"}
+        <div role="alert" class="alert alert-info mb-3">
+          <IconInfoCircleFilled size={24} />
+          <span>MemberロールはHost以外の全員に適用されます。</span>
         </div>
       {/if}
       <span class="text-xl mb-1 flex flex-row items-center gap-2">
