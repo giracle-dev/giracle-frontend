@@ -105,8 +105,7 @@
         roleId: string;
       };
     } = JSON.parse(event.data);
-    console.log("/setting/role-setting :: roleUpdateReceiver :: data->", dat);
-
+    //console.log("/setting/role-setting :: roleUpdateReceiver :: data->", dat);
     //signalが一致しているなら更新処理
     if (dat.signal === "role::Deleted") {
       //ループして一致するチャンネルデータを更新
