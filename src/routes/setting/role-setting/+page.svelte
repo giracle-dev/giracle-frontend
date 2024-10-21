@@ -279,11 +279,5 @@
   </div>
 </div>
 
-<CreateRole
-  display={false}
-  bind:openCreateRoleDialog={PROXYopenCreateRoleDialog}
-/>
-<DeleteRole
-  display={false}
-  bind:openDeleteRoleDialog={PROXYopenDeleteRoleDialog}
-/>
+<CreateRole bind:openCreateRoleDialog={PROXYopenCreateRoleDialog} />
+<DeleteRole bind:openDeleteRoleDialog={PROXYopenDeleteRoleDialog} />

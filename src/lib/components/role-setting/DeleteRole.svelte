@@ -5,7 +5,6 @@
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   const roleRepository = repositoryFactory.get("role");
 
-  export let display: boolean;
   export const openDeleteRoleDialog = (role: IRole) => {
     roleDeleting = role;
     modalDeleteRole?.showModal();
