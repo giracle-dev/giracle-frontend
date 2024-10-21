@@ -29,5 +29,23 @@ export default {
     });
     if (!response.ok) throw new Error("roleRepository :: updateRole :: エラー");
     return await response.json();
+  },
+  createRole: async (dat: {
+    roleName: string,
+    rolePower: {
+      manageServer: boolean;
+      manageChannel: boolean;
+      manageRole: boolean;
+      manageUser: boolean;
+    }
+  }) => {
+    const response = await fetch("/api/role/create", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(dat),
+    });
+    if (!response.ok) throw new Error("roleRepository :: updateRole :: エラー");
+    return await response.json();
   }
 }
