@@ -112,6 +112,7 @@
       //ループして一致するチャンネルデータを更新
       for (const index in roles) {
         if (roles[index].id === dat.data.roleId) {
+          roleConfiguring = structuredClone(roles[0]);
           roles.splice(parseInt(index), 1);
         }
       }
