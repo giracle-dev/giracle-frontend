@@ -31,6 +31,7 @@
   let modalCreateRole: null | HTMLDialogElement = null;
 
   const createRole = async () => {
+    processing = true;
     await roleRepository
       .createRole(roleCreating)
       .then((res) => {
@@ -42,6 +43,7 @@
         console.log("CreateRole :: createRole : e->", e);
         resultCreateRole = "error";
       });
+    processing = false;
   };
 
   onMount(() => {
@@ -109,7 +111,7 @@
       {/if}
 
       <form method="dialog">
-        <button class="btn">キャンセル</button>
+        <button class="btn" disabled={processing}>キャンセル</button>
       </form>
       <button
         on:click={createRole}

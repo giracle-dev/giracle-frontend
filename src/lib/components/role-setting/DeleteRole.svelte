@@ -26,6 +26,7 @@
   let modalDeleteRole: null | HTMLDialogElement = null;
 
   const deleteRole = async () => {
+    processing = true;
     await roleRepository
       .deleteRole(roleDeleting.id)
       .then((res) => {
@@ -37,6 +38,7 @@
         console.log("DeleteRole :: deleteRole : e->", e);
         resultDeleteRole = "error";
       });
+    processing = false;
   };
 
   onMount(() => {
@@ -51,9 +53,9 @@
     <h3 class="text-lg font-bold">ロールを削除する</h3>
     <p class="py-4">次のロールを削除します</p>
 
-    <p class="font-bold text-xl2">{roleDeleting.name}</p>
+    <p class="font-bold text-4xl text-center">{roleDeleting.name}</p>
 
-    <div class="modal-action flex flex-row gap-2 items-center">
+    <div class="modal-action flex flex-row gap-2 mt-4 items-center">
       {#if resultDeleteRole === "error"}
         <div
           role="alert"
@@ -65,7 +67,7 @@
       {/if}
 
       <form method="dialog">
-        <button class="btn">キャンセル</button>
+        <button class="btn" disabled={processing}>キャンセル</button>
       </form>
       <button
         on:dblclick={deleteRole}
