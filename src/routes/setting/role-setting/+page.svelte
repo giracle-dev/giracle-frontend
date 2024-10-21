@@ -158,6 +158,16 @@
           {/if}
         </div>
       {/each}
+
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
+      <span
+        on:click={openCreateRoleDialog}
+        class="card bg-neutral flex flex-row gap-2 items-center self-end mt-1 cursor-pointer px-2 py-3 text-left w-full"
+      >
+        <IconPlus size={20} />
+        新規ロールを作成
+      </span>
     </div>
 
     <!-- ロール設定部分 -->
