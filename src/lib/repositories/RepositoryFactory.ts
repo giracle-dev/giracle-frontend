@@ -2,12 +2,14 @@ import userRepository from "./userRepository";
 import channelRepository from "./channelRepository";
 import messageRepository from "./messageRepository";
 import serverRepository from "./serverRepository";
+import roleRepository from "./roleRepository";
 
 const repositories = {
   user: userRepository,
   channel: channelRepository,
   message: messageRepository,
-  server: serverRepository
+  server: serverRepository,
+  role: roleRepository
 };
 
 type RepositoryName = keyof typeof repositories;
