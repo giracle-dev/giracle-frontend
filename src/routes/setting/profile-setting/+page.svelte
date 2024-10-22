@@ -18,75 +18,6 @@
   let selfIntroduction = "";
   let processing = false;
 
-  const lightThemes: Theme[] = [
-    "light",
-    "cupcake",
-    "bumblebee",
-    "emerald",
-    "corporate",
-    "pastel",
-    "fantasy",
-    "wireframe",
-    "luxury",
-    "autumn",
-    "lemonade",
-    "winter",
-    "sunset",
-    "dark",
-    "synthwave",
-    "retro",
-    "cyberpunk",
-    "valentine",
-    "halloween",
-    "garden",
-    "forest",
-    "aqua",
-    "lofi",
-    "black",
-    "dracula",
-    "cmyk",
-    "business",
-    "acid",
-    "night",
-    "coffee",
-    "dim",
-    "nord",
-  ];
-  const darkThemes: Theme[] = [
-    "dark",
-    "synthwave",
-    "retro",
-    "cyberpunk",
-    "valentine",
-    "halloween",
-    "garden",
-    "forest",
-    "aqua",
-    "lofi",
-    "black",
-    "dracula",
-    "cmyk",
-    "business",
-    "acid",
-    "night",
-    "coffee",
-    "dim",
-    "nord",
-    "light",
-    "cupcake",
-    "bumblebee",
-    "emerald",
-    "corporate",
-    "pastel",
-    "fantasy",
-    "wireframe",
-    "luxury",
-    "autumn",
-    "lemonade",
-    "winter",
-    "sunset",
-  ];
-
   let my_modal_5: HTMLDialogElement;
 
   let incorrectCurrentPassword: boolean = false;
@@ -220,30 +151,6 @@
     name = value.name;
     selfIntroduction = value.selfIntroduction;
   });
-
-  const handleLightThemeChange = async (theme: Theme) => {
-    selectedLightTheme = theme;
-    localStorage.setItem("lightTheme", theme);
-    await themaStore.update((t) => {
-      t.lightTheme = theme;
-      return t;
-    });
-    await changeThema();
-    // ローカルストレージに保存
-    localStorage.setItem("lightTheme", theme);
-  };
-
-  const handleDarkThemeChange = async (theme: Theme) => {
-    selectedDarkTheme = theme;
-    localStorage.setItem("darkTheme", theme);
-    await themaStore.update((t) => {
-      t.darkTheme = theme;
-      return t;
-    });
-    await changeThema();
-    // ローカルストレージに保存
-    localStorage.setItem("darkTheme", theme);
-  };
 </script>
 
 <dialog
@@ -448,43 +355,6 @@
           </div>
         </div>
       </div>
-      <!--  Thema設定 -->
-      <!--
-      <div>
-        <label>ライトテーマ</label>
-        <select
-          bind:value={selectedLightTheme}
-          on:change={() => handleLightThemeChange(selectedLightTheme)}
-        >
-          {#each lightThemes as theme}
-            <option value={theme}>{theme}</option>
-          {/each}
-        </select>
-
-        <label>ダークテーマ</label>
-        <select
-          bind:value={selectedDarkTheme}
-          on:change={() => handleDarkThemeChange(selectedDarkTheme)}
-        >
-          {#each darkThemes as theme}
-            <option value={theme}>{theme}</option>
-          {/each}
-        </select>
-      </div>
-      {$themaStore.darkTheme}
-
-      <button
-        on:click={updateIt}
-        class="btn"
-        disabled={(selfIntroduction === get(myUserStore).selfIntroduction &&
-          name === get(myUserStore).name) ||
-          name === "" ||
-          selfIntroduction === "" ||
-          processing}
-      >
-        {processing ? "処理中..." : "更新"}
-      </button>
-        -->
     </div>
   </div>
 </div>
