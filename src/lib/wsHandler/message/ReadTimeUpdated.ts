@@ -1,4 +1,4 @@
-import { hasNewMessageStore } from "$lib/store/messageReadTime";
+import { hasNewMessageStore, MessageReadTimeStore } from "$lib/store/messageReadTime";
 
 interface IResponseWsReadTimeUpdated {
   signal: "message::ReadTimeUpdated";
@@ -19,5 +19,10 @@ export const ReadTimeUpdated = async (data: IResponseWsReadTimeUpdated) => {
         [data.data.channelId]: false,
       }
     ));
+    //既読時間Storeへ適用
+    MessageReadTimeStore.update((store) => {
+      store[data.data.channelId] = data.data.readTime;
+      return store;
+    });
   }
 };
