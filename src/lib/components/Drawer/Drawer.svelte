@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { IconSettings } from "@tabler/icons-svelte";
+  import { IconSettings, IconPointFilled } from "@tabler/icons-svelte";
   import { goto } from "$app/navigation";
   import { myUserStore, onlineUserListStore } from "$lib/store/user";
   import type { IChannel } from "$lib/types/IChannel";
@@ -73,9 +73,9 @@
               <li>
                 <a href="/channel/{channel.id}" on:click={handleDrawer}
                   >{channel.name}
-                  <p class="ml-auto">
-                    {$hasNewMessageStore[channel.id] ? "新着" : ""}
-                  </p>
+                  {#if $hasNewMessageStore[channel.id]}
+                    <IconPointFilled class="ml-auto" />
+                  {/if}
                   {#if channel.id === $page.params.id}
                     <span class="badge badge-primary">&larr;</span>
                   {/if}
