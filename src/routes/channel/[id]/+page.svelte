@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
+  import { navigating, page } from "$app/stores";
   import { channelHistoryStore } from "$lib/store/channelHistory";
   import { onlineUserListStore, userListStore } from "$lib/store/user";
   import {
@@ -13,15 +12,34 @@
   import { onMount } from "svelte";
   import UserProfile from "$lib/components/unique/userProfile.svelte";
   import MessageInput from "./messageInput.svelte";
-  const messageRepository = repositoryFactory.get("message");
+  import updateReadTime from "$lib/utils/updateReadTime";
 
   onMount(async () => {
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
     await getChannelHistory();
     const MessageContainer = document.getElementById("messageContainer");
     console.log(MessageContainer);
+
+    //スクロール監視
     MessageContainer?.addEventListener("scroll", scrollHandler);
+    //既読時間を更新させてみる
+    updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt);
   });
+
+  $: if ($navigating) {
+    if ($navigating.to?.params !== null) {
+      if ($navigating.to?.params.id !== $page.params.id) {
+        //console.log("パスは変更するがまだ遷移前");
+      } else if ($channelHistoryStore.history[0] !== undefined) {
+        //console.log("パスの変更を検知->", $page.params.id, $navigating);
+        //既読時間を更新させてみる
+        updateReadTime(
+          $page.params.id,
+          $channelHistoryStore.history[0].createdAt,
+        );
+      }
+    }
+  }
 
   $: (async () => {
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
