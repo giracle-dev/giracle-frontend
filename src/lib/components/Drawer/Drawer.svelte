@@ -65,14 +65,14 @@
       <!-- ボーダー -->
       <div class="border-t border-base-300 my-2"></div>
       <!-- Sidebar content here -->
-      <ul class="h-[calc(100svh-240px)] overflow-y-auto py-2">
+      <ul class="h-[calc(100svh-240px)] overflow-y-auto py-2 w-full">
         <li><a href="/channel" on:click={handleDrawer}>チャンネル一覧</a></li>
         {#if channelList && channelList.length > 0}
           {#each channelList as channel}
             {#if $myUserStore.ChannelJoin && $myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
-              <li>
-                <a href="/channel/{channel.id}" on:click={handleDrawer}
-                  >{channel.name}
+              <li class="">
+                <a href="/channel/{channel.id}" on:click={handleDrawer}>
+                  <div class="truncate">{channel.name}</div>
                   {#if $hasNewMessageStore[channel.id]}
                     <IconPointFilled class="ml-auto" />
                   {/if}
