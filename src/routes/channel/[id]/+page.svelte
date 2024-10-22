@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
+  import { navigating, page } from "$app/stores";
   import { channelHistoryStore } from "$lib/store/channelHistory";
   import { onlineUserListStore, userListStore } from "$lib/store/user";
   import {
@@ -13,13 +12,18 @@
   import { onMount } from "svelte";
   import UserProfile from "$lib/components/unique/userProfile.svelte";
   import MessageInput from "./messageInput.svelte";
+  import updateReadTime from "$lib/utils/updateReadTime";
 
   onMount(async () => {
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
     await getChannelHistory();
     const MessageContainer = document.getElementById("messageContainer");
     console.log(MessageContainer);
+
+    //スクロール監視
     MessageContainer?.addEventListener("scroll", scrollHandler);
+    //既読時間を更新させてみる
+    updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt);
   });
 
   $: (async () => {

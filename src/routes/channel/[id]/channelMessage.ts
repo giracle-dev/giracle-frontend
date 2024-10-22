@@ -5,6 +5,7 @@ import { toastStore } from "$lib/store/toast";
 import { userListStore } from "$lib/store/user";
 import type { IChannel } from "$lib/types/IChannel";
 import type { IMessage, IRequestChannelHistoryBody } from "$lib/types/IMessage";
+import updateReadTime from "$lib/utils/updateReadTime";
 import { get } from "svelte/store";
 const messageRepository = repositoryFactory.get("message");
 const channelRepository = repositoryFactory.get("channel");
@@ -75,6 +76,9 @@ export const getChannelHistory = async (
       } else {
         channelHistoryStore.set(res.data);
       }
+
+      //既読時間の更新
+      updateReadTime(res.data.history[0].channelId, res.data.history[0].createdAt);
     });
 };
 
