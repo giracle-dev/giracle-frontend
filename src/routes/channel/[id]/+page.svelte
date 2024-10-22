@@ -26,21 +26,6 @@
     updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt);
   });
 
-  $: if ($navigating) {
-    if ($navigating.to?.params !== null) {
-      if ($navigating.to?.params.id !== $page.params.id) {
-        //console.log("パスは変更するがまだ遷移前");
-      } else if ($channelHistoryStore.history[0] !== undefined) {
-        //console.log("パスの変更を検知->", $page.params.id, $navigating);
-        //既読時間を更新させてみる
-        updateReadTime(
-          $page.params.id,
-          $channelHistoryStore.history[0].createdAt,
-        );
-      }
-    }
-  }
-
   $: (async () => {
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
     await getChannelHistory();
