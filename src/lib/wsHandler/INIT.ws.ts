@@ -1,5 +1,6 @@
 import { sendMessageWsOn } from "./channel/sendMessage";
 import { updateMessageWsOn } from "./channel/updateMessage";
+import { ReadTimeUpdated } from "./message/ReadTimeUpdated";
 import { userConnectWsOn } from "./user/userConnected";
 import { userDisconnectedWsOn } from "./user/userDisconnected";
 export let ws: WebSocket = new WebSocket("/ws");
@@ -32,6 +33,7 @@ export const initWS = () => {
       updateMessageWsOn(json);
       userConnectWsOn(json);
       userDisconnectedWsOn(json);
+      ReadTimeUpdated(json);
 
       //トークンが無効な場合のフラグ設定
       if (json.signal === "ERROR" && json.data === "token not valid") {
