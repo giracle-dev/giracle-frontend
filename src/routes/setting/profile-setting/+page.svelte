@@ -307,6 +307,17 @@
         >
           ログアウト
         </button>
+        <button
+          on:click={updateIt}
+          class="btn btn-primary"
+          disabled={(selfIntroduction === get(myUserStore).selfIntroduction &&
+            name === get(myUserStore).name) ||
+            name === "" ||
+            selfIntroduction === "" ||
+            processing}
+        >
+          {processing ? "処理中..." : "更新"}
+        </button>
       </div>
       <div class="flex flex-col gap-2 my-5">
         <div class="card bg-base-200 max-w-[350px] mx-auto m-2">
