@@ -52,9 +52,12 @@ export const getChannelHistory = async (
     .then((res) => {
       if (direction === "older") {
         // 配列の一番下に追加
-        // 取得した時にリクエストした時のIDも含まれるので、除外する
+        // 重複しているメッセージを除外
         const newMessages = res.data.history.filter(
-          (message) => message.id !== targetMessage?.id,
+          (message) =>
+            !get(channelHistoryStore).history.some(
+              (oldMessage) => oldMessage.id === message.id,
+            ),
         );
         channelHistoryStore.update((messages) => ({
           // 既存メッセージを配列の最初に追加
@@ -63,9 +66,12 @@ export const getChannelHistory = async (
           atEnd: messages.atEnd,
         }));
       } else if (direction === "newer") {
-        // 取得した時にリクエストした時のIDも含まれるので、除外する
+        // 重複しているメッセージを除外
         const newMessages = res.data.history.filter(
-          (message) => message.id !== targetMessage?.id,
+          (message) =>
+            !get(channelHistoryStore).history.some(
+              (oldMessage) => oldMessage.id === message.id,
+            ),
         );
         channelHistoryStore.update((messages) => ({
           // 既存メッセージを配列の最後に追加
@@ -93,7 +99,6 @@ export const scrollHandler = async () => {
   const MessageContainer = document.getElementById("messageContainer");
   // スクロールが一番上まで行ったかどうか
   if (MessageContainer) {
-    let test = MessageContainer.scrollHeight - MessageContainer.clientHeight;
     //100は誤差範囲のため
     const isScrolledToTop =
       Math.abs(MessageContainer.scrollTop) >=
