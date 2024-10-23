@@ -13,6 +13,7 @@
   import UserProfile from "$lib/components/unique/userProfile.svelte";
   import MessageInput from "./messageInput.svelte";
   import updateReadTime from "$lib/utils/updateReadTime";
+  import type { IMessage } from "$lib/types/IMessage";
 
   onMount(async () => {
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
@@ -30,6 +31,34 @@
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
     await getChannelHistory();
   })();
+
+  /**
+   * 日付が変わったかどうかを判定
+   * @param currentMessage
+   */
+  const isDateChanged = (currentMessage: IMessage): boolean => {
+    // 前の投稿の日付と比較
+    const currentMessageDate = $channelHistoryStore.history.find(
+      (message) => message.id === currentMessage.id,
+    );
+    // currentMessageDateのindexを取得
+    const currentMessageDateIndex = $channelHistoryStore.history.findIndex(
+      (message) => message.id === currentMessage.id,
+    );
+    // currentMessageDateの前の投稿の日付を取得
+    const previousMessageDate = $channelHistoryStore.history.find(
+      (message, index) => index === currentMessageDateIndex + 1,
+    );
+    // 日付が変わったかどうか
+    if (currentMessageDate && previousMessageDate) {
+      return (
+        new Date(currentMessageDate.createdAt).toLocaleDateString() !==
+        new Date(previousMessageDate.createdAt).toLocaleDateString()
+      );
+    } else {
+      return false;
+    }
+  };
 </script>
 
 <div class="h-full w-full flex flex-col px-1 pb-2">
@@ -114,6 +143,19 @@
           {/if}
         </div>
       </div>
+      {#if isDateChanged(message)}
+        <div class="flex items-center justify-center my-4">
+          <hr class="border-t border-gray-300 w-full" />
+          <span class="px-2 text-gray-500 text-sm">
+            {new Date(message.createdAt).toLocaleDateString("ja-JP", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })}
+          </span>
+          <hr class="border-t border-gray-300 w-full" />
+        </div>
+      {/if}
     {/each}
   </div>
   <div class="flex gap-1">

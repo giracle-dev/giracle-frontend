@@ -29,7 +29,7 @@ export const formatDate = (date: Date): string => {
   const year = d.getFullYear();
   const month = d.getMonth() + 1;
   const day = d.getDate();
-  return year + "-" + month + "-" + day + " " + d.toLocaleTimeString();
+  return year + "/" + month + "/" + day + " " + d.toLocaleTimeString();
 };
 
 /**
@@ -78,7 +78,10 @@ export const getChannelHistory = async (
       }
 
       //既読時間の更新
-      updateReadTime(res.data.history[0].channelId, res.data.history[0].createdAt);
+      updateReadTime(
+        res.data.history[0].channelId,
+        res.data.history[0].createdAt,
+      );
     });
 };
 
