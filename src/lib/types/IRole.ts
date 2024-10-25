@@ -3,6 +3,17 @@ export interface IResponseGetRoleList {
   data: IRole[];
 }
 
+
+export interface IResponseGetRoleInfo {
+  message: "Role fetched";
+  data: IRole;
+}
+
+export interface IResponseSearchRoles {
+  message: "Role searched";
+  data: IRole[];
+}
+
 export interface IRole {
   name: string;
   id: string;
