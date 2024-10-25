@@ -26,7 +26,7 @@
     //既読時間を更新させてみる
     updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt);
 
-    document.addEventListener('focus', readItOnPageVisible);
+    window.addEventListener('focus', readItOnPageVisible);
   });
 
   $: (async () => {
@@ -35,7 +35,7 @@
   })();
 
   onDestroy(() => {
-    document.removeEventListener('focus', readItOnPageVisible);
+    window.removeEventListener('focus', readItOnPageVisible);
   });
 
   /**
@@ -43,7 +43,9 @@
    */
   const readItOnPageVisible = () => {
     console.log('/channel/[id] :: readItOnPageVisible');
-    updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt);
+    setTimeout(() => {
+      updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt);
+    }, 250);
   }
 
   /**
