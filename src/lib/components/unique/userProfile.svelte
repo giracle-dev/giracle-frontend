@@ -50,7 +50,7 @@
       </div>
 
       <div>
-        <UserRoles roleList={user.RoleLink} />
+        <UserRoles userId={user.id} roleList={user.RoleLink} />
       </div>
     </div>
   {/if}

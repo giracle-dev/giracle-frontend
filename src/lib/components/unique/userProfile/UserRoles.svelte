@@ -2,9 +2,12 @@
   import RoleChip from "$lib/components/unique/RoleChip.svelte";
   import { IconPlus, IconPointFilled } from "@tabler/icons-svelte";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
+  import { toastStore } from "$lib/store/toast";
+  import type { IRole } from "$lib/types/IRole";
   const roleRepository = repositoryFactory.get("role");
 
   export let roleList: { roleId: string }[] = [];
+  export let userId: string;
 
   let roleListFetched: IRole[] = [];
 
