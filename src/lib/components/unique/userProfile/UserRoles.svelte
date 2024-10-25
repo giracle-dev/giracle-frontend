@@ -108,7 +108,6 @@
         tabindex={index}
       >
         <RoleChip
-          class="line-through"
           roleId={roleData.roleId}
         />
       </button>
