@@ -48,6 +48,16 @@
       })
       .catch((err) => {
         console.error("UserRoles :: roleLink : err->", err);
+        //トースト通知を出すように
+        toastStore.update((t) => {
+          return [
+            ...t,
+            {
+              message: "ロールを付与できませんでした...",
+              type: "error",
+            },
+          ];
+        });
       });
   }
 
@@ -72,6 +82,16 @@
       })
       .catch((err) => {
         console.error("UserRoles :: roleUnlink : err->", err);
+        //トースト通知を出すように
+        toastStore.update((t) => {
+          return [
+            ...t,
+            {
+              message: "ロールを解除できませんでした...",
+              type: "error",
+            },
+          ];
+        });
       });
   }
 </script>
