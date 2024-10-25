@@ -29,17 +29,28 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
   if (data.signal === "message::SendMessage") {
     console.log("message::SendMessage====>", data.data);
     // 一番下に追加
-    // 現在のチャンネルメッセージではない、あるいはGiracle自体がフォーカスされていない場合は追加しない
-    if (get(page).params.id === data.data.channelId && WINDOW_FOCUS) {
+    // 現在のチャンネルメッセージではない場合は追加しない
+    if (get(page).params.id === data.data.channelId) {
       channelHistoryStore.update((channelHistory) => ({
         history: [data.data, ...channelHistory.history],
         atTop: channelHistory.atTop,
         atEnd: channelHistory.atEnd,
       }));
-      //既読時間も更新させる
-      updateReadTime(data.data.channelId, data.data.createdAt);
 
-      console.log("sendMessage :: sendMessageWsOn : フォーカスされているから同期", WINDOW_FOCUS);
+      //Giracle自体がフォーカスされているなら既読時間を更新、違うなら新着とマーク
+      if (WINDOW_FOCUS) {
+        //既読時間も更新させる
+        updateReadTime(data.data.channelId, data.data.createdAt);
+        console.log("sendMessage :: sendMessageWsOn : フォーカスされているから同期", WINDOW_FOCUS);
+      } else {
+        //新着設定
+        hasNewMessageStore.update((hasNewMessage) => (
+          {
+            ...hasNewMessage,
+            [data.data.channelId]: true,
+          }
+        ));
+      }
     } else {
       //新着設定
       hasNewMessageStore.update((hasNewMessage) => (
