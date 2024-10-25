@@ -19,7 +19,12 @@ const initialRole: {[key: IRole["id"]]: IRole} = {
 
 export const roleStore = writable<{[key: string]: IRole}>(initialRole);
 
-const getRoleInfo = async (id: string) => {
+/**
+ * Storeからロール情報を取得する
+ * @param id 
+ * @returns 
+ */
+export const getRoleInfo = async (id: string) => {
   if (get(roleStore)[id]) return get(roleStore)[id];
 
   //ロールがなければ取得してから返す
