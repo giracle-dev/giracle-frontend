@@ -106,7 +106,7 @@
           </div>
           <div
             tabindex={index}
-            class="shadow m-0 p-0 card card-compact dropdown-content bg-base-100 rounded-box w-64"
+            class="shadow m-0 p-0 card card-compact dropdown-content bg-base-100 rounded-box w-64 z-40"
           >
             <UserProfile userId={message.userId} />
           </div>
