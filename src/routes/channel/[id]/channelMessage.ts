@@ -144,6 +144,7 @@ export const linkify = (text: string) => {
   const channelPattern = /#<(\d+)>/g;
   const codeSnippetPattern = /```([^`]+)```/g;
   const inlineCodePattern = /`([^`]+)`/g;
+  const breakLinePattern = /\n/g;
 
   // スクリプトタグをエスケープ
   text = text.replace(scriptPattern, (match) => {
@@ -206,6 +207,16 @@ export const linkify = (text: string) => {
     placeholders.push({
       placeholder,
       content: `<code class=" bg-gray-100 p-1 rounded">${code}</code>`,
+    });
+    return placeholder;
+  });
+
+  // 改行を変換
+  text = text.replace(breakLinePattern, (match) => {
+    const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
+    placeholders.push({
+      placeholder,
+      content: `<br>`,
     });
     return placeholder;
   });
