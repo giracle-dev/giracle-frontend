@@ -10,6 +10,7 @@
   export let userId: string;
 
   let roleListFetched: IRole[] = [];
+  let selectedRoleIndex: number = -1;
 
   //ロールを取得する
   const fetchRole = async () => {
@@ -19,6 +20,7 @@
       .getRoleList()
       .then((res) => {
         roleListFetched = res.data;
+        roleListFetched = [...roleListFetched, ...roleListFetched];
       })
       .catch((err) => {
         console.error(err);
@@ -33,6 +35,7 @@
     await roleRepository
       .linkRole(roleId, userId)
       .then((res) => {
+        //トースト通知を出すように
         toastStore.update((t) => {
           return [
             ...t,
@@ -47,12 +50,47 @@
         console.error("UserRoles :: roleLink : err->", err);
       });
   }
+
+  /**
+   * 対象のユーザーに対しロールを付与する
+   * @param roleId
+   */
+  const roleUnlink = async (roleId: string) => {
+    await roleRepository
+      .unlinkRole(roleId, userId)
+      .then((res) => {
+        //トースト通知を出すように
+        toastStore.update((t) => {
+          return [
+            ...t,
+            {
+              message: "ロールを解除しました",
+              type: "success",
+            },
+          ];
+        });
+      })
+      .catch((err) => {
+        console.error("UserRoles :: roleUnlink : err->", err);
+      });
+  }
 </script>
 
 <div class="flex flex-wrap items-center gap-1">
 
-  {#each roleList as roleData}
-    <RoleChip roleId={roleData.roleId} />
+  {#each roleList as roleData,index}
+    <button
+      on:click={()=>roleUnlink(roleData.roleId)}
+      on:mouseenter={()=>selectedRoleIndex = index}
+      on:mouseleave={()=>selectedRoleIndex = -1}
+      class="line-through"
+      aria-label="Role Chip"
+      tabindex={index}
+    >
+      <RoleChip
+        roleId={roleData.roleId}
+      />
+    </button>
   {/each}
 
   <details class="dropdown">
