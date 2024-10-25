@@ -24,7 +24,7 @@ export const roleStore = writable<{[key: string]: IRole}>(initialRole);
  * @param id 
  * @returns 
  */
-export const getRoleInfo = async (id: string) => {
+export const getRoleInfo = async (id: string): Promise<IRole> => {
   if (get(roleStore)[id]) return get(roleStore)[id];
 
   //ロールがなければ取得してから返す
@@ -50,4 +50,16 @@ export const getRoleInfo = async (id: string) => {
         manageServer: false,
       };
     });
+
+  return {
+    id: "ERROR",
+    name: "エラー",
+    color: "#f00",
+    createdAt: new Date(),
+    createdUserId: "SYSTEM",
+    manageUser: false,
+    manageChannel: false,
+    manageRole: false,
+    manageServer: false,
+  };
 }
