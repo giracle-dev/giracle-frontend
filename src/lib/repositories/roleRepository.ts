@@ -10,6 +10,15 @@ export default {
     if (!response.ok) throw new Error("roleRepository :: getRoleList :: エラー");
     return await response.json();
   },
+  searchRoles: async (searchWord: string): Promise<IResponseGetRoleList> => {
+    const response = await fetch(`/api/role/search?name=${searchWord}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("roleRepository :: searchRoles :: エラー");
+    return await response.json();
+  },
   updateRole: async (dat: {
     roleId: string,
     roleData: {
