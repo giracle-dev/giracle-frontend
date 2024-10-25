@@ -2,6 +2,7 @@
   import { getRoleInfo, roleStore } from "$lib/store/role";
   import type { IRole } from "$lib/types/IRole";
   import { onMount } from "svelte";
+  import { IconPointFilled } from "@tabler/icons-svelte";
 
   export let roleId: string;
 
@@ -27,5 +28,8 @@
 </script>
 
 <div>
-  <span>{role.name || 'Loading...'}</span>
+  <div class="badge badge-neutral">
+    <IconPointFilled color={role.color} class="-ml-2" />
+    {role.name || 'Loading...'}
+  </div>
 </div>
