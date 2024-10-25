@@ -77,5 +77,31 @@ export default {
     });
     if (!response.ok) throw new Error("roleRepository :: deleteRole :: エラー");
     return await response.json();
+  },
+  linkRole: async (roleId: string, userId: string) => {
+    const response = await fetch("/api/role/link", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        roleId,
+        userId
+      }),
+    });
+    if (!response.ok) throw new Error("roleRepository :: linkRole :: エラー");
+    return await response.json();
+  },
+  unlinkRole: async (roleId: string, userId: string) => {
+    const response = await fetch("/api/role/unlink", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        roleId,
+        userId
+      }),
+    });
+    if (!response.ok) throw new Error("roleRepository :: unlinkRole :: エラー");
+    return await response.json();
   }
 }
