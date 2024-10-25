@@ -20,7 +20,6 @@
       .getRoleList()
       .then((res) => {
         roleListFetched = res.data;
-        roleListFetched = [...roleListFetched, ...roleListFetched];
       })
       .catch((err) => {
         console.error(err);
