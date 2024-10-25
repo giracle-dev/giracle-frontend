@@ -12,12 +12,16 @@
   import { onMount } from "svelte";
   import UserProfile from "$lib/components/unique/userProfile.svelte";
   import HoverMenu from "./hoverMenu.svelte";
-  import MessageInput from "./messageInput.svelte";
   import updateReadTime from "$lib/utils/updateReadTime";
+  import MessageInput from "./MessageInput.svelte";
   import type { IMessage } from "$lib/types/IMessage";
 
   onMount(async () => {
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
+    // ユーザー一覧が取得されるまで待つ
+    while ($userListStore.length === 0) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
     await getChannelHistory();
     const MessageContainer = document.getElementById("messageContainer");
     console.log(MessageContainer);
@@ -61,15 +65,14 @@
     }
   };
 
-  let hoverMessageID :string ='';
+  let hoverMessageID: string = "";
 
-  const onHover = (id :string) =>{
+  const onHover = (id: string) => {
     hoverMessageID = id;
-  }
-  const onEndHover = ()=>{
-    hoverMessageID = '';
-  }
-
+  };
+  const onEndHover = () => {
+    hoverMessageID = "";
+  };
 </script>
 
 <div class="h-full w-full flex flex-col px-1 pb-2">
@@ -78,11 +81,13 @@
     class="flex-grow flex flex-col-reverse overflow-y-auto"
   >
     {#each $channelHistoryStore.history as message, index}
-      <div class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300" role="log"
-            on:mouseover={()=>onHover(message.id)}
-            on:mouseout={()=>onEndHover()}
-            on:focus={()=>onHover(message.id)}
-            on:blur={()=>onEndHover()}
+      <div
+        class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300"
+        role="log"
+        on:mouseover={() => onHover(message.id)}
+        on:mouseout={() => onEndHover()}
+        on:focus={() => onHover(message.id)}
+        on:blur={() => onEndHover()}
       >
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <div class="dropdown dropdown-right dropdown-end">
@@ -158,7 +163,7 @@
             </div>
           {/if}
         </div>
-        <HoverMenu messageId={message.id} hoverMessageId={hoverMessageID}/>
+        <HoverMenu messageId={message.id} hoverMessageId={hoverMessageID} />
       </div>
       {#if isDateChanged(message)}
         <div class="flex items-center justify-center my-4">
