@@ -95,7 +95,7 @@
   }
 </script>
 
-<div class="flex flex-wrap items-center gap-1">
+<div class="flex flex-wrap items-start gap-1">
 
   {#each roleList as roleData,index}
     <button

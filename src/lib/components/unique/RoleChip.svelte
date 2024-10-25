@@ -27,9 +27,7 @@
   $: role = $roleStore[roleId] || role;
 </script>
 
-<div>
-  <div class="badge badge-neutral badge-lg">
-    <IconPointFilled color={role.color} class="-ml-2" />
-    <p>{role.name || 'Loading...'}</p>
-  </div>
+<div class="badge badge-neutral badge-lg">
+  <IconPointFilled color={role.color} class="-ml-2" />
+  <p>{role.name || 'Loading...'}</p>
 </div>
