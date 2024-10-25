@@ -11,6 +11,7 @@
   } from "./channelMessage";
   import { onMount } from "svelte";
   import UserProfile from "$lib/components/unique/userProfile.svelte";
+  import HoverMenu from "./hoverMenu.svelte";
   import MessageInput from "./messageInput.svelte";
   import updateReadTime from "$lib/utils/updateReadTime";
   import type { IMessage } from "$lib/types/IMessage";
@@ -59,6 +60,16 @@
       return false;
     }
   };
+
+  let hoverMessageID :string ='';
+
+  const onHover = (id :string) =>{
+    hoverMessageID = id;
+  }
+  const onEndHover = ()=>{
+    hoverMessageID = '';
+  }
+
 </script>
 
 <div class="h-full w-full flex flex-col px-1 pb-2">
@@ -67,7 +78,12 @@
     class="flex-grow flex flex-col-reverse overflow-y-auto"
   >
     {#each $channelHistoryStore.history as message, index}
-      <div class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300">
+      <div class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300" role="log"
+            on:mouseover={()=>onHover(message.id)}
+            on:mouseout={()=>onEndHover()}
+            on:focus={()=>onHover(message.id)}
+            on:blur={()=>onEndHover()}
+      >
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <div class="dropdown dropdown-right dropdown-end">
           <div tabindex={index} role="button" class="w-15">
@@ -142,6 +158,7 @@
             </div>
           {/if}
         </div>
+        <HoverMenu messageId={message.id} hoverMessageId={hoverMessageID}/>
       </div>
       {#if isDateChanged(message)}
         <div class="flex items-center justify-center my-4">
