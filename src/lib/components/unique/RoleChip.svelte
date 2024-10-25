@@ -2,7 +2,6 @@
   import { getRoleInfo, roleStore } from "$lib/store/role";
   import type { IRole } from "$lib/types/IRole";
   import { onMount } from "svelte";
-  import { get } from "svelte/store";
 
   export let roleId: string;
 
@@ -20,7 +19,6 @@
 
   onMount(async () => {
     const tempRole = await getRoleInfo(roleId);
-    console.log("RoleChip :: onMount : tempRole", tempRole);
 
     if (tempRole !== undefined) role = tempRole;
   });
