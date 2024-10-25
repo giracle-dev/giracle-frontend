@@ -1,4 +1,4 @@
-import type { IResponseGetRoleList } from "$lib/types/IRole";
+import type { IResponseGetRoleInfo, IResponseGetRoleList, IResponseSearchRoles } from "$lib/types/IRole";
 
 export default {
   getRoleList: async (): Promise<IResponseGetRoleList> => {
@@ -10,7 +10,16 @@ export default {
     if (!response.ok) throw new Error("roleRepository :: getRoleList :: エラー");
     return await response.json();
   },
-  searchRoles: async (searchWord: string): Promise<IResponseGetRoleList> => {
+  getRoleInfo: async (roleId: string): Promise<IResponseGetRoleInfo> => {
+    const response = await fetch("/api/role/get-info/" + roleId, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("roleRepository :: getRoleList :: エラー");
+    return await response.json();
+  },
+  searchRoles: async (searchWord: string): Promise<IResponseSearchRoles> => {
     const response = await fetch(`/api/role/search?name=${searchWord}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
