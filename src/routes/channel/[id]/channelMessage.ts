@@ -197,7 +197,7 @@ export const linkify = (text: string) => {
     const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
     placeholders.push({
       placeholder,
-      content: `<pre class="overflow-x-auto bg-base-300 p-2 rounded"><code>${code}</code>`,
+      content: `<pre class="overflow-x-auto bg-base-300 p-2 outline outline-1	 rounded"><code>${code}</code>`,
     });
     return placeholder;
   });
@@ -207,7 +207,7 @@ export const linkify = (text: string) => {
     const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
     placeholders.push({
       placeholder,
-      content: `<code class=" bg-base-300 p-1 rounded">${code}</code>`,
+      content: `<code class=" bg-base-300 p-1 outline outline-1	 rounded">${code}</code>`,
     });
     return placeholder;
   });
