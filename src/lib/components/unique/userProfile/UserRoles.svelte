@@ -118,7 +118,10 @@
     </summary>
     <ul class="menu dropdown-content bg-base-200 rounded-box z-[1] w-52 p-2 shadow max-h-[25vh] overflow-y-auto">
       {#if roleListFetched.length === 0}
-        <li class="text-left">ロール一覧取得中...</li>
+        <li class="text-left">
+          <progress class="progress w-full"></progress>
+          ロール一覧取得中...
+        </li>
       {/if}
       {#each roleListFetched as role}
         <li class="text-left w-full truncate">
