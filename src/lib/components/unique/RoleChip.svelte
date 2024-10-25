@@ -30,6 +30,6 @@
 <div>
   <div class="badge badge-neutral">
     <IconPointFilled color={role.color} class="-ml-2" />
-    {role.name || 'Loading...'}
+    <p>{role.name || 'Loading...'}</p>
   </div>
 </div>
