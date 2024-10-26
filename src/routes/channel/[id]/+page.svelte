@@ -13,7 +13,7 @@
   import UserProfile from "$lib/components/unique/userProfile.svelte";
   import HoverMenu from "./hoverMenu.svelte";
   import updateReadTime from "$lib/utils/updateReadTime";
-  import MessageInput from "./MessageInput.svelte";
+  import MessageInput from "../../../lib/components/unique/MessageInput.svelte";
   import type { IMessage } from "$lib/types/IMessage";
 
   onMount(async () => {
@@ -31,7 +31,7 @@
     //既読時間を更新させてみる
     updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt);
 
-    window.addEventListener('focus', readItOnPageVisible);
+    window.addEventListener("focus", readItOnPageVisible);
   });
 
   $: (async () => {
@@ -40,18 +40,21 @@
   })();
 
   onDestroy(() => {
-    window.removeEventListener('focus', readItOnPageVisible);
+    window.removeEventListener("focus", readItOnPageVisible);
   });
 
   /**
    * タブのアクティブが切り替わったら既読処理をする
    */
   const readItOnPageVisible = () => {
-    console.log('/channel/[id] :: readItOnPageVisible');
+    console.log("/channel/[id] :: readItOnPageVisible");
     setTimeout(() => {
-      updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt);
+      updateReadTime(
+        $page.params.id,
+        $channelHistoryStore.history[0]?.createdAt,
+      );
     }, 250);
-  }
+  };
 
   /**
    * 日付が変わったかどうかを判定
