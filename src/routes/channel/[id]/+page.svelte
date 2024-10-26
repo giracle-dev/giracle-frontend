@@ -13,7 +13,7 @@
   import UserProfile from "$lib/components/unique/userProfile.svelte";
   import HoverMenu from "./hoverMenu.svelte";
   import updateReadTime from "$lib/utils/updateReadTime";
-  import MessageInput from "../../../lib/components/unique/MessageInput.svelte";
+  import MessageInput from "./MessageInput.svelte";
   import type { IMessage } from "$lib/types/IMessage";
 
   onMount(async () => {
