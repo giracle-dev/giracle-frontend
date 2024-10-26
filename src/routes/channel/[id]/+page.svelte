@@ -9,7 +9,7 @@
     linkify,
     sendMessage,
   } from "./channelMessage";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import UserProfile from "$lib/components/unique/userProfile.svelte";
   import HoverMenu from "./hoverMenu.svelte";
   import MessageInput from "./messageInput.svelte";
@@ -26,12 +26,28 @@
     MessageContainer?.addEventListener("scroll", scrollHandler);
     //既読時間を更新させてみる
     updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt);
+
+    window.addEventListener('focus', readItOnPageVisible);
   });
 
   $: (async () => {
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
     await getChannelHistory();
   })();
+
+  onDestroy(() => {
+    window.removeEventListener('focus', readItOnPageVisible);
+  });
+
+  /**
+   * タブのアクティブが切り替わったら既読処理をする
+   */
+  const readItOnPageVisible = () => {
+    console.log('/channel/[id] :: readItOnPageVisible');
+    setTimeout(() => {
+      updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt);
+    }, 250);
+  }
 
   /**
    * 日付が変わったかどうかを判定
