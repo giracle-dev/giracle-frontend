@@ -9,6 +9,7 @@ import updateReadTime from "$lib/utils/updateReadTime";
 import { get } from "svelte/store";
 const messageRepository = repositoryFactory.get("message");
 const channelRepository = repositoryFactory.get("channel");
+const userRepository = repositoryFactory.get("user");
 
 /**
  *  ユーザー名を取得する
@@ -138,12 +139,13 @@ export const linkify = (text: string) => {
   const getUserList = get(userListStore);
   const urlPattern =
     /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
-  const mentionPattern = /@<(\d+)>/g;
+  const mentionPattern = /@<([a-f0-9-]+)>/g;
   const scriptPattern = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi;
   const htmlTagPattern = /<\/?[^>]+(>|$)/g;
-  const channelPattern = /#<(\d+)>/g;
+  const channelPattern = /#<([a-f0-9-]+)>/g;
   const codeSnippetPattern = /```([^`]+)```/g;
   const inlineCodePattern = /`([^`]+)`/g;
+  const newlinePattern = /\n/g;
 
   // スクリプトタグをエスケープ
   text = text.replace(scriptPattern, (match) => {
@@ -155,8 +157,8 @@ export const linkify = (text: string) => {
   let placeholderIndex = 0;
 
   // メンションを変換
-  text = text.replace(mentionPattern, (match, userId) => {
-    const userInfo = getUserList[userId];
+  text = text.replace(mentionPattern, (_match, userId) => {
+    const userInfo = getUserList.find((user) => user.id === userId);
     const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
     placeholders.push({
       placeholder,
@@ -178,34 +180,44 @@ export const linkify = (text: string) => {
   });
 
   // チャンネルIDを変換
-  text = text.replace(channelPattern, (match, channelId) => {
+  text = text.replace(channelPattern, (_match, channelId) => {
     const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
     // チャンネルリストからチャンネル名を取得
     const channel = channelList.find((channel) => channel.id === channelId);
     const channelName = channel ? channel.name : "Unknown Channel";
     placeholders.push({
       placeholder,
-      content: `<a href="/chat/${channelId}" class="w-fit inline-flex items-center glass px-1 rounded-lg" rel="noopener noreferrer">#${channelName}</a>`,
+      content: `<a href="/channel/${channelId}" class="w-fit inline-flex items-center glass px-1 rounded-lg" rel="noopener noreferrer">#${channelName}</a>`,
     });
     return placeholder;
   });
 
   // コードスニペットを変換
-  text = text.replace(codeSnippetPattern, (match, code) => {
+  text = text.replace(codeSnippetPattern, (_match, code) => {
     const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
     placeholders.push({
       placeholder,
-      content: `<pre class="overflow-x-auto bg-gray-100 p-2 rounded"><code>${code}</code>`,
+      content: `<pre class="overflow-x-auto bg-base-300 p-2 outline outline-1	 rounded"><code>${code}</code>`,
     });
     return placeholder;
   });
 
   // インラインコードを変換
-  text = text.replace(inlineCodePattern, (match, code) => {
+  text = text.replace(inlineCodePattern, (_match, code) => {
     const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
     placeholders.push({
       placeholder,
-      content: `<code class=" bg-gray-100 p-1 rounded">${code}</code>`,
+      content: `<code class=" bg-base-300 p-1 outline outline-1	 rounded">${code}</code>`,
+    });
+    return placeholder;
+  });
+
+  // 改行を変換
+  text = text.replace(newlinePattern, (_match) => {
+    const placeholder = `__PLACEHOLDER_${placeholderIndex++}__`;
+    placeholders.push({
+      placeholder,
+      content: "<br>",
     });
     return placeholder;
   });
@@ -228,6 +240,7 @@ export const linkify = (text: string) => {
  */
 export const sendMessage = async (event: CustomEvent) => {
   const message = event.detail.message;
+  console.log("/channel/[id] :: sendMessage : message->", message);
   if (message === "") return;
   await messageRepository
     .sendMessage(get(page).params.id, message)
