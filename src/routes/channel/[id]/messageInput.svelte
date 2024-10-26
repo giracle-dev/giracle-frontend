@@ -169,6 +169,8 @@
     } else {
       mentionListVisible = false;
     }
+
+    adjustTextareaHeight();
   };
 
   const selectUser = (user: IUser) => {
