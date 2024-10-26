@@ -29,12 +29,6 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
     // 一番下に追加
     // 現在のチャンネルメッセージではない場合は追加しない
     if (get(page).params.id === data.data.channelId) {
-      channelHistoryStore.update((channelHistory) => ({
-        history: [data.data, ...channelHistory.history],
-        atTop: channelHistory.atTop,
-        atEnd: channelHistory.atEnd,
-      }));
-
       //Giracle自体がフォーカスされているなら既読時間を更新、違うなら新着とマーク
       if (WINDOW_FOCUS) {
         //既読時間も更新させる
@@ -49,6 +43,13 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
           }
         ));
       }
+
+      //履歴Storeへ追加
+      channelHistoryStore.update((channelHistory) => ({
+        history: [data.data, ...channelHistory.history],
+        atTop: channelHistory.atTop,
+        atEnd: channelHistory.atEnd,
+      }));
     } else {
       //新着設定
       hasNewMessageStore.update((hasNewMessage) => (
