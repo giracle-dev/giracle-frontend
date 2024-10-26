@@ -110,7 +110,7 @@
     <p class="text-center">最新のcreatedAt : { $channelHistoryStore.history[0]?.createdAt || 'loading...' }</p>
     {#each $channelHistoryStore.history as message, index}
 
-      {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] && index !== 0}
+      {#if message.createdAt === get(MessageReadTimeBeforeStore)[$page.params.id] && index !== 0}
         <NewMessageLine />
         <p>なぜ消える？</p>
       {/if}
