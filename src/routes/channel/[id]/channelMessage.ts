@@ -163,7 +163,7 @@ export const linkify = (text: string) => {
     placeholders.push({
       placeholder,
       content: userInfo
-        ? `<span class="w-fit inline-flex items-center glass px-1 rounded-lg">@<img src="${`/api/icon/${userInfo.id}`}" alt="${userInfo.id}" class="w-5 h-5 rounded-full object-cover"  /> ${userInfo.name}</span>`
+        ? `<span class="w-fit inline-flex items-center glass px-1 rounded-lg">@<img src="${`/api/user/icon/${userInfo.id}`}" alt="i" class="w-5 h-5 rounded-full object-cover"  /> ${userInfo.name}</span>`
         : `<span class="w-fit inline-flex items-center glass px-1 rounded-lg">@Unknown User</span>`,
     });
     return placeholder;
