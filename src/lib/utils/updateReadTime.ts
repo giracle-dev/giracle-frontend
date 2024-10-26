@@ -1,5 +1,5 @@
 import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
-import { MessageReadTimeStore } from "$lib/store/messageReadTime";
+import { MessageReadTimeStore, MessageReadTimeBeforeStore } from "$lib/store/messageReadTime";
 import { get } from "svelte/store";
 const messageRepository = repositoryFactory.get("message");
 
@@ -19,6 +19,11 @@ export default async function updateReadTime(
     )
     .then((res) => {
       console.log("updateReadTime :: 既読時間の更新", res);
+      //最後の既読時間用Storeへ既読時間をコピー
+      MessageReadTimeBeforeStore.update((store) => {
+        store[channelId] = get(MessageReadTimeStore)[channelId];
+        return store;
+      });
       //既読時間Storeを更新
       MessageReadTimeStore.update((store) => {
         store[channelId] = readTime;

@@ -9,6 +9,10 @@ const initialHasNewMessage: {[key: IChannel["id"]]: boolean} = {};
 export const MessageReadTimeStore = writable<{[key: string]: Date}>(
   initialMessageReadTime,
 );
+//履歴の既読時間Store
+export const MessageReadTimeBeforeStore = writable<{[key: string]: Date}>(
+  initialMessageReadTime,
+);
 //新着メッセージの有無Store
 export const hasNewMessageStore = writable<{[key: IChannel["id"]]: boolean}>(
   initialHasNewMessage,

@@ -15,7 +15,12 @@
   import updateReadTime from "$lib/utils/updateReadTime";
   import FilePreview from "./FilePreview.svelte";
   import MessageInput from "./MessageInput.svelte";
+  import NewMessageLine from "./NewMessageLine.svelte";
+  import { MessageReadTimeStore, MessageReadTimeBeforeStore } from "\$lib/store/messageReadTime";
   import type { IMessage } from "$lib/types/IMessage";
+  import { get } from "svelte/store";
+
+  let readTimeBefore = new Date();
 
   onMount(async () => {
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
@@ -29,6 +34,9 @@
 
     //スクロール監視
     MessageContainer?.addEventListener("scroll", scrollHandler);
+
+    //新着線用の最後に既読した時間
+    readTimeBefore = get(MessageReadTimeStore)[$page.params.id] || new Date();
     //既読時間を更新させてみる
     updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt);
 
@@ -101,6 +109,7 @@
     class="flex-grow flex flex-col-reverse overflow-y-auto"
   >
     {#each $channelHistoryStore.history as message, index}
+
       <div
         class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300"
         role="log"
@@ -194,6 +203,9 @@
         </div>
         <HoverMenu messageId={message.id} hoverMessageId={hoverMessageID} />
       </div>
+      {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] && index !== 0}
+        <NewMessageLine />
+      {/if}
       {#if isDateChanged(message)}
         <div class="flex items-center justify-center my-4">
           <hr class="border-t border-gray-300 w-full" />
