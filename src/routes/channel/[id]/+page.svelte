@@ -112,12 +112,12 @@
     <p class="text-center">最新のcreatedAt : { $channelHistoryStore.history[0]?.createdAt || 'loading...' }</p>
     {#each $channelHistoryStore.history as message, index}
 
-      {#if index !== 0}
-        {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id]}
-          <NewMessageLine />
-          index : { index }
-        {/if}
+      {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id]}
+        <NewMessageLine />
+        index : { index }
       {/if}
+
+      { message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] }
 
       <div
         class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300"
