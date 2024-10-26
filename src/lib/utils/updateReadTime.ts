@@ -19,7 +19,7 @@ export default async function updateReadTime(
     )
     .then((res) => {
       console.log("updateReadTime :: 既読時間の更新", res);
-      //最後の既読時間用Storeへ既読時間をコピー
+      //最後の既読時間用Storeへ既読時間を格納
       MessageReadTimeBeforeStore.update((store) => {
         store[channelId] = get(MessageReadTimeStore)[channelId];
         return store;
