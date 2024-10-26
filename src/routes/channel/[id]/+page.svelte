@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { navigating, page } from "$app/stores";
+  import { page } from "$app/stores";
   import { channelHistoryStore } from "$lib/store/channelHistory";
   import { onlineUserListStore, userListStore } from "$lib/store/user";
   import {
@@ -16,7 +16,7 @@
   import FilePreview from "./FilePreview.svelte";
   import MessageInput from "./MessageInput.svelte";
   import NewMessageLine from "./NewMessageLine.svelte";
-  import { MessageReadTimeStore, MessageReadTimeBeforeStore } from "\$lib/store/messageReadTime";
+  import { MessageReadTimeStore, MessageReadTimeBeforeStore } from "$lib/store/messageReadTime";
   import type { IMessage } from "$lib/types/IMessage";
   import { get } from "svelte/store";
 
@@ -38,7 +38,7 @@
     //新着線用の最後に既読した時間
     readTimeBefore = get(MessageReadTimeStore)[$page.params.id] || new Date();
     //既読時間を更新させてみる
-    updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt, false);
+    await updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt, false);
 
     window.addEventListener("focus", readItOnPageVisible);
   });
@@ -108,12 +108,15 @@
     class="flex-grow flex flex-col-reverse overflow-y-auto"
   >
     <p class="text-center">MessageReadTimeBeforeStore : { $MessageReadTimeBeforeStore[$page.params.id] }</p>
+    <p class="text-center">MessageReadTimeBeforeStore : get : { get(MessageReadTimeBeforeStore)[$page.params.id] }</p>
     <p class="text-center">最新のcreatedAt : { $channelHistoryStore.history[0]?.createdAt || 'loading...' }</p>
     {#each $channelHistoryStore.history as message, index}
 
-      {#if message.createdAt === get(MessageReadTimeBeforeStore)[$page.params.id] && index !== 0}
-        <NewMessageLine />
-        <p>なぜ消える？</p>
+      {#if index !== 0}
+        {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id]}
+          <NewMessageLine />
+          index : { index }
+        {/if}
       {/if}
 
       <div
