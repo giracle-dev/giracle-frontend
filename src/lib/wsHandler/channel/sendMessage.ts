@@ -14,13 +14,11 @@ interface IResponseWsSendMessage {
 let WINDOW_FOCUS = false;
 //ウィンドウがフォーカスされているかどうかの判定
 window.addEventListener('focus', () => {
-  console.log('Window is in focus');
   // ウィンドウがフォーカスを得たときの処理
   WINDOW_FOCUS = true;
 });
 //ウィンドウがフォーカスされていないかどうかの判定
 window.addEventListener('blur', () => {
-  console.log('Window is out of focus');
   // ウィンドウがフォーカスを失ったときの処理
   WINDOW_FOCUS = false;
 });
