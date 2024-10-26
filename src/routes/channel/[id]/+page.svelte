@@ -37,7 +37,7 @@
     //新着線用の最後に既読した時間
     readTimeBefore = get(MessageReadTimeStore)[$page.params.id] || new Date();
     //既読時間を更新させてみる
-    updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt);
+    updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt, false);
 
     window.addEventListener("focus", readItOnPageVisible);
   });
@@ -56,12 +56,11 @@
    */
   const readItOnPageVisible = () => {
     console.log("/channel/[id] :: readItOnPageVisible");
-    setTimeout(() => {
-      updateReadTime(
-        $page.params.id,
-        $channelHistoryStore.history[0]?.createdAt,
-      );
-    }, 250);
+    updateReadTime(
+      $page.params.id,
+      $channelHistoryStore.history[0]?.createdAt,
+      false
+    );
   };
 
   /**
@@ -107,7 +106,14 @@
     id="messageContainer"
     class="flex-grow flex flex-col-reverse overflow-y-auto"
   >
+    <p class="text-center">MessageReadTimeBeforeStore : { $MessageReadTimeBeforeStore[$page.params.id] }</p>
+    <p class="text-center">最新のcreatedAt : { $channelHistoryStore.history[0]?.createdAt || 'loading...' }</p>
     {#each $channelHistoryStore.history as message, index}
+
+      {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] && index !== 0}
+        <NewMessageLine />
+        <p>なぜ消える？</p>
+      {/if}
 
       <div
         class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300"
@@ -193,9 +199,7 @@
         </div>
         <HoverMenu messageId={message.id} hoverMessageId={hoverMessageID} />
       </div>
-      {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] && index !== 0}
-        <NewMessageLine />
-      {/if}
+
       {#if isDateChanged(message)}
         <div class="flex items-center justify-center my-4">
           <hr class="border-t border-gray-300 w-full" />
