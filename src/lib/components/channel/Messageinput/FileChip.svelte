@@ -71,7 +71,7 @@
 </script>
 
 <div
-  class="card bg-base-200 h-fit max-w-[350px] overflow-x-auto flex-col px-3 py-2"
+  class="card bg-base-200 shrink-0 h-fit max-w-[350px] overflow-x-auto flex-col px-3 py-2"
 >
   {#if fileData.type.startsWith("image/")}
     <figure>
