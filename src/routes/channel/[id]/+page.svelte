@@ -185,7 +185,7 @@
           {/if}
 
           {#if message.MessageFileAttached && message.MessageFileAttached.length > 0}
-            <div class="mt-2 rounded-lg">
+            <div class="flex flex-col gap-1 rounded-lg md:max-w-lg">
               {#each message.MessageFileAttached as fileData}
                 <FilePreview {fileData} />
               {/each}
