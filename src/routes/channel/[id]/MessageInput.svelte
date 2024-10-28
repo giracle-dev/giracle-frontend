@@ -4,6 +4,7 @@
   import { IconSend2, IconPaperclip } from "@tabler/icons-svelte";
   import type { IUser } from "$lib/types/IUser";
   import { IconFile } from "@tabler/icons-svelte";
+  import FileChip from "$lib/components/channel/Messageinput/FileChip.svelte";
 
   let userList: IUser[] = [];
   userListStore.subscribe((users) => {
@@ -28,11 +29,9 @@
     const items = event.clipboardData?.items;
     if (items) {
       for (const item of items) {
-        if (item.type.startsWith("image/")) {
-          const file = item.getAsFile();
-          if (file) {
-            selectedFiles = [...selectedFiles, file];
-          }
+        const file = item.getAsFile();
+        if (file) {
+          selectedFiles = [...selectedFiles, file];
         }
       }
     }
@@ -219,6 +218,7 @@
       </div>
     {:else if selectedFiles.length > 0}
       {#each selectedFiles as file}
+        <FileChip fileData={file} />
         <div class="file-preview-item relative flex items-center mb-2">
           {#if file.type.startsWith("image/")}
             <img
@@ -253,7 +253,7 @@
   </div>
 
   <div class="flex w-full mt-2">
-    <!-- <button
+    <button
       on:click={triggerFileInput}
       class="mr-2 p-2 text-white rounded bg-neutral"
     >
@@ -265,7 +265,7 @@
         class="hidden"
         multiple
       />
-    </button> -->
+    </button>
     <div class="flex grow gap-2 w-full">
       <textarea
         bind:value={message}
