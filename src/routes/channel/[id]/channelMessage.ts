@@ -242,7 +242,6 @@ export const sendMessage = async (event: CustomEvent) => {
   const message = event.detail.message;
   const fileIds = event.detail.fileIds;
   console.log("/channel/[id] :: sendMessage : message->", message);
-  if (message === "") return;
   await messageRepository
     .sendMessage(get(page).params.id, message, fileIds)
     .then((res) => {
