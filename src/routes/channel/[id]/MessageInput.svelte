@@ -3,8 +3,8 @@
   import { userListStore } from "$lib/store/user";
   import { IconSend2, IconPaperclip } from "@tabler/icons-svelte";
   import type { IUser } from "$lib/types/IUser";
-  import { IconFile } from "@tabler/icons-svelte";
   import FileChip from "$lib/components/channel/Messageinput/FileChip.svelte";
+  import { toastStore } from "$lib/store/toast";
 
   let userList: IUser[] = [];
   userListStore.subscribe((users) => {
@@ -15,6 +15,7 @@
     userList = users;
   });
   let message = ""; //メッセージ入力用
+  let fileIds: string[] = []; //メッセージに使うファイルのID
   let textarea: HTMLTextAreaElement;
   let selectedFiles: File[] = []; // 選択されたファイルを保持
   let mentionListVisible = false;
@@ -51,18 +52,27 @@
       return;
     }
 
-    let fileIds: string[] | null = null;
-    if (selectedFiles.length > 0) {
-      const uploadedFileIds = await Promise.all(
-        selectedFiles.map((file) => uploadFile(file)),
-      );
-      fileIds = uploadedFileIds.filter((id): id is string => id !== null); // nullを除外
+    //すべてのファイルがアップロードされたかどうかを確認
+    if (fileIds.length !== selectedFiles.length) {
+      //トースト通知表示
+      toastStore.update((toast) => {
+        return [
+          ...toast,
+          {
+            message: "ファイルのアップロードが完了していません",
+            type: "error",
+          },
+        ];
+      });
+      return;
     }
 
     const messageToSend: {
       message: string;
+      fileIds: string[];
     } = {
       message: message,
+      fileIds: fileIds,
     };
     dispatch("sendMessage", messageToSend);
     message = ""; // メッセージをリセット

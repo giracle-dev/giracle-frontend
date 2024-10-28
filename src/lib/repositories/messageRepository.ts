@@ -1,12 +1,12 @@
 import type { IResponseHasNewMessage } from "$lib/types/IMessage";
 
 export default {
-  sendMessage: async (channelId: string, message: string): Promise<void> => {
+  sendMessage: async (channelId: string, message: string, fileIds: string[]): Promise<void> => {
     const response = await fetch("/api/message/send", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ channelId, message }),
+      body: JSON.stringify({ channelId, message, fileIds }),
     });
     if (!response.ok)
       throw new Error("messageRepository :: sendMessage : エラー");
