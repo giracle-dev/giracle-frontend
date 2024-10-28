@@ -218,22 +218,11 @@
       </div>
     {:else if selectedFiles.length > 0}
       {#each selectedFiles as file}
-        <FileChip fileData={file} removeFilePROXY={(f) => removeFile(f)} />
-        <div class="file-preview-item relative flex items-center mb-2">
-          {#if file.type.startsWith("image/")}
-            <img
-              src={URL.createObjectURL(file)}
-              alt={file.name}
-              class="file-preview-image max-w-12 max-h-12 mr-2"
-            />
-          {:else}
-            <div class="file-preview-image max-w-12 max-h-12 mr-2">
-              <IconFile />
-              <!-- 最初の３文字だけ -->
-              {file.name.slice(0, 3) + "..."}
-            </div>
-          {/if}
-        </div>
+        <FileChip
+          fileData={file}
+          removeFilePROXY={(f) => removeFile(f)}
+          appendFileId={(Fid) => fileIds.push(Fid)}
+        />
       {/each}
     {/if}
   </div>

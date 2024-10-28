@@ -4,6 +4,7 @@
 
   export let fileData: File;
   export let removeFilePROXY: (file: File) => void;
+  export let appendFileId: (fileId: string) => void;
 
   let uploadResult = "";
   let progress = 0;
@@ -28,8 +29,10 @@
       if (event.lengthComputable) {
         //アップロード状況を更新する
         progress = Math.round((event.loaded / event.total) * 100);
-        if (progress % 5 === 0)
+        /*
+        if (progress % 10 === 0)
           console.log("FileChip :: uploadIt : progress->", progress);
+        */
       }
     });
 
@@ -37,13 +40,15 @@
     xhr.addEventListener("load", () => {
       if (xhr.status === 200) {
         console.log("FileItem :: 成功!->", xhr.responseText);
-        const result: { result: string; data: string } = JSON.parse(
+        const result: { result: string; data: { fileId: string } } = JSON.parse(
           xhr.responseText,
         );
         //結果を格納
         uploadResult = "SUCCESS";
         //結果がちゃんと取れているなら親コンポにファイルIdを渡す
         if (result.data !== undefined) {
+          appendFileId(result.data.fileId);
+          uploadResult = "SUCCESS";
         } else {
           //エラーとして設定
           uploadResult = "FAILED";
