@@ -13,6 +13,7 @@
   import UserProfile from "$lib/components/unique/userProfile.svelte";
   import HoverMenu from "./hoverMenu.svelte";
   import updateReadTime from "$lib/utils/updateReadTime";
+  import FilePreview from "./FilePreview.svelte";
   import MessageInput from "./MessageInput.svelte";
   import type { IMessage } from "$lib/types/IMessage";
 
@@ -144,6 +145,7 @@
           <div class="break-words break-all">
             {@html linkify(message.content)}
           </div>
+
           {#if message.MessageUrlPreview && message.MessageUrlPreview.length > 0}
             <div class="mt-2 p-2 border rounded-lg">
               {#each message.MessageUrlPreview as preview}
@@ -178,6 +180,14 @@
                     </div>
                   {/if}
                 </div>
+              {/each}
+            </div>
+          {/if}
+
+          {#if message.MessageFileAttached && message.MessageFileAttached.length > 0}
+            <div class="mt-2 p-2 border rounded-lg">
+              {#each message.MessageFileAttached as fileData}
+                <FilePreview fileId={fileData.id} />
               {/each}
             </div>
           {/if}
