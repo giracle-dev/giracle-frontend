@@ -29,6 +29,7 @@ export interface IMessageFileAttached {
   actualFileName: string;
   savedFileName: string;
   size: number;
+  type: File["type"];
 }
 
 export interface IRequestChannelHistoryBody {
