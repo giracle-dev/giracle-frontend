@@ -3,7 +3,8 @@
   import { userListStore } from "$lib/store/user";
   import { IconSend2, IconPaperclip } from "@tabler/icons-svelte";
   import type { IUser } from "$lib/types/IUser";
-  import { IconFile } from "@tabler/icons-svelte";
+  import FileChip from "$lib/components/channel/Messageinput/FileChip.svelte";
+  import { toastStore } from "$lib/store/toast";
 
   let userList: IUser[] = [];
   userListStore.subscribe((users) => {
@@ -14,6 +15,7 @@
     userList = users;
   });
   let message = ""; //メッセージ入力用
+  let fileIds: string[] = []; //メッセージに使うファイルのID
   let textarea: HTMLTextAreaElement;
   let selectedFiles: File[] = []; // 選択されたファイルを保持
   let mentionListVisible = false;
@@ -28,11 +30,9 @@
     const items = event.clipboardData?.items;
     if (items) {
       for (const item of items) {
-        if (item.type.startsWith("image/")) {
-          const file = item.getAsFile();
-          if (file) {
-            selectedFiles = [...selectedFiles, file];
-          }
+        const file = item.getAsFile();
+        if (file) {
+          selectedFiles = [...selectedFiles, file];
         }
       }
     }
@@ -52,29 +52,33 @@
       return;
     }
 
-    let fileIds: string[] | null = null;
-    if (selectedFiles.length > 0) {
-      const uploadedFileIds = await Promise.all(
-        selectedFiles.map((file) => uploadFile(file)),
-      );
-      fileIds = uploadedFileIds.filter((id): id is string => id !== null); // nullを除外
+    //すべてのファイルがアップロードされたかどうかを確認
+    if (fileIds.length !== selectedFiles.length) {
+      //トースト通知表示
+      toastStore.update((toast) => {
+        return [
+          ...toast,
+          {
+            message: "ファイルのアップロードが完了していません",
+            type: "error",
+          },
+        ];
+      });
+      return;
     }
 
     const messageToSend: {
       message: string;
+      fileIds: string[];
     } = {
       message: message,
+      fileIds: fileIds,
     };
     dispatch("sendMessage", messageToSend);
     message = ""; // メッセージをリセット
     selectedFiles = []; // ファイルをリセット
+    fileIds = []; // ファイルIDをリセット
     clickSendAdjustTextareaHeight(); // メッセージ送信後に高さをリセット
-  };
-
-  // ファイルをアップロードする関数
-  const uploadFile = async (file: File): Promise<string | null> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // 1秒待つ
-    return "dummyFileId";
   };
 
   const handleFileChange = (event: Event) => {
@@ -189,7 +193,7 @@
 </script>
 
 <div class="flex flex-col w-full">
-  <div class="file-preview-list flex gap-2">
+  <div class="file-preview-list overflow-x-auto w-full flex items-end gap-2">
     {#if mentionListVisible}
       <div
         class="relative flex flex-col gap-2 mb-2 border w-full max-h-32 overflow-y-auto"
@@ -219,41 +223,17 @@
       </div>
     {:else if selectedFiles.length > 0}
       {#each selectedFiles as file}
-        <div class="file-preview-item relative flex items-center mb-2">
-          {#if file.type.startsWith("image/")}
-            <img
-              src={URL.createObjectURL(file)}
-              alt={file.name}
-              class="file-preview-image max-w-12 max-h-12 mr-2"
-            />
-            <button
-              on:click={() => removeFile(file)}
-              class="remove-icon absolute top-0 right-0 m-1 text-red-500"
-              aria-label="削除"
-            >
-              ✖️
-            </button>
-          {:else}
-            <div class="file-preview-image max-w-12 max-h-12 mr-2">
-              <IconFile />
-              <!-- 最初の３文字だけ -->
-              {file.name.slice(0, 3) + "..."}
-            </div>
-            <button
-              on:click={() => removeFile(file)}
-              class="remove-icon absolute top-0 right-0 m-1 text-red-500"
-              aria-label="削除"
-            >
-              ✖️
-            </button>
-          {/if}
-        </div>
+        <FileChip
+          fileData={file}
+          removeFilePROXY={(f) => removeFile(f)}
+          appendFileId={(Fid) => fileIds.push(Fid)}
+        />
       {/each}
     {/if}
   </div>
 
   <div class="flex w-full mt-2">
-    <!-- <button
+    <button
       on:click={triggerFileInput}
       class="mr-2 p-2 text-white rounded bg-neutral"
     >
@@ -265,7 +245,7 @@
         class="hidden"
         multiple
       />
-    </button> -->
+    </button>
     <div class="flex grow gap-2 w-full">
       <textarea
         bind:value={message}
@@ -281,7 +261,7 @@
         selectedFiles.length === 0
           ? 'opacity-50'
           : ''}"
-        disabled={message.trim() === ""}
+        disabled={message.trim() === "" && selectedFiles.length === 0}
       >
         <IconSend2 size={20} />
       </button>
