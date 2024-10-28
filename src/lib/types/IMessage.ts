@@ -8,6 +8,7 @@ export interface IMessage {
   isSystemMessage: false;
   userId: string;
   MessageUrlPreview: IMessageUrlPreview[];
+  MessageFileAttached: IMessageFileAttached[]
 }
 
 export interface IMessageUrlPreview {
@@ -18,6 +19,16 @@ export interface IMessageUrlPreview {
   title: string;
   type: "article" | "video.other" | "UNKNOWN";
   url: string;
+}
+
+export interface IMessageFileAttached {
+  id: string;
+  userId: string;
+  channelId: string;
+  messageId: string | null;
+  actualFileName: string;
+  savedFileName: string;
+  size: number;
 }
 
 export interface IRequestChannelHistoryBody {
