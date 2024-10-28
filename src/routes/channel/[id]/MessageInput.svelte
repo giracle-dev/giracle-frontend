@@ -80,12 +80,6 @@
     clickSendAdjustTextareaHeight(); // メッセージ送信後に高さをリセット
   };
 
-  // ファイルをアップロードする関数
-  const uploadFile = async (file: File): Promise<string | null> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // 1秒待つ
-    return "dummyFileId";
-  };
-
   const handleFileChange = (event: Event) => {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
