@@ -71,14 +71,14 @@
 </script>
 
 <div
-  class="card bg-base-200 shrink-0 h-fit max-w-[350px] overflow-x-auto flex-col px-3 py-2"
+  class="card bg-base-200 shrink-0 h-fit max-w-[200px] md:max-w-[350px] overflow-x-auto flex-col px-3 py-2"
 >
   {#if fileData.type.startsWith("image/")}
     <figure>
       <img
         src={URL.createObjectURL(fileData)}
         alt={fileData.name}
-        class="max-h-[150px] max-w-[150px] rounded-xl"
+        class="max-h-[100px] md:max-h-[150px] max-w-[150px] rounded-xl"
       />
     </figure>
   {/if}
