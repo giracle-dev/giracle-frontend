@@ -261,7 +261,7 @@
         selectedFiles.length === 0
           ? 'opacity-50'
           : ''}"
-        disabled={message.trim() === ""}
+        disabled={message.trim() === "" && selectedFiles.length === 0}
       >
         <IconSend2 size={20} />
       </button>
