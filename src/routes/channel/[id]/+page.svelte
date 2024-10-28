@@ -185,9 +185,9 @@
           {/if}
 
           {#if message.MessageFileAttached && message.MessageFileAttached.length > 0}
-            <div class="mt-2 p-2 border rounded-lg">
+            <div class="mt-2 rounded-lg">
               {#each message.MessageFileAttached as fileData}
-                <FilePreview fileId={fileData.id} />
+                <FilePreview {fileData} />
               {/each}
             </div>
           {/if}
