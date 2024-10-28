@@ -1,21 +1,95 @@
 <script lang="ts">
+  import { page } from "$app/stores";
+  import { onMount } from "svelte";
+
   export let fileData: File;
+
+  let uploadResult = "";
+  let progress = 0;
+
+  /**
+   * ファイルをアップロードする
+   */
+  const uploadIt = () => {
+    if (fileData.arrayBuffer === null) return;
+
+    //アップロードするデータフォームオブジェクト生成
+    const formData = new FormData();
+    //送信者情報とディレクトリを付与
+    formData.append("channelId", $page.params.id);
+    //ファイルそのものを内包
+    formData.append("file", fileData);
+
+    //アップロード用のXHRインスタンス
+    const xhr = new XMLHttpRequest();
+    //アップロード状況追跡用
+    xhr.upload.addEventListener("progress", (event) => {
+      if (event.lengthComputable) {
+        //アップロード状況を更新する
+        progress = Math.round((event.loaded / event.total) * 100);
+        if (progress % 5 === 0)
+          console.log("FileChip :: uploadIt : progress->", progress);
+      }
+    });
+
+    //アップロードの結果用
+    xhr.addEventListener("load", () => {
+      if (xhr.status === 200) {
+        console.log("FileItem :: 成功!->", xhr.responseText);
+        const result: { result: string; data: string } = JSON.parse(
+          xhr.responseText,
+        );
+        //結果を格納
+        uploadResult = "SUCCESS";
+        //結果がちゃんと取れているなら親コンポにファイルIdを渡す
+        if (result.data !== undefined) {
+        } else {
+          //エラーとして設定
+          uploadResult = "FAILED";
+        }
+      } else {
+        uploadResult = "FAILED";
+        console.error("FileChip :: 失敗...->", xhr.statusText);
+      }
+    });
+
+    //アップロード先のURLを指定
+    xhr.open("POST", "/api/message/file/upload");
+    //アップロードする
+    xhr.send(formData);
+  };
+
+  onMount(() => uploadIt());
 </script>
 
-<div class="card bg-base-200 px-3 py-2">
+<div class="card bg-base-200 flex flex-col px-3 py-2">
   {#if fileData.type.startsWith("image/")}
     <figure>
       <img
         src={URL.createObjectURL(fileData)}
         alt={fileData.name}
-        class="max-h-[150px] max-w-[150px]"
+        class="max-h-[150px] max-w-[150px] rounded-xl"
       />
     </figure>
   {/if}
 
-  <p>
-    {fileData.name.length > 15
-      ? fileData.name.slice(0, 15) + "..."
-      : fileData.name}
-  </p>
+  <span class="flex flex-row items-center gap-1">
+    {#if uploadResult === "SUCCESS"}
+      <span class="text-green-500">✔</span>
+    {:else if uploadResult === "FAILED"}
+      <span class="text-red-500">✖</span>
+    {:else}
+      <div
+        class="radial-progress"
+        style={`--value:${progress}; --size:1rem;`}
+        role="progressbar"
+      />
+    {/if}
+    <p>
+      {fileData.name.length > 15
+        ? fileData.name.slice(0, 15) + "..."
+        : fileData.name}
+    </p>
+    <button class="btn btn-xs">x</button>
+  </span>
 </div>
