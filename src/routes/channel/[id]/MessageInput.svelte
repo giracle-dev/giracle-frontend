@@ -198,7 +198,7 @@
 </script>
 
 <div class="flex flex-col w-full">
-  <div class="file-preview-list flex gap-2">
+  <div class="file-preview-list flex items-end gap-2">
     {#if mentionListVisible}
       <div
         class="relative flex flex-col gap-2 mb-2 border w-full max-h-32 overflow-y-auto"

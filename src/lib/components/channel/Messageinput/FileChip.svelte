@@ -1,5 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores";
+  import displaySizeForHuman from "$lib/utils/DisplaySizeForHuman";
+  import { IconSquareRoundedXFilled, IconX } from "@tabler/icons-svelte";
   import { onMount } from "svelte";
 
   export let fileData: File;
@@ -68,7 +70,9 @@
   onMount(() => uploadIt());
 </script>
 
-<div class="card bg-base-200 flex flex-col px-3 py-2">
+<div
+  class="card bg-base-200 h-fit max-w-[350px] overflow-x-auto flex-col px-3 py-2"
+>
   {#if fileData.type.startsWith("image/")}
     <figure>
       <img
@@ -92,13 +96,17 @@
       />
     {/if}
 
-    <p>
-      {fileData.name.length > 15
-        ? fileData.name.slice(0, 15) + "..."
+    <p class="truncate">
+      {fileData.name.length > 25
+        ? fileData.name.slice(0, 25) + "..."
         : fileData.name}
     </p>
-    <button on:click={() => removeFilePROXY(fileData)} class="btn btn-xs"
-      >x</button
+    <span class="badge shrink-0">{displaySizeForHuman(fileData.size)}</span>
+    <button
+      on:click={() => removeFilePROXY(fileData)}
+      class="btn btn-xs btn-square"
     >
+      <IconSquareRoundedXFilled />
+    </button>
   </span>
 </div>
