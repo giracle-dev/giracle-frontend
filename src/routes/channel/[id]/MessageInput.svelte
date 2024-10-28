@@ -218,7 +218,7 @@
       </div>
     {:else if selectedFiles.length > 0}
       {#each selectedFiles as file}
-        <FileChip fileData={file} />
+        <FileChip fileData={file} removeFilePROXY={(f) => removeFile(f)} />
         <div class="file-preview-item relative flex items-center mb-2">
           {#if file.type.startsWith("image/")}
             <img

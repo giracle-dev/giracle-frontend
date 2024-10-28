@@ -3,6 +3,7 @@
   import { onMount } from "svelte";
 
   export let fileData: File;
+  export let removeFilePROXY: (file: File) => void;
 
   let uploadResult = "";
   let progress = 0;
@@ -85,11 +86,14 @@
         role="progressbar"
       />
     {/if}
+
     <p>
       {fileData.name.length > 15
         ? fileData.name.slice(0, 15) + "..."
         : fileData.name}
     </p>
-    <button class="btn btn-xs">x</button>
+    <button on:click={() => removeFilePROXY(fileData)} class="btn btn-xs"
+      >x</button
+    >
   </span>
 </div>
