@@ -77,6 +77,7 @@
     dispatch("sendMessage", messageToSend);
     message = ""; // メッセージをリセット
     selectedFiles = []; // ファイルをリセット
+    fileIds = []; // ファイルIDをリセット
     clickSendAdjustTextareaHeight(); // メッセージ送信後に高さをリセット
   };
 
