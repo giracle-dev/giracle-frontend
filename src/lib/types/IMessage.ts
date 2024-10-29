@@ -45,3 +45,8 @@ export interface IResponseHasNewMessage {
     [key: IChannel["id"]]: boolean;
   }
 }
+
+export interface IResponseSearchMessage {
+  message: "Searched messages",
+  data: IMessage[]
+}
