@@ -20,7 +20,7 @@
     <img
       src={`/api/message/file/${fileData.id}`}
       alt={fileData.actualFileName}
-      class="max-h-[150px] md:max-h-[350px]"
+      class="max-h-[150px] md:max-h-[350px] rounded-md"
     />
   {:else}
     <div class="flex bg-base-200 items-center rounded px-4 py-3">
