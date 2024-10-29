@@ -33,7 +33,7 @@
     <label
       for="my-drawer-2"
       aria-label="close sidebar"
-      class="drawer-overlay"
+      class="drawer-overlay flex flex-col"
     />
     <div
       class=" menu bg-base-200 text-base-content min-h-full w-60 md:w-60 p-2"
@@ -62,10 +62,12 @@
           </div>
         </div>
       </div>
+
       <!-- ボーダー -->
       <div class="border-t border-base-300 my-2"></div>
+
       <!-- Sidebar content here -->
-      <ul class="h-[calc(100svh-240px)] overflow-y-auto py-2 w-full">
+      <ul class="grow overflow-y-auto py-2 w-full">
         <li><a href="/channel" on:click={handleDrawer}>チャンネル一覧</a></li>
         {#if channelList && channelList.length > 0}
           {#each channelList as channel}
@@ -85,6 +87,11 @@
           {/each}
         {/if}
       </ul>
+
+      <div class="border rounded p-3">
+        検索
+      </div>
+
       <!-- user -->
       <div class="bg-base-700 pa-2 flex items-center gap-2 h-[64px]">
         <details class="dropdown dropdown-top flex-1">
