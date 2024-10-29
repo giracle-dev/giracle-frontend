@@ -40,8 +40,8 @@
   <div class="card bg-base-200">
     <div class="card-body">
       <span class="flex flex-row items-center">
-        <p>総ストレージ量 :</p>
-        <code>{FileStorageUsage}</code>
+        <span class="text-xl">総ストレージ量 :</span>
+        <code class="text-xl ml-auto">{FileStorageUsage}</code>
       </span>
 
       <div class="divider" />

@@ -1,11 +1,11 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import {
-    IconUser,
-    IconCirclesRelation,
-    IconMailFilled,
-    IconServer,
-    IconHomeCog,
+      IconUser,
+      IconCirclesRelation,
+      IconMailFilled,
+      IconServer,
+      IconHomeCog, IconDeviceFloppy,
   } from "@tabler/icons-svelte";
 </script>
 
@@ -56,7 +56,7 @@
           goto("/setting/storage-manage");
         }}
       >
-        <IconCirclesRelation size={16} />
+        <IconDeviceFloppy size={16} />
       </button>
       <div class="text-xs">ストレージ管理</div>
     </div>
