@@ -88,9 +88,12 @@
         {/if}
       </ul>
 
-      <div class="border rounded p-3">
-        検索
-      </div>
+      <!-- search -->
+      <a href="/search">
+        <div class="border rounded p-3">
+          検索
+        </div>
+      </a>
 
       <!-- user -->
       <div class="bg-base-700 pa-2 flex items-center gap-2 h-[64px]">
