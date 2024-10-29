@@ -12,8 +12,11 @@
   let userId: string | undefined = undefined;
 
   let result: IMessage[] = [];
+  let fetchResult: "success"|"error"|"-" = "-";
+  let processing = false;
 
   const searchIt = async () => {
+    processing = true;
     await messageRepository
       .searchMessage({
         content: query,
@@ -23,10 +26,13 @@
       .then((res) => {
         console.log("/search :: searchIt : res->", res);
         result = res.data;
+        fetchResult = "success";
       })
       .catch((err) => {
         console.error("/search :: searchIt : err->", err);
+          fetchResult = "error";
       });
+    processing = false;
   }
 </script>
 
@@ -86,6 +92,14 @@
 
       <!-- ここから結果表示 -->
       <div class="flex flex-col gap-2">
+        {#if fetchResult === 'error'}
+          <p class="text-center">結果を取得できませんでした...</p>
+        {/if}
+        {#if processing}
+          <p class="text-center">処理中...</p>
+          <progress class="progress w-3/4 mx-auto"></progress>
+        {/if}
+
         {#each result as message}
           <div class="card bg-base-300 px-4 py-3 flex flex-col gap-2">
 
