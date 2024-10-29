@@ -51,6 +51,17 @@
     </div>
     <div class=" flex flex-col">
       <button
+              class="btn btn-ghost mx-auto btn-circle"
+              on:click={() => {
+          goto("/setting/storage-manage");
+        }}
+      >
+        <IconCirclesRelation size={16} />
+      </button>
+      <div class="text-xs">ストレージ管理</div>
+    </div>
+    <div class=" flex flex-col">
+      <button
         class="btn btn-ghost mx-auto btn-circle"
         on:click={() => {
           goto("/setting/role-setting");
