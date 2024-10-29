@@ -29,7 +29,7 @@
   }
 </script>
 
-<div class="px-2 pt-2">
+<div class="px-2 pt-2 h-full overflow-y-auto">
   <div class="card bg-base-200">
     <div class="card-body">
 
