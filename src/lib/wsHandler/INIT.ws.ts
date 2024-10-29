@@ -3,6 +3,7 @@ import { updateMessageWsOn } from "./channel/updateMessage";
 import { ReadTimeUpdated } from "./message/ReadTimeUpdated";
 import { userConnectWsOn } from "./user/userConnected";
 import { userDisconnectedWsOn } from "./user/userDisconnected";
+import { deleteMessageWsOn } from "./message/deleteMessage";
 export let ws: WebSocket = new WebSocket("/ws");
 
 //WS接続がエラーで閉じられた場合のフラグ
@@ -31,6 +32,7 @@ export const initWS = () => {
       console.log("INIT.ws :: initWS : event->", json);
       sendMessageWsOn(json);
       updateMessageWsOn(json);
+      deleteMessageWsOn(json);
       userConnectWsOn(json);
       userDisconnectedWsOn(json);
       ReadTimeUpdated(json);

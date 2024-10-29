@@ -12,6 +12,18 @@ export default {
       throw new Error("messageRepository :: sendMessage : エラー");
     return await response.json();
   },
+  deleteMessage: async (messageId: string): Promise<void> =>{
+    const response = await fetch("/api/message/delete", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ messageId }),
+    });
+    console.log(response);
+    if(!response.ok)
+      throw new Error("messageRepository :: deleteMessage : エラー");
+    return await response.json();
+  },
   updateReadTime: async (channelId: string, readTime: Date): Promise<void> => {
     const response = await fetch("/api/message/read-time/update", {
       method: "POST",
