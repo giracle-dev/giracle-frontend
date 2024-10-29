@@ -3,6 +3,7 @@
   import {IconSettings} from "@tabler/icons-svelte";
   import {repositoryFactory} from "$lib/repositories/RepositoryFactory";
   import {onMount} from "svelte";
+  import displaySizeForHuman from "$lib/utils/DisplaySizeForHuman";
   const serverRepository = repositoryFactory.get("server");
 
   let FileStorageUsage = 0;
@@ -13,6 +14,7 @@
       .getStorageUsage()
       .then((res) => {
         console.log("/server/storage-manage :: getStorageUsage : res->", res);
+        FileStorageUsage = res.data;
       })
       .catch((err) => {
         console.log("/server/storage-manage :: getStorageUsage : エラー->", err);
@@ -41,7 +43,7 @@
     <div class="card-body">
       <span class="flex flex-row items-center">
         <span class="text-xl">総ストレージ量 :</span>
-        <code class="text-xl ml-auto">{FileStorageUsage}</code>
+        <code class="text-xl ml-auto">{displaySizeForHuman(FileStorageUsage)}</code>
       </span>
 
       <div class="divider" />
