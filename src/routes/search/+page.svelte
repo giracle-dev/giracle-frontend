@@ -30,20 +30,21 @@
   }
 </script>
 
-<div class="px-2 pt-2 h-full overflow-y-auto">
+<div class="px-2 pt-2 h-full max-w-[1150px] mx-auto overflow-y-auto">
   <div class="card bg-base-200">
     <div class="card-body">
 
-      <label class="input input-bordered flex items-center gap-2">
-        <IconSearch size={20} />
+      <div class="join join-horizontal">
         <input
           bind:value={query}
           type="text"
           placeholder="検索文字"
-          class="grow"
+          class="grow input input-bordered join-item"
         />
-        <button on:click={searchIt}>検索</button>
-      </label>
+        <button on:click={searchIt} class="btn btn-square btn-primary join-item">
+          <IconSearch size={16} />
+        </button>
+      </div>
 
       <div class="flex flex-row items-center">
         <p class="truncate">URLプレビュー</p>
@@ -83,36 +84,42 @@
 
       <div class="divider" />
 
+      <!-- ここから結果表示 -->
       <div class="flex flex-col gap-2">
         {#each result as message}
-          <div class="card bg-base-300">
-            <div class="card-body">
-              {$userListStore.find((user) => user.id === message.userId)?.name}
-              <p>{message.content}</p>
+          <div class="card bg-base-300 px-4 py-3 flex flex-col gap-2">
 
-              {#if message.MessageUrlPreview}
-                {#each message.MessageUrlPreview as urlPreview}
-                  <div class="card border px-2 py-2 flex flex-col sm:flex-row gap-1 items-center">
-                    <img
-                      src={urlPreview.imageLink}
-                      alt="urlPreview"
-                      class="h-min w-min max-h-[150px] max-w-[150px] rounded-lg"
-                    />
-                    <div>
-                      <a href={urlPreview.url} target="_blank">{urlPreview.title}</a>
-                      <p>{urlPreview.description}</p>
-                    </div>
-                  </div>
-                {/each}
-              {/if}
-              {#if message.MessageFileAttached}
-                {#each message.MessageFileAttached as fileData}
-                  <span class="">
-                    <FilePreview {fileData} forcedImageSize="150px" />
-                  </span>
-                {/each}
-              {/if}
+            <div class="flex flex-row items-center gap-2">
+              <div class="w-8 rounded-full">
+                <img src="/api/user/icon/{message.userId}" alt="userIcon" />
+              </div>
+              {$userListStore.find((user) => user.id === message.userId)?.name}
             </div>
+            <p>{message.content}</p>
+
+            {#if message.MessageUrlPreview}
+              {#each message.MessageUrlPreview as urlPreview}
+                <div class="card border px-2 py-2 flex flex-col sm:flex-row gap-1 items-center">
+                  <img
+                    src={urlPreview.imageLink}
+                    alt="urlPreview"
+                    class="h-min w-min max-h-[150px] max-w-[150px] rounded-lg"
+                  />
+                  <div>
+                    <a href={urlPreview.url} target="_blank">{urlPreview.title}</a>
+                    <p>{urlPreview.description}</p>
+                  </div>
+                </div>
+              {/each}
+            {/if}
+            {#if message.MessageFileAttached}
+              {#each message.MessageFileAttached as fileData}
+                <span class="">
+                  <FilePreview {fileData} forcedImageSize="150px" />
+                </span>
+              {/each}
+            {/if}
+
           </div>
         {/each}
       </div>
