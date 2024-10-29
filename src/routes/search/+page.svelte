@@ -3,6 +3,7 @@
   import {IconSearch} from "@tabler/icons-svelte";
   import type {IMessage} from "$lib/types/IMessage";
   import { userListStore } from "$lib/store/user";
+  import FilePreview from "../channel/[id]/FilePreview.svelte";
   const messageRepository = repositoryFactory.get("message");
 
   let query = "";
@@ -88,6 +89,29 @@
             <div class="card-body">
               {$userListStore.find((user) => user.id === message.userId)?.name}
               <p>{message.content}</p>
+
+              {#if message.MessageUrlPreview}
+                {#each message.MessageUrlPreview as urlPreview}
+                  <div class="card border px-2 py-2 flex flex-col sm:flex-row gap-1 items-center">
+                    <img
+                      src={urlPreview.imageLink}
+                      alt="urlPreview"
+                      class="h-min w-min max-h-[150px] max-w-[150px] rounded-lg"
+                    />
+                    <div>
+                      <a href={urlPreview.url} target="_blank">{urlPreview.title}</a>
+                      <p>{urlPreview.description}</p>
+                    </div>
+                  </div>
+                {/each}
+              {/if}
+              {#if message.MessageFileAttached}
+                {#each message.MessageFileAttached as fileData}
+                  <span class="">
+                    <FilePreview {fileData} forcedImageSize="150px" />
+                  </span>
+                {/each}
+              {/if}
             </div>
           </div>
         {/each}
