@@ -1,6 +1,10 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { IconSettings, IconPointFilled } from "@tabler/icons-svelte";
+  import {
+    IconSettings,
+    IconPointFilled,
+    IconSearch,
+  } from "@tabler/icons-svelte";
   import { goto } from "$app/navigation";
   import { myUserStore, onlineUserListStore } from "$lib/store/user";
   import type { IChannel } from "$lib/types/IChannel";
@@ -90,8 +94,11 @@
 
       <!-- search -->
       <a href="/search">
-        <div class="border rounded p-3">
-          検索
+        <div
+          class={`${$page.url.pathname === "/search" ? "bg-primary text-primary-content" : "hover:bg-base-300"} rounded-lg p-3 flex flex-row items-center gap-3`}
+        >
+          <IconSearch size={20} />
+          <p>検索</p>
         </div>
       </a>
 
