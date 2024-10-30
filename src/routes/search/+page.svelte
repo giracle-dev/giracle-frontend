@@ -9,6 +9,7 @@
   import type { IMessage } from "$lib/types/IMessage";
   import { userListStore } from "$lib/store/user";
   import FilePreview from "../channel/[id]/FilePreview.svelte";
+  import { channelListStore } from "$lib/store/channel";
   const messageRepository = repositoryFactory.get("message");
 
   let query = "";
@@ -158,14 +159,30 @@
         {/if}
 
         {#each result as message}
-          <div class="card bg-base-300 px-4 py-3 flex flex-col gap-2">
+          <div class="card bg-base-300 px-4 py-3 flex flex-col">
+            <!-- チャンネルと時間表示 -->
+            <div
+              class="flex flex-row w-full gap-2 overflow-x-auto items-center"
+            >
+              <span class="badge shrink-0">
+                {$channelListStore.find(
+                  (channel) => channel.id === message.channelId,
+                )?.name}
+              </span>
+              <span class="badge shrink-0 badge-neutral ml-auto">
+                {new Date(message.createdAt).toLocaleString()}
+              </span>
+            </div>
+
+            <!-- ユーザーとメッセージ本文 -->
+            <div class="divider my-1"></div>
             <div class="flex flex-row items-center gap-2">
               <div class="w-8 rounded-full">
                 <img src="/api/user/icon/{message.userId}" alt="userIcon" />
               </div>
               {$userListStore.find((user) => user.id === message.userId)?.name}
             </div>
-            <p>{message.content}</p>
+            <p class="my-2">{message.content}</p>
 
             <!-- URLプレビュー -->
             {#if message.MessageUrlPreview}
