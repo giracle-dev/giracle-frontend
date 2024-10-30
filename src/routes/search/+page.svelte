@@ -15,25 +15,40 @@
   let hasUrlPreview: boolean | undefined = undefined;
   let hasFileAttachment: boolean | undefined = undefined;
   //let userId: string | undefined = undefined;
+  let loadIndex = 1;
   let dateOrder: "desc" | "asc" = "desc";
 
   let result: IMessage[] = [];
   let fetchResult: "success" | "error" | "-" = "-";
   let processing = false;
+  let hasMoreMessages = false;
 
-  const searchIt = async () => {
+  const searchIt = async (continuousSearch: boolean = false) => {
     processing = true;
     await messageRepository
       .searchMessage({
         content: query,
         hasUrlPreview,
         hasFileAttachment,
+        loadIndex,
         dateOrder,
       })
       .then((res) => {
         console.log("/search :: searchIt : res->", res);
-        result = res.data;
+        //連続検索なら結果を追加、そうでないなら上書き
+        if (continuousSearch) {
+          result = [...result, ...res.data];
+        } else {
+          result = res.data;
+        }
         fetchResult = "success";
+
+        //50件以上ある場合はもっと読み込むボタンを表示
+        if (res.data.length === 50) {
+          hasMoreMessages = true;
+        } else {
+          hasMoreMessages = false;
+        }
       })
       .catch((err) => {
         console.error("/search :: searchIt : err->", err);
@@ -54,7 +69,10 @@
           class="grow input input-bordered join-item"
         />
         <button
-          on:click={searchIt}
+          on:click={() => {
+            loadIndex = 1;
+            searchIt(false);
+          }}
           class="btn btn-square btn-primary join-item"
         >
           <IconSearch size={16} />
@@ -133,6 +151,9 @@
           <p class="text-center">処理中...</p>
           <progress class="progress w-3/4 mx-auto"></progress>
         {/if}
+        {#if fetchResult === "success" && result.length === 0}
+          <p class="text-center">結果がありません...</p>
+        {/if}
 
         {#each result as message}
           <div class="card bg-base-300 px-4 py-3 flex flex-col gap-2">
@@ -172,6 +193,16 @@
             {/if}
           </div>
         {/each}
+
+        {#if hasMoreMessages}
+          <button
+            on:click={() => {
+              loadIndex++;
+              searchIt(true);
+            }}
+            class="btn btn-primary">もっと読み込む</button
+          >
+        {/if}
       </div>
     </div>
   </div>
