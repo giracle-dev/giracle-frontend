@@ -16,6 +16,7 @@
   import FilePreview from "./FilePreview.svelte";
   import MessageInput from "./MessageInput.svelte";
   import type { IMessage } from "$lib/types/IMessage";
+  import DeleteMessageModal from "./deleteMessageModal.svelte"
 
   onMount(async () => {
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
@@ -88,13 +89,15 @@
   let hoverMessageID: string = "";
 
   const onHover = (id: string) => {
+    //console.log(`hoverChanged ${hoverMessageID} to ${id} `);
     hoverMessageID = id;
   };
   const onEndHover = () => {
+    //console.log(`hoverClear ${hoverMessageID} `);
     hoverMessageID = "";
   };
 </script>
-
+<DeleteMessageModal />
 <div class="h-full w-full flex flex-col px-1 pb-2">
   <div
     id="messageContainer"
