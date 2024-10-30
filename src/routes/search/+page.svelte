@@ -1,6 +1,11 @@
 <script lang="ts">
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
-  import { IconSearch } from "@tabler/icons-svelte";
+  import {
+    IconSearch,
+    IconClockCog,
+    IconFileFilled,
+    IconLink,
+  } from "@tabler/icons-svelte";
   import type { IMessage } from "$lib/types/IMessage";
   import { userListStore } from "$lib/store/user";
   import FilePreview from "../channel/[id]/FilePreview.svelte";
@@ -40,7 +45,7 @@
 
 <div class="px-2 pt-2 h-full max-w-[1150px] mx-auto overflow-y-auto">
   <div class="card bg-base-200">
-    <div class="card-body">
+    <div class="card-body flex flex-col gap-3">
       <div class="join join-horizontal">
         <input
           bind:value={query}
@@ -56,59 +61,62 @@
         </button>
       </div>
 
-      <div class="flex flex-row items-center">
+      <div class="flex flex-col sm:flex-row items-center text-sm gap-1">
+        <IconLink />
         <p class="truncate">URLプレビュー</p>
-        <div class="join join-horizontal ml-auto">
+        <div class="join join-horizontal w-full sm:w-fit ml-auto">
           <button
             on:click={() => (hasUrlPreview = true)}
-            class={`btn ${hasUrlPreview === true ? "btn-primary" : "btn-neutral"} join-item`}
+            class={`btn grow sm:grow-0 ${hasUrlPreview === true ? "btn-primary" : "btn-neutral"} join-item`}
             >必須</button
           >
           <button
             on:click={() => (hasUrlPreview = undefined)}
-            class={`btn ${hasUrlPreview === undefined ? "btn-primary" : "btn-neutral"} join-item`}
+            class={`btn grow sm:grow-0 ${hasUrlPreview === undefined ? "btn-primary" : "btn-neutral"} join-item`}
             >-</button
           >
           <button
             on:click={() => (hasUrlPreview = false)}
-            class={`btn ${hasUrlPreview === false ? "btn-primary" : "btn-neutral"} join-item`}
+            class={`btn grow sm:grow-0 ${hasUrlPreview === false ? "btn-primary" : "btn-neutral"} join-item`}
             >除外</button
           >
         </div>
       </div>
 
-      <div class="flex flex-row items-center">
+      <div class="flex flex-col sm:flex-row items-center text-sm gap-1">
+        <IconFileFilled />
         <p class="truncate">ファイル添付</p>
-        <div class="join join-horizontal ml-auto">
+        <div class="join join-horizontal w-full sm:w-fit ml-auto">
           <button
             on:click={() => (hasFileAttachment = true)}
-            class={`btn ${hasFileAttachment === true ? "btn-primary" : "btn-neutral"} join-item`}
+            class={`btn grow sm:grow-0 ${hasFileAttachment === true ? "btn-primary" : "btn-neutral"} join-item`}
             >必須</button
           >
           <button
             on:click={() => (hasFileAttachment = undefined)}
-            class={`btn ${hasFileAttachment === undefined ? "btn-primary" : "btn-neutral"} join-item`}
+            class={`btn grow sm:grow-0 ${hasFileAttachment === undefined ? "btn-primary" : "btn-neutral"} join-item`}
             >-</button
           >
           <button
             on:click={() => (hasFileAttachment = false)}
-            class={`btn ${hasFileAttachment === false ? "btn-primary" : "btn-neutral"} join-item`}
+            class={`btn grow sm:grow-0 ${hasFileAttachment === false ? "btn-primary" : "btn-neutral"} join-item`}
             >除外</button
           >
         </div>
       </div>
 
-      <div class="flex flex-row items-center">
+      <div class="flex flex-col sm:flex-row items-center text-sm gap-1">
+        <IconClockCog />
         <p class="truncate">時間ソート</p>
-        <div class="join join-horizontal ml-auto">
+        <div class="join join-horizontal w-full sm:w-fit ml-auto">
           <button
             on:click={() => (dateOrder = "desc")}
-            class={`btn ${dateOrder === "desc" ? "btn-primary" : "btn-neutral"} join-item`}
+            class={`btn grow sm:grow-0 ${dateOrder === "desc" ? "btn-primary" : "btn-neutral"} join-item`}
             >新しい順</button
           >
           <button
             on:click={() => (dateOrder = "asc")}
-            class={`btn ${dateOrder === "asc" ? "btn-primary" : "btn-neutral"} join-item`}
+            class={`btn grow sm:grow-0 ${dateOrder === "asc" ? "btn-primary" : "btn-neutral"} join-item`}
             >古い順</button
           >
         </div>
