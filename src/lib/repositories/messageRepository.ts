@@ -39,7 +39,8 @@ export default {
       content?: string,
       userId?: string,
       hasUrlPreview?: boolean
-      hasFileAttachment?: boolean
+      hasFileAttachment?: boolean,
+      dateOrder: "asc" | "desc"
     }
   ): Promise<IResponseSearchMessage> => {
     let uri = `/api/message/search?`;
@@ -48,6 +49,7 @@ export default {
     if (_dat.userId) uri += "&userId=" + _dat.userId;
     if (_dat.hasUrlPreview !== undefined) uri += "&hasUrlPreview=" + _dat.hasUrlPreview;
     if (_dat.hasFileAttachment !== undefined) uri += "&hasFileAttachment=" + _dat.hasFileAttachment;
+    uri += "&sort=" + _dat.dateOrder;
     const response = await fetch(uri, {
       method: "GET",
       headers: { "Content-Type": "application/json" },

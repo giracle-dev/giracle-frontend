@@ -10,6 +10,7 @@
   let hasUrlPreview: boolean | undefined = undefined;
   let hasFileAttachment: boolean | undefined = undefined;
   //let userId: string | undefined = undefined;
+  let dateOrder: "desc" | "asc" = "desc";
 
   let result: IMessage[] = [];
   let fetchResult: "success" | "error" | "-" = "-";
@@ -22,6 +23,7 @@
         content: query,
         hasUrlPreview,
         hasFileAttachment,
+        dateOrder,
       })
       .then((res) => {
         console.log("/search :: searchIt : res->", res);
@@ -92,6 +94,22 @@
             on:click={() => (hasFileAttachment = false)}
             class={`btn ${hasFileAttachment === false ? "btn-primary" : "btn-neutral"} join-item`}
             >除外</button
+          >
+        </div>
+      </div>
+
+      <div class="flex flex-row items-center">
+        <p class="truncate">時間ソート</p>
+        <div class="join join-horizontal ml-auto">
+          <button
+            on:click={() => (dateOrder = "desc")}
+            class={`btn ${dateOrder === "desc" ? "btn-primary" : "btn-neutral"} join-item`}
+            >新しい順</button
+          >
+          <button
+            on:click={() => (dateOrder = "asc")}
+            class={`btn ${dateOrder === "asc" ? "btn-primary" : "btn-neutral"} join-item`}
+            >古い順</button
           >
         </div>
       </div>
