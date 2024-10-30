@@ -46,8 +46,8 @@ export default {
     if (_dat.channelId) uri += "&channelId=" + _dat.channelId;
     if (_dat.content) uri += "&content=" + _dat.content;
     if (_dat.userId) uri += "&userId=" + _dat.userId;
-    if (_dat.hasUrlPreview) uri += "&hasUrlPreview=" + _dat.hasUrlPreview;
-    if (_dat.hasFileAttachment) uri += "&hasFileAttachment=" + _dat.hasFileAttachment;
+    if (_dat.hasUrlPreview !== undefined) uri += "&hasUrlPreview=" + _dat.hasUrlPreview;
+    if (_dat.hasFileAttachment !== undefined) uri += "&hasFileAttachment=" + _dat.hasFileAttachment;
     const response = await fetch(uri, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
