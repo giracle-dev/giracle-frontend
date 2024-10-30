@@ -79,6 +79,8 @@
         </button>
       </div>
 
+      <!-- ここから検索条件指定 -->
+
       <div class="flex flex-col sm:flex-row items-center text-sm gap-1">
         <IconLink />
         <p class="truncate">URLプレビュー</p>
@@ -165,6 +167,7 @@
             </div>
             <p>{message.content}</p>
 
+            <!-- URLプレビュー -->
             {#if message.MessageUrlPreview}
               {#each message.MessageUrlPreview as urlPreview}
                 <div
@@ -184,6 +187,7 @@
                 </div>
               {/each}
             {/if}
+            <!-- 添付ファイル表示 -->
             {#if message.MessageFileAttached}
               {#each message.MessageFileAttached as fileData}
                 <span class="">
@@ -194,6 +198,7 @@
           </div>
         {/each}
 
+        <!-- さらに読み込むボタン -->
         {#if hasMoreMessages}
           <button
             on:click={() => {
