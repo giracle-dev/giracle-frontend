@@ -1,4 +1,4 @@
-import type { IResponseHasNewMessage } from "$lib/types/IMessage";
+import type { IResponseGetReadTime, IResponseHasNewMessage, IResponseSearchMessage } from "$lib/types/IMessage";
 
 export default {
   sendMessage: async (channelId: string, message: string, fileIds: string[]): Promise<void> => {
