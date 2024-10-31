@@ -34,6 +34,14 @@
     //既読時間を更新させてみる
     await updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt, false);
 
+    //既読時間のところまでスクロールする
+    $channelHistoryStore.history.forEach((message) => {
+      if (message.createdAt === $MessageReadTimeBeforeStore[$page.params.id]) {
+        document.getElementById("message::" + message.id)?.scrollIntoView();
+        return;
+      }
+    });
+
     window.addEventListener("focus", readItOnPageVisible);
   });
 
@@ -109,6 +117,7 @@
       <div
         class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300"
         role="log"
+        id={"message::" + message.id}
         on:mouseover={() => onHover(message.id)}
         on:mouseout={() => onEndHover()}
         on:focus={() => onHover(message.id)}
