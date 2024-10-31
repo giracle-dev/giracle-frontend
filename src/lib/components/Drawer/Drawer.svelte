@@ -1,6 +1,10 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { IconSettings, IconPointFilled } from "@tabler/icons-svelte";
+  import {
+    IconSettings,
+    IconPointFilled,
+    IconSearch,
+  } from "@tabler/icons-svelte";
   import { goto } from "$app/navigation";
   import { myUserStore, onlineUserListStore } from "$lib/store/user";
   import type { IChannel } from "$lib/types/IChannel";
@@ -33,7 +37,7 @@
     <label
       for="my-drawer-2"
       aria-label="close sidebar"
-      class="drawer-overlay"
+      class="drawer-overlay flex flex-col"
     />
     <div
       class=" menu bg-base-200 text-base-content min-h-full w-60 md:w-60 p-2"
@@ -62,10 +66,12 @@
           </div>
         </div>
       </div>
+
       <!-- ボーダー -->
       <div class="border-t border-base-300 my-2"></div>
+
       <!-- Sidebar content here -->
-      <ul class="h-[calc(100svh-240px)] overflow-y-auto py-2 w-full">
+      <ul class="grow overflow-y-auto py-2 w-full">
         <li><a href="/channel" on:click={handleDrawer}>チャンネル一覧</a></li>
         {#if channelList && channelList.length > 0}
           {#each channelList as channel}
@@ -85,6 +91,17 @@
           {/each}
         {/if}
       </ul>
+
+      <!-- search -->
+      <a href="/search">
+        <div
+          class={`${$page.url.pathname === "/search" ? "bg-primary text-primary-content" : "hover:bg-base-300"} rounded-lg p-3 flex flex-row items-center gap-3`}
+        >
+          <IconSearch size={20} />
+          <p>検索</p>
+        </div>
+      </a>
+
       <!-- user -->
       <div class="bg-base-700 pa-2 flex items-center gap-2 h-[64px]">
         <details class="dropdown dropdown-top flex-1">

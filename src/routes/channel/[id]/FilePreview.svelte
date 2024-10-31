@@ -3,6 +3,7 @@
   import type { IMessageFileAttached } from "$lib/types/IMessage";
 
   export let fileData: IMessageFileAttached;
+  export let forcedImageSize: string | undefined = "auto";
 
   //ファイルをダウンロードする
   const downloadFile = () => {
@@ -15,12 +16,12 @@
   };
 </script>
 
-<div>
+<div class="h-fit">
   {#if fileData.type.startsWith("image")}
     <img
       src={`/api/message/file/${fileData.id}`}
       alt={fileData.actualFileName}
-      class="max-h-[150px] md:max-h-[350px]"
+      class={`h-${forcedImageSize ? "[" + forcedImageSize + "]" : "auto"} max-h-[150px] md:max-h-[350px] rounded-md`}
     />
   {:else}
     <div class="flex bg-base-200 items-center rounded px-4 py-3">
