@@ -110,7 +110,7 @@
   >
     {#each $channelHistoryStore.history as message, index}
 
-      {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id]}
+      {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] && index !== 0}
         <NewMessageLine />
       {/if}
 
