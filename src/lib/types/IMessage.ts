@@ -54,3 +54,8 @@ export interface IResponseGetReadTime {
     readTime: Date
   }[]
 }
+
+export interface IResponseSearchMessage {
+  message: "Searched messages",
+  data: IMessage[]
+}
