@@ -46,7 +46,8 @@
   });
 
   $: (async () => {
-    await getChannelHistory();
+    //console.log("/channel/[id] :: $ : page.params.id->", $page.params.id);
+    if ($page.params.id) await getChannelHistory();
   })();
 
   onDestroy(() => {
