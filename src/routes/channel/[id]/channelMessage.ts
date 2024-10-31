@@ -1,6 +1,7 @@
 import { page } from "$app/stores";
 import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
 import { channelHistoryStore } from "$lib/store/channelHistory";
+import { MessageReadTimeStore, MessageReadTimeBeforeStore } from "$lib/store/messageReadTime";
 import { toastStore } from "$lib/store/toast";
 import { userListStore } from "$lib/store/user";
 import type { IChannel } from "$lib/types/IChannel";
@@ -83,12 +84,6 @@ export const getChannelHistory = async (
       } else {
         channelHistoryStore.set(res.data);
       }
-
-      //既読時間の更新
-      updateReadTime(
-        res.data.history[0].channelId,
-        res.data.history[0].createdAt,
-      );
     });
 };
 
