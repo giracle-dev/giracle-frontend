@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { navigating, page } from "$app/stores";
+  import { page } from "$app/stores";
   import { channelHistoryStore } from "$lib/store/channelHistory";
   import { onlineUserListStore, userListStore } from "$lib/store/user";
   import {
@@ -15,28 +15,37 @@
   import updateReadTime from "$lib/utils/updateReadTime";
   import FilePreview from "./FilePreview.svelte";
   import MessageInput from "./MessageInput.svelte";
+  import NewMessageLine from "./NewMessageLine.svelte";
+  import { MessageReadTimeBeforeStore } from "$lib/store/messageReadTime";
   import type { IMessage } from "$lib/types/IMessage";
 
   onMount(async () => {
-    console.log("/channel/[id] :: $page.params.id->", $page.params.id);
+    //console.log("/channel/[id] :: $page.params.id->", $page.params.id);
     // ユーザー一覧が取得されるまで待つ
     while ($userListStore.length === 0) {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
     await getChannelHistory();
     const MessageContainer = document.getElementById("messageContainer");
-    console.log(MessageContainer);
 
     //スクロール監視
     MessageContainer?.addEventListener("scroll", scrollHandler);
+
     //既読時間を更新させてみる
-    updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt);
+    await updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt, false);
+
+    //既読時間のところまでスクロールする
+    $channelHistoryStore.history.forEach((message) => {
+      if (message.createdAt === $MessageReadTimeBeforeStore[$page.params.id]) {
+        document.getElementById("message::" + message.id)?.scrollIntoView();
+        return;
+      }
+    });
 
     window.addEventListener("focus", readItOnPageVisible);
   });
 
   $: (async () => {
-    console.log("/channel/[id] :: $page.params.id->", $page.params.id);
     await getChannelHistory();
   })();
 
@@ -49,12 +58,11 @@
    */
   const readItOnPageVisible = () => {
     console.log("/channel/[id] :: readItOnPageVisible");
-    setTimeout(() => {
-      updateReadTime(
-        $page.params.id,
-        $channelHistoryStore.history[0]?.createdAt,
-      );
-    }, 250);
+    updateReadTime(
+      $page.params.id,
+      $channelHistoryStore.history[0]?.createdAt,
+      false
+    );
   };
 
   /**
@@ -101,14 +109,21 @@
     class="flex-grow flex flex-col-reverse overflow-y-auto"
   >
     {#each $channelHistoryStore.history as message, index}
+
+      {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] && index !== 0}
+        <NewMessageLine />
+      {/if}
+
       <div
         class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300"
         role="log"
+        id={"message::" + message.id}
         on:mouseover={() => onHover(message.id)}
         on:mouseout={() => onEndHover()}
         on:focus={() => onHover(message.id)}
         on:blur={() => onEndHover()}
       >
+
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <div class="dropdown dropdown-right dropdown-end">
           <div tabindex={index} role="button" class="w-15">
@@ -194,6 +209,7 @@
         </div>
         <HoverMenu messageId={message.id} hoverMessageId={hoverMessageID} />
       </div>
+
       {#if isDateChanged(message)}
         <div class="flex items-center justify-center my-4">
           <hr class="border-t border-gray-300 w-full" />
