@@ -1,25 +1,24 @@
 import { page } from "$app/stores";
 import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
 import { channelHistoryStore } from "$lib/store/channelHistory";
-import { MessageReadTimeStore, MessageReadTimeBeforeStore } from "$lib/store/messageReadTime";
 import { toastStore } from "$lib/store/toast";
 import { userListStore } from "$lib/store/user";
 import type { IChannel } from "$lib/types/IChannel";
-import type { IMessage, IRequestChannelHistoryBody } from "$lib/types/IMessage";
-import updateReadTime from "$lib/utils/updateReadTime";
+import type { IMessage } from "$lib/types/IMessage";
 import { get } from "svelte/store";
 const messageRepository = repositoryFactory.get("message");
 const channelRepository = repositoryFactory.get("channel");
-const userRepository = repositoryFactory.get("user");
 
 /**
  *  ユーザー名を取得する
  */
+/*
 export const getUserName = (userId: string) => {
   const getUserList = get(userListStore);
   const user = getUserList.find((user) => user.id === userId);
   return user?.name ?? "名無し";
 };
+*/
 
 /**
  *　日付をフォーマットする
@@ -130,7 +129,7 @@ export const scrollHandler = async () => {
  * @returns string
  */
 export const linkify = (text: string) => {
-  let channelList: IChannel[] = [];
+  const channelList: IChannel[] = [];
   const getUserList = get(userListStore);
   const urlPattern =
     /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
@@ -158,7 +157,7 @@ export const linkify = (text: string) => {
     placeholders.push({
       placeholder,
       content: userInfo
-        ? `<span class="w-fit inline-flex items-center glass px-1 rounded-lg">@<img src="${`/api/user/icon/${userInfo.id}`}" alt="i" class="w-5 h-5 rounded-full object-cover"  /> ${userInfo.name}</span>`
+        ? `<span class="w-fit inline-flex items-center glass px-1 rounded-lg">@<img src="/api/user/icon/${userInfo.id}" alt="i" class="w-5 h-5 rounded-full object-cover"  /> ${userInfo.name}</span>`
         : `<span class="w-fit inline-flex items-center glass px-1 rounded-lg">@Unknown User</span>`,
     });
     return placeholder;
