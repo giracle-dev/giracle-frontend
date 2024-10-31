@@ -1,4 +1,4 @@
-import type { IResponseHasNewMessage } from "$lib/types/IMessage";
+import type { IResponseGetReadTime, IResponseHasNewMessage } from "$lib/types/IMessage";
 
 export default {
   sendMessage: async (channelId: string, message: string, fileIds: string[]): Promise<void> => {
@@ -10,6 +10,16 @@ export default {
     });
     if (!response.ok)
       throw new Error("messageRepository :: sendMessage : エラー");
+    return await response.json();
+  },
+  getReadTime: async (): Promise<IResponseGetReadTime> => {
+    const response = await fetch("/api/message/read-time/get", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok)
+      throw new Error("messageRepository :: getReadTime : エラー");
     return await response.json();
   },
   updateReadTime: async (channelId: string, readTime: Date): Promise<void> => {

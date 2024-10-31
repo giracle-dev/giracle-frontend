@@ -8,7 +8,8 @@ import { get } from "svelte/store";
 import type { IResponseUSerVerifyToken } from "./types/IUser";
 import { serverInfoStore } from "./store/serverInfo";
 import messageRepository from "./repositories/messageRepository";
-import { hasNewMessageStore } from "./store/messageReadTime";
+import { hasNewMessageStore, MessageReadTimeStore, MessageReadTimeBeforeStore } from "./store/messageReadTime";
+import updateReadTime from "$lib/utils/updateReadTime";
 
 const userRepository = repositoryFactory.get("user");
 const channelRepository = repositoryFactory.get("channel");
@@ -43,6 +44,20 @@ export const init = async () => {
   await messageRepository.getHasNewMessage().then((response) => {
     console.log("middleware :: init : response(getHasNewMessage)->", response);
     hasNewMessageStore.set(response.data);
+  });
+  //既読時間を取得
+  await messageRepository.getReadTime().then((response) => {
+    for (const data of response.data) {
+      console.log("middleware :: init : response(getReadTime)->", data);
+      MessageReadTimeStore.update((store) => {
+        store[data.channelId] = structuredClone(data).readTime;
+        return store;
+      });
+      MessageReadTimeBeforeStore.update((store) => {
+        store[data.channelId] = structuredClone(data).readTime;
+        return store;
+      });
+    }
   });
   // チャンネル一覧を取得
   await channelRepository.getChannel().then((response) => {
