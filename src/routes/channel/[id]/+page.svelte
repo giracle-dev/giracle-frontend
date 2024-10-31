@@ -20,8 +20,6 @@
   import type { IMessage } from "$lib/types/IMessage";
   import { get } from "svelte/store";
 
-  let readTimeBefore = new Date();
-
   onMount(async () => {
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
     // ユーザー一覧が取得されるまで待つ
@@ -35,8 +33,6 @@
     //スクロール監視
     MessageContainer?.addEventListener("scroll", scrollHandler);
 
-    //新着線用の最後に既読した時間
-    readTimeBefore = get(MessageReadTimeStore)[$page.params.id] || new Date();
     //既読時間を更新させてみる
     await updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt, false);
 
