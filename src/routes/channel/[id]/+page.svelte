@@ -103,17 +103,11 @@
     id="messageContainer"
     class="flex-grow flex flex-col-reverse overflow-y-auto"
   >
-    <p class="text-center">MessageReadTimeBeforeStore : { $MessageReadTimeBeforeStore[$page.params.id] }</p>
-    <p class="text-center">MessageReadTimeBeforeStore : get : { get(MessageReadTimeBeforeStore)[$page.params.id] }</p>
-    <p class="text-center">最新のcreatedAt : { $channelHistoryStore.history[0]?.createdAt || 'loading...' }</p>
     {#each $channelHistoryStore.history as message, index}
 
       {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id]}
         <NewMessageLine />
-        index : { index }
       {/if}
-
-      { message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] }
 
       <div
         class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300"
@@ -123,6 +117,7 @@
         on:focus={() => onHover(message.id)}
         on:blur={() => onEndHover()}
       >
+
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <div class="dropdown dropdown-right dropdown-end">
           <div tabindex={index} role="button" class="w-15">
