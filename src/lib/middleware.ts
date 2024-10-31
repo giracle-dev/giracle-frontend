@@ -9,7 +9,6 @@ import type { IResponseUSerVerifyToken } from "./types/IUser";
 import { serverInfoStore } from "./store/serverInfo";
 import messageRepository from "./repositories/messageRepository";
 import { hasNewMessageStore, MessageReadTimeStore, MessageReadTimeBeforeStore } from "./store/messageReadTime";
-import updateReadTime from "$lib/utils/updateReadTime";
 
 const userRepository = repositoryFactory.get("user");
 const channelRepository = repositoryFactory.get("channel");

@@ -24,7 +24,7 @@ export default async function updateReadTime(
       channelId,
       readTime,
     )
-    .then((res) => {
+    .then(() => {
       //console.log("updateReadTime :: 既読時間の更新", res);
       //最後の既読時間用Storeへ既読時間を格納
       if (alsoUpdateTimeBefore) {
