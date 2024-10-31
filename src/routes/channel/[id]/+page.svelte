@@ -220,3 +220,14 @@
     <MessageInput on:sendMessage={sendMessage} />
   </div>
 </div>
+
+<style>
+  /* サイドバーとかぶってしまうため */
+  /* 暫定対応 */
+  .avatar.offline:before {
+    z-index: 0 !important;
+  }
+  .avatar.online:before {
+    z-index: 0 !important;
+  }
+</style>
