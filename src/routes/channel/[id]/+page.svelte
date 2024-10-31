@@ -16,9 +16,8 @@
   import FilePreview from "./FilePreview.svelte";
   import MessageInput from "./MessageInput.svelte";
   import NewMessageLine from "./NewMessageLine.svelte";
-  import { MessageReadTimeStore, MessageReadTimeBeforeStore } from "$lib/store/messageReadTime";
+  import { MessageReadTimeBeforeStore } from "$lib/store/messageReadTime";
   import type { IMessage } from "$lib/types/IMessage";
-  import { get } from "svelte/store";
 
   onMount(async () => {
     console.log("/channel/[id] :: $page.params.id->", $page.params.id);
@@ -223,14 +222,3 @@
     <MessageInput on:sendMessage={sendMessage} />
   </div>
 </div>
-
-<style>
-  /* サイドバーとかぶってしまうため */
-  /* 暫定対応 */
-  .avatar.offline:before {
-    z-index: 0 !important;
-  }
-  .avatar.online:before {
-    z-index: 0 !important;
-  }
-</style>
