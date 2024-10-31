@@ -30,13 +30,14 @@ export default async function updateReadTime(
       if (alsoUpdateTimeBefore) {
         console.log("updateReadTime :: 更新する")
         MessageReadTimeBeforeStore.update((store) => {
-          store[channelId] = readTime;
+          store[channelId] = structuredClone(readTime);
           return store;
         });
       }
+
       //既読時間Storeを更新
       MessageReadTimeStore.update((store) => {
-        store[channelId] = readTime;
+        store[channelId] = structuredClone(readTime);
         return store;
       });
     })
