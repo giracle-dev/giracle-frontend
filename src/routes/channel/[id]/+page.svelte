@@ -18,6 +18,7 @@
   import NewMessageLine from "./NewMessageLine.svelte";
   import { MessageReadTimeBeforeStore } from "$lib/store/messageReadTime";
   import type { IMessage } from "$lib/types/IMessage";
+  import { get } from "svelte/store";
 
   onMount(async () => {
     //console.log("/channel/[id] :: $page.params.id->", $page.params.id);
@@ -47,7 +48,19 @@
 
   $: (async () => {
     //console.log("/channel/[id] :: $ : page.params.id->", $page.params.id);
-    if ($page.params.id) await getChannelHistory();
+    if ($page.params.id) {
+      await getChannelHistory();
+
+      //既読時間を更新させてみる
+      await updateReadTime(get(page).params.id, get(channelHistoryStore).history[0]?.createdAt, false);
+      //既読時間のところまでスクロールする
+      get(channelHistoryStore).history.forEach((message) => {
+        if (message.createdAt === get(MessageReadTimeBeforeStore)[get(page).params.id]) {
+          document.getElementById("message::" + message.id)?.scrollIntoView();
+          return;
+        }
+      });
+    }
   })();
 
   onDestroy(() => {
