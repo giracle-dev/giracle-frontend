@@ -32,7 +32,7 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
       //Giracle自体がフォーカスされているなら既読時間を更新、違うなら新着とマーク
       if (WINDOW_FOCUS) {
         //既読時間も更新させる
-        updateReadTime(data.data.channelId, data.data.createdAt, true);
+        await updateReadTime(data.data.channelId, data.data.createdAt, true);
         //console.log("sendMessage :: sendMessageWsOn : フォーカスされているから同期", WINDOW_FOCUS);
       } else {
         //新着設定
