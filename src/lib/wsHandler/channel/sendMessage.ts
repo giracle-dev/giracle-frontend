@@ -33,7 +33,7 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
       if (WINDOW_FOCUS) {
         //既読時間も更新させる
         updateReadTime(data.data.channelId, data.data.createdAt, true);
-        console.log("sendMessage :: sendMessageWsOn : フォーカスされているから同期", WINDOW_FOCUS);
+        //console.log("sendMessage :: sendMessageWsOn : フォーカスされているから同期", WINDOW_FOCUS);
       } else {
         //新着設定
         hasNewMessageStore.update((hasNewMessage) => (
@@ -58,7 +58,7 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
           [data.data.channelId]: true,
         }
       ));
-      console.log("hasNewMessageStore", get(hasNewMessageStore)[data.data.channelId]);
+      //console.log("hasNewMessageStore", get(hasNewMessageStore)[data.data.channelId]);
     }
   }
 };
