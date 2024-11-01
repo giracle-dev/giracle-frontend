@@ -19,7 +19,7 @@ export default async function updateReadTime(
   if (get(MessageReadTimeStore)[channelId] >= readTime) return;
 
   //既読時間の更新
-  messageRepository
+  await messageRepository
     .updateReadTime(
       channelId,
       readTime,
