@@ -26,14 +26,13 @@ let isHoverDropDown:boolean = false;
 
         >
             <li>
-                <button class="btn btn-sm btn-link hover:btn-neutral">返信</button>
+                <button>返信</button>
             </li>
             <li>
-                <button class="btn btn-sm  btn-link hover:btn-neutral">テキストをコピー</button>
+                <button>テキストをコピー</button>
             </li>
             <li>
-                <button class="btn btn-sm btn-link hover:text-error"
-                        on:click={() => messageDeleteStore.set(messageId)}
+                <button class="text-error" on:click={() => isDisplayDeleteModal = true}
                 >メッセージを削除</button
                 >
             </li>
