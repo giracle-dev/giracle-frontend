@@ -1,18 +1,27 @@
 <script lang="ts">
 import {IconDots} from "@tabler/icons-svelte";
+import DeleteMessageModal from "./deleteMessageModal.svelte"
+import {onMount} from "svelte";
 
 
 
 export let messageId: string = '';
 export let hoverMessageId: string = '';
+export let isLast:boolean = false;
 
+let isDisplayDeleteModal:boolean = false;
 let isHoverDropDown:boolean = false;
+
+
+onMount(()=>{
+    console.log(isLast + " :" +messageId);
+})
 </script>
 
 <div
         class="join join-horizontal indicator -top-7 right-0 pr-7 {messageId === hoverMessageId || isHoverDropDown ? '' : 'hidden' } "
 >
-    <div class="dropdown dropdown-top dropdown-left">
+    <div class="dropdown {isLast ? 'dropdown-top':'dropdown-bottom'} dropdown-left">
         <div class="btn btn-sm join-item px-2 py-0"
              role="button"
              tabindex="0"
@@ -40,3 +49,6 @@ let isHoverDropDown:boolean = false;
     </div>
 </div>
 
+{#if isDisplayDeleteModal}
+    <DeleteMessageModal messageId={messageId} />
+{/if}

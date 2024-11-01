@@ -5,11 +5,12 @@
 
     const messageRepository = repositoryFactory.get("message");
 
-    let messageId:string = "";
+    export let messageId:string = "";
     let deleteModal: HTMLDialogElement;
 
     onMount(()=>{
         deleteModal = document.getElementById("deleteModal") as HTMLDialogElement;
+        deleteModal.showModal();
     })
 
     const deleteMessage = async (messageId :string)=>{

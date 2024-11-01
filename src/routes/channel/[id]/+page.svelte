@@ -193,7 +193,7 @@
             </div>
           {/if}
         </div>
-        <HoverMenu messageId={message.id} hoverMessageId={hoverMessageID} />
+        <HoverMenu messageId={message.id} hoverMessageId={hoverMessageID} isLast={index === 0}/>
       </div>
       {#if isDateChanged(message)}
         <div class="flex items-center justify-center my-4">
