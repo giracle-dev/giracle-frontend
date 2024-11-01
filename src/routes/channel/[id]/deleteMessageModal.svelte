@@ -1,18 +1,12 @@
 <script lang="ts">
     import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
     import {toastStore} from "$lib/store/toast.js";
-    import { messageDeleteStore } from "$lib/store/messageDelete"
     import {onMount} from "svelte";
 
     const messageRepository = repositoryFactory.get("message");
 
     let messageId:string = "";
     let deleteModal: HTMLDialogElement;
-
-    messageDeleteStore.subscribe((value)=>{
-        messageId = value;
-        deleteModal?.showModal();
-    });
 
     onMount(()=>{
         deleteModal = document.getElementById("deleteModal") as HTMLDialogElement;
