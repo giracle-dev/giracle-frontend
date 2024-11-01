@@ -11,7 +11,7 @@ interface IResponseWsSendMessage {
 }
 
 //ウィンドウがフォーカスされているかどうか
-let WINDOW_FOCUS = false;
+let WINDOW_FOCUS = document.hasFocus();
 //ウィンドウがフォーカスされているかどうかの判定
 window.addEventListener('focus', () => {
   // ウィンドウがフォーカスを得たときの処理

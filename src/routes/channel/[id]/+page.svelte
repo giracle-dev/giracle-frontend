@@ -21,7 +21,7 @@
   import { get } from "svelte/store";
 
   onMount(async () => {
-    //console.log("/channel/[id] :: $page.params.id->", $page.params.id);
+    //console.log("/channel/[id] :: onMount : $page.params.id->", $page.params.id);
     // ユーザー一覧が取得されるまで待つ
     while ($userListStore.length === 0) {
       await new Promise((resolve) => setTimeout(resolve, 100));
