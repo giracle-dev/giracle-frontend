@@ -3,6 +3,8 @@ import { updateMessageWsOn } from "./channel/updateMessage";
 import { ReadTimeUpdated } from "./message/ReadTimeUpdated";
 import { userConnectWsOn } from "./user/userConnected";
 import { userDisconnectedWsOn } from "./user/userDisconnected";
+import { roleLinkedWsOn } from "$lib/wsHandler/role/roleLinked";
+import { roleUnlinkedWsOn } from "$lib/wsHandler/role/roleUnlinked";
 export let ws: WebSocket = new WebSocket("/ws");
 
 //WS接続がエラーで閉じられた場合のフラグ
@@ -34,6 +36,8 @@ export const initWS = () => {
       userConnectWsOn(json);
       userDisconnectedWsOn(json);
       ReadTimeUpdated(json);
+      roleLinkedWsOn(json);
+      roleUnlinkedWsOn(json);
 
       //トークンが無効な場合のフラグ設定
       if (json.signal === "ERROR" && json.data === "token not valid") {

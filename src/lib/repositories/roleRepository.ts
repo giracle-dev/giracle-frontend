@@ -1,4 +1,4 @@
-import type { IResponseGetRoleList } from "$lib/types/IRole";
+import type { IResponseGetRoleInfo, IResponseGetRoleList, IResponseSearchRoles } from "$lib/types/IRole";
 
 export default {
   getRoleList: async (): Promise<IResponseGetRoleList> => {
@@ -8,6 +8,24 @@ export default {
       credentials: "include",
     });
     if (!response.ok) throw new Error("roleRepository :: getRoleList :: エラー");
+    return await response.json();
+  },
+  getRoleInfo: async (roleId: string): Promise<IResponseGetRoleInfo> => {
+    const response = await fetch("/api/role/get-info/" + roleId, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("roleRepository :: getRoleList :: エラー");
+    return await response.json();
+  },
+  searchRoles: async (searchWord: string): Promise<IResponseSearchRoles> => {
+    const response = await fetch(`/api/role/search?name=${searchWord}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("roleRepository :: searchRoles :: エラー");
     return await response.json();
   },
   updateRole: async (dat: {
@@ -58,6 +76,32 @@ export default {
       }),
     });
     if (!response.ok) throw new Error("roleRepository :: deleteRole :: エラー");
+    return await response.json();
+  },
+  linkRole: async (roleId: string, userId: string) => {
+    const response = await fetch("/api/role/link", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        roleId,
+        userId
+      }),
+    });
+    if (!response.ok) throw new Error("roleRepository :: linkRole :: エラー");
+    return await response.json();
+  },
+  unlinkRole: async (roleId: string, userId: string) => {
+    const response = await fetch("/api/role/unlink", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        roleId,
+        userId
+      }),
+    });
+    if (!response.ok) throw new Error("roleRepository :: unlinkRole :: エラー");
     return await response.json();
   }
 }

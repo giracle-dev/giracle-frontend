@@ -2,6 +2,7 @@
   import { userListStore } from "$lib/store/user";
   import type { IUser } from "$lib/types/IUser";
   import { onlineUserListStore } from "$lib/store/user";
+  import UserRoles from "./userProfile/UserRoles.svelte";
 
   export let userId: string | null = null;
 
@@ -46,6 +47,10 @@
         <div class="text-sm max-w-64">
           {user.selfIntroduction}
         </div>
+      </div>
+
+      <div>
+        <UserRoles userId={user.id} roleList={user.RoleLink} />
       </div>
     </div>
   {/if}
