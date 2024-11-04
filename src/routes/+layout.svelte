@@ -13,7 +13,9 @@
   import { themaStore } from "$lib/store/thema";
   import type { Theme } from "daisyui";
   import { changeThema } from "$lib/utils/thema";
-  import { get } from "svelte/store";
+  import GlobalModal from "$lib/components/modal/global-modal.svelte";
+  import GlobalUserModal from "$lib/components/modal/global-user-modal.svelte";
+  import { globalModalStore } from "$lib/store/globalModal";
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
@@ -131,6 +133,13 @@
         break;
     }
   }
+
+  /**
+   * モーダルを表示する
+   */
+  globalModalStore.subscribe((value) => {
+    console.log("globalModalStore", value);
+  });
 </script>
 
 <svelte:head>
@@ -168,3 +177,9 @@
     </div>
   </Drawer>
 {/if}
+
+<GlobalModal isActiveGlobalModal={$globalModalStore !== null}>
+  {#if $globalModalStore !== null}
+    <GlobalUserModal user={$globalModalStore} />
+  {/if}
+</GlobalModal>
