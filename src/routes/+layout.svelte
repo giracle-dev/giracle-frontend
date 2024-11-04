@@ -121,6 +121,10 @@
         headerTitle = "Setting";
         headerIcon = "channel";
         break;
+      case "/search":
+        headerTitle = "メッセージ検索";
+        headerIcon = "channelList";
+        break;
       default:
         headerTitle = "None Title";
         headerIcon = "channel";

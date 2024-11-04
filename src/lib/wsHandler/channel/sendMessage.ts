@@ -11,16 +11,14 @@ interface IResponseWsSendMessage {
 }
 
 //ウィンドウがフォーカスされているかどうか
-let WINDOW_FOCUS = false;
+let WINDOW_FOCUS = document.hasFocus();
 //ウィンドウがフォーカスされているかどうかの判定
 window.addEventListener('focus', () => {
-  console.log('Window is in focus');
   // ウィンドウがフォーカスを得たときの処理
   WINDOW_FOCUS = true;
 });
 //ウィンドウがフォーカスされていないかどうかの判定
 window.addEventListener('blur', () => {
-  console.log('Window is out of focus');
   // ウィンドウがフォーカスを失ったときの処理
   WINDOW_FOCUS = false;
 });
@@ -31,17 +29,11 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
     // 一番下に追加
     // 現在のチャンネルメッセージではない場合は追加しない
     if (get(page).params.id === data.data.channelId) {
-      channelHistoryStore.update((channelHistory) => ({
-        history: [data.data, ...channelHistory.history],
-        atTop: channelHistory.atTop,
-        atEnd: channelHistory.atEnd,
-      }));
-
       //Giracle自体がフォーカスされているなら既読時間を更新、違うなら新着とマーク
       if (WINDOW_FOCUS) {
         //既読時間も更新させる
-        updateReadTime(data.data.channelId, data.data.createdAt);
-        console.log("sendMessage :: sendMessageWsOn : フォーカスされているから同期", WINDOW_FOCUS);
+        await updateReadTime(data.data.channelId, data.data.createdAt, true);
+        //console.log("sendMessage :: sendMessageWsOn : フォーカスされているから同期", WINDOW_FOCUS);
       } else {
         //新着設定
         hasNewMessageStore.update((hasNewMessage) => (
@@ -51,6 +43,13 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
           }
         ));
       }
+
+      //履歴Storeへ追加
+      channelHistoryStore.update((channelHistory) => ({
+        history: [data.data, ...channelHistory.history],
+        atTop: channelHistory.atTop,
+        atEnd: channelHistory.atEnd,
+      }));
     } else {
       //新着設定
       hasNewMessageStore.update((hasNewMessage) => (
@@ -59,7 +58,7 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
           [data.data.channelId]: true,
         }
       ));
-      console.log("hasNewMessageStore", get(hasNewMessageStore)[data.data.channelId]);
+      //console.log("hasNewMessageStore", get(hasNewMessageStore)[data.data.channelId]);
     }
   }
 };

@@ -20,6 +20,11 @@ export interface IResponseDeleteInvite {
   };
 }
 
+export interface IResponseGetStorageUsage {
+  message: "Server storage usage fetched";
+  data: number;
+}
+
 export interface IServer {
   name: string;
   introduction: string;

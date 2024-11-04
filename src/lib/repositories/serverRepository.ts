@@ -1,4 +1,10 @@
-import type { IResponseCreateInvite, IResponseGetInvite, IResponseDeleteInvite, IResponseGetConfig } from "$lib/types/IServer";
+import type {
+  IResponseCreateInvite,
+  IResponseGetInvite,
+  IResponseDeleteInvite,
+  IResponseGetConfig,
+  IResponseGetStorageUsage
+} from "$lib/types/IServer";
 
 export default {
   getConfig: async (): Promise<IResponseGetConfig> => {
@@ -87,13 +93,22 @@ export default {
   deleteInvite: async (inviteId: number): Promise<IResponseDeleteInvite> => {
     const response = await fetch("/api/server/delete-invite", {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
       credentials: "include",
       body: JSON.stringify({
         inviteId,
       }),
     });
     if (!response.ok) throw new Error("serverRepository :: deleteInvite :: エラー");
+    return await response.json();
+  },
+  getStorageUsage: async (): Promise<IResponseGetStorageUsage> => {
+    const response = await fetch("/api/server/storage-usage", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("serverRepository :: getStorageUsage :: エラー");
     return await response.json();
   }
 };

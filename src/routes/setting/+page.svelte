@@ -1,11 +1,11 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import {
-    IconUser,
-    IconCirclesRelation,
-    IconMailFilled,
-    IconServer,
-    IconHomeCog,
+      IconUser,
+      IconCirclesRelation,
+      IconMailFilled,
+      IconServer,
+      IconHomeCog, IconDeviceFloppy,
   } from "@tabler/icons-svelte";
 </script>
 
@@ -48,6 +48,17 @@
         <IconServer size={16} />
       </button>
       <div class="text-xs">サーバー管理</div>
+    </div>
+    <div class=" flex flex-col">
+      <button
+              class="btn btn-ghost mx-auto btn-circle"
+              on:click={() => {
+          goto("/setting/storage-manage");
+        }}
+      >
+        <IconDeviceFloppy size={16} />
+      </button>
+      <div class="text-xs">ストレージ管理</div>
     </div>
     <div class=" flex flex-col">
       <button

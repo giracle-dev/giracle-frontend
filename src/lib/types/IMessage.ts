@@ -45,3 +45,17 @@ export interface IResponseHasNewMessage {
     [key: IChannel["id"]]: boolean;
   }
 }
+
+export interface IResponseGetReadTime {
+  message: "Fetched read time",
+  data: {
+    channelId: string,
+    userId: string,
+    readTime: Date
+  }[]
+}
+
+export interface IResponseSearchMessage {
+  message: "Searched messages",
+  data: IMessage[]
+}
