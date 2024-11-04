@@ -7,7 +7,9 @@
   let selection: IChannel[] = []; //結果から選択されたチャンネルを格納
   let query = ""; //検索クエリ
 
-  //チャンネルを検索する
+  /**
+   * チャンネルを検索する
+   */
   const searchChannel = () => {
 
   }
