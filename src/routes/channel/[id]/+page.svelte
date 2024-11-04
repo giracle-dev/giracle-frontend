@@ -110,13 +110,14 @@
   let hoverMessageID: string = "";
 
   const onHover = (id: string) => {
+    //console.log(`hoverChanged ${hoverMessageID} to ${id} `);
     hoverMessageID = id;
   };
   const onEndHover = () => {
+    //console.log(`hoverClear ${hoverMessageID} `);
     hoverMessageID = "";
   };
 </script>
-
 <div class="h-full w-full flex flex-col px-1 pb-2">
   <div
     id="messageContainer"
@@ -221,7 +222,7 @@
             </div>
           {/if}
         </div>
-        <HoverMenu messageId={message.id} hoverMessageId={hoverMessageID} />
+        <HoverMenu messageId={message.id} hoverMessageId={hoverMessageID} isLast={index === 0}/>
       </div>
 
       {#if isDateChanged(message)}
