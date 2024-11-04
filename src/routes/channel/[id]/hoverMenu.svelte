@@ -34,12 +34,7 @@ onMount(()=>{
                 class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
 
         >
-            <li>
-                <button>返信</button>
-            </li>
-            <li>
-                <button>テキストをコピー</button>
-            </li>
+
             <li>
                 <button class="text-error" on:click={() => isDisplayDeleteModal = true}
                 >メッセージを削除</button
