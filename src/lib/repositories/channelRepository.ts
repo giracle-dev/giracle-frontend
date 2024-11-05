@@ -3,7 +3,7 @@ import type {
   IResponseChannelHistory,
   IResponseChannelJoin,
   IResponseChannelLeave,
-  IResponseChannelList,
+  IResponseChannelList, IResponseChannelSearch
 } from "$lib/types/IChannel";
 import type { IMessage, IRequestChannelHistoryBody } from "$lib/types/IMessage";
 
@@ -93,4 +93,14 @@ export default {
       throw new Error("channelRepository :: getHistory :: エラー");
     return await response.json();
   },
+  searchChannel: async(query: string): Promise<IResponseChannelSearch> => {
+    const response = await fetch("/api/channel/search?query=" + query, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok)
+      throw new Error("channelRepository :: searchChannel :: エラー");
+    return await response.json();
+  }
 };

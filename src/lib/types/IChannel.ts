@@ -23,6 +23,11 @@ export interface IResponseChannelLeave {
   message: string;
 }
 
+export interface IResponseChannelSearch {
+  message: string;
+  data: IChannel[]
+}
+
 export interface IChannelHistory {
   history: IMessage[];
   atTop: boolean;
