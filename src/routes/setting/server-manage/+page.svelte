@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { IServer } from "$lib/types/IServer";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
-  import { onMount } from "svelte";
+  import { afterUpdate, onMount } from "svelte";
   import {
     IconSettings,
     IconEggFilled,
@@ -9,6 +9,8 @@
   } from "@tabler/icons-svelte";
   import { toastStore } from "$lib/store/toast";
   import { goto } from "$app/navigation";
+  import SearchChannelAndSelect from "$lib/components/unique/SearchChannelAndSelect.svelte";
+  import type { IChannel } from "$lib/types/IChannel";
   const serverRepository = repositoryFactory.get("server");
 
   //バナー画像
@@ -20,6 +22,7 @@
     RegisterAvailable: true,
     RegisterInviteOnly: false,
     MessageMaxLength: 5000,
+    defaultJoinChannel: [],
   };
   //サーバー設定
   let serverConfig: IServer = {
@@ -28,7 +31,9 @@
     RegisterAvailable: false,
     RegisterInviteOnly: false,
     MessageMaxLength: 0,
+    defaultJoinChannel: [],
   };
+  let defaultJoinChannelArr: IChannel[] = [];
   let configChanged = false;
 
   //サーバー設定が更新されたと設定
@@ -42,6 +47,20 @@
       JSON.stringify(serverConfig) !== JSON.stringify(serverConfigNow);
   };
 
+  $: if (defaultJoinChannelArr) {
+    console.log("defaultJoinChannelArr", defaultJoinChannelArr);
+    for (const channel of defaultJoinChannelArr) {
+      if (
+        serverConfigNow.defaultJoinChannel.findIndex(
+          (c) => c.id === channel.id,
+        ) === -1
+      ) {
+        configChanged = true;
+        break;
+      }
+    }
+  }
+
   //サーバー設定を取得
   const fetchServerConfig = async () => {
     await serverRepository
@@ -49,6 +68,7 @@
       .then((res) => {
         serverConfigNow = structuredClone(res.data);
         serverConfig = res.data;
+        defaultJoinChannelArr = structuredClone(res.data.defaultJoinChannel);
         setChanged();
       })
       .catch((err) => {
@@ -104,6 +124,7 @@
         serverConfig.RegisterAvailable,
         serverConfig.RegisterInviteOnly,
         serverConfig.MessageMaxLength,
+        defaultJoinChannelArr.map((c) => c.id),
       )
       .then((res) => {
         fetchServerConfig();
@@ -133,6 +154,10 @@
         });
       });
   };
+
+  afterUpdate(() => {
+    //console.log("afterUpdate", JSON.stringify(serverConfig));
+  });
 
   //サーバーバナーを変更する
   const changeServerBanner = async () => {
@@ -291,6 +316,16 @@
         <span>7500</span>
         <span>8750</span>
         <span>10000</span>
+      </div>
+
+      <div class="divider" />
+
+      <span class="text-xl font-bold flex flex-row items-center">
+        <IconMessageChatbotFilled size={24} />
+        デフォルト参加チャンネル
+      </span>
+      <div>
+        <SearchChannelAndSelect bind:selection={defaultJoinChannelArr} />
       </div>
     </div>
   </div>

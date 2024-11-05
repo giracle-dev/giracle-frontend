@@ -20,6 +20,7 @@ export default {
     RegisterAvailable: boolean,
     RegisterInviteOnly: boolean,
     MessageMaxLength: number,
+    DefaultJoinChannel: string[]
   ): Promise<IResponseGetConfig> => {
     const response = await fetch("/api/server/change-config", {
       method: "POST",
@@ -29,6 +30,7 @@ export default {
         RegisterAvailable,
         RegisterInviteOnly,
         MessageMaxLength,
+        DefaultJoinChannel
       }),
     });
     if (!response.ok) throw new Error("serverRepository :: changeConfig :: エラー");
