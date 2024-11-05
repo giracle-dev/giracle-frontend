@@ -7,6 +7,7 @@ const initialServerInfoValue: IServer = {
   RegisterAvailable: false,
   RegisterInviteOnly: false,
   MessageMaxLength: 0,
+  defaultJoinChannel: []
 };
 
 export const serverInfoStore = writable<IServer>(initialServerInfoValue);
