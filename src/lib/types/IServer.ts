@@ -1,3 +1,5 @@
+import type { IChannel } from "./IChannel";
+
 export interface IResponseGetConfig {
   message: "Server config fetched";
   data: IServer;
@@ -31,6 +33,7 @@ export interface IServer {
   RegisterAvailable: boolean;
   RegisterInviteOnly: boolean;
   MessageMaxLength: number;
+  defaultJoinChannel: IChannel[]
 }
 
 export interface IInvite {

@@ -7,6 +7,12 @@ export interface IChannel {
   isArchived: boolean;
 }
 
+export interface IResponseChannelSingle {
+  message: string;
+  data: IChannel;
+}
+
+
 export interface IResponseChannelList {
   message: string;
   data: IChannel[];
@@ -21,6 +27,11 @@ export interface IResponseChannelJoin {
 
 export interface IResponseChannelLeave {
   message: string;
+}
+
+export interface IResponseChannelSearch {
+  message: string;
+  data: IChannel[]
 }
 
 export interface IChannelHistory {
