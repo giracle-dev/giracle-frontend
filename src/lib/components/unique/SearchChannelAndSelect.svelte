@@ -2,7 +2,6 @@
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import type { IChannel } from "$lib/types/IChannel";
   import { IconX } from "@tabler/icons-svelte";
-  import { channelListStore } from "$lib/store/channel";
   const channelRepository = repositoryFactory.get("channel");
 
   let result: IChannel[] = []; //検索結果格納用
