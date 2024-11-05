@@ -88,9 +88,9 @@
       bind:value={query}
       type="text"
       on:focusout={() => (result = [])}
-      placeholder="Search for a channel"
+      placeholder="チャンネルを検索する"
       class="input w-full grow bg-base-200"
     />
-    <button on:click={searchChannel} class="btn btn-primary">Search</button>
+    <button on:click={searchChannel} class="btn btn-primary">検索</button>
   </div>
 </div>
