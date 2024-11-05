@@ -63,7 +63,7 @@
     </div>
   {/if}
 
-  <div class="flex flex-row items-center pt-1 gap-1">
+  <div class="flex flex-row overflow-x-auto items-center pt-1 gap-1">
     {#each selection as channel}
       <div class="badge badge-lg badge-neutral gap-2">
         {channel.name}
