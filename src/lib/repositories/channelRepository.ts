@@ -3,6 +3,7 @@ import type {
   IResponseChannelHistory,
   IResponseChannelJoin,
   IResponseChannelLeave,
+  IResponseChannelSingle,
   IResponseChannelList, IResponseChannelSearch
 } from "$lib/types/IChannel";
 import type { IMessage, IRequestChannelHistoryBody } from "$lib/types/IMessage";
@@ -18,6 +19,17 @@ export default {
     if (!response.ok)
       throw new Error("channelRepository :: createChannel :: エラー");
     return await response.json();
+  },
+  getSingleChannel: async (channelId: string): Promise<IResponseChannelSingle> => {
+    const response = await fetch("/api/channel/get-info/" + channelId, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    const responseData: IResponseChannelSingle = await response.json();
+    if (!response.ok)
+      throw new Error("channelRepository :: getSingleChannel :: エラー");
+    return responseData;
   },
   getChannel: async (): Promise<IResponseChannelList> => {
     const response = await fetch("/api/channel/list", {

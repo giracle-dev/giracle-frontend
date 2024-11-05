@@ -7,6 +7,12 @@ export interface IChannel {
   isArchived: boolean;
 }
 
+export interface IResponseChannelSingle {
+  message: string;
+  data: IChannel;
+}
+
+
 export interface IResponseChannelList {
   message: string;
   data: IChannel[];
