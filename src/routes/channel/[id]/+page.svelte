@@ -122,7 +122,7 @@
    * 前と同じメッセージ送信者かどうか
    * @param index
    */
-  const isSameSender = (message: IMessage): boolean => {
+  const displayAvatar = (message: IMessage): boolean => {
     // 前の投稿の日付と比較
     const currentMessageIndex = $channelHistoryStore.history.findIndex(
       (m) => m.id === message.id,
@@ -133,10 +133,10 @@
       $channelHistoryStore.history[currentMessageIndex + 1];
 
     //前のメッセージがない場合はfalse
-    if (!previousMessage) return false;
+    if (!previousMessage) return true;
     //日付が違う場合はfalse
     if (isDateChanged(currentMessage)) {
-      return false;
+      return true;
     }
     //ひとつ前と今のメッセージの時差が５分以内ならfalse
     if (
@@ -147,9 +147,9 @@
     }
     //同じユーザーの場合はtrue
     if (currentMessage && previousMessage) {
-      return currentMessage.userId === previousMessage.userId;
+      return currentMessage.userId !== previousMessage.userId;
     } else {
-      return false;
+      return true;
     }
   };
 
@@ -184,7 +184,7 @@
         on:focus={() => onHover(message.id)}
         on:blur={() => onEndHover()}
       >
-        {#if !isSameSender(message)}
+        {#if displayAvatar(message)}
           <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
           <div class="dropdown dropdown-right dropdown-end w-[50px]">
             <!-- アイコン表示 -->
@@ -211,9 +211,9 @@
         {/if}
 
         <div
-          class={`flex flex-col gap-1 w-full ${isSameSender(message) ? "ml-[50px]" : null}`}
+          class={`flex flex-col gap-1 w-full ${!displayAvatar(message) ? "ml-[50px]" : null}`}
         >
-          {#if !isSameSender(message)}
+          {#if displayAvatar(message)}
             <!-- ユーザー名、日付表示 -->
             <div class="flex gap-2 items-center">
               <span class="font-bold text-sm">
