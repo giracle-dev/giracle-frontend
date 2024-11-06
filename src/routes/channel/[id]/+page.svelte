@@ -33,7 +33,11 @@
     MessageContainer?.addEventListener("scroll", scrollHandler);
 
     //既読時間を更新させてみる
-    await updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt, false);
+    await updateReadTime(
+      $page.params.id,
+      $channelHistoryStore.history[0]?.createdAt,
+      false,
+    );
 
     //既読時間のところまでスクロールする
     $channelHistoryStore.history.forEach((message) => {
@@ -52,10 +56,17 @@
       await getChannelHistory();
 
       //既読時間を更新させてみる
-      await updateReadTime(get(page).params.id, get(channelHistoryStore).history[0]?.createdAt, false);
+      await updateReadTime(
+        get(page).params.id,
+        get(channelHistoryStore).history[0]?.createdAt,
+        false,
+      );
       //既読時間のところまでスクロールする
       get(channelHistoryStore).history.forEach((message) => {
-        if (message.createdAt === get(MessageReadTimeBeforeStore)[get(page).params.id]) {
+        if (
+          message.createdAt ===
+          get(MessageReadTimeBeforeStore)[get(page).params.id]
+        ) {
           document.getElementById("message::" + message.id)?.scrollIntoView();
           return;
         }
@@ -75,7 +86,7 @@
     updateReadTime(
       $page.params.id,
       $channelHistoryStore.history[0]?.createdAt,
-      false
+      false,
     );
   };
 
@@ -118,13 +129,13 @@
     hoverMessageID = "";
   };
 </script>
+
 <div class="h-full w-full flex flex-col px-1 pb-2">
   <div
     id="messageContainer"
     class="flex-grow flex flex-col-reverse overflow-y-auto"
   >
     {#each $channelHistoryStore.history as message, index}
-
       {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] && index !== 0}
         <NewMessageLine />
       {/if}
@@ -138,9 +149,9 @@
         on:focus={() => onHover(message.id)}
         on:blur={() => onEndHover()}
       >
-
         <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
         <div class="dropdown dropdown-right dropdown-end">
+          <!-- アイコン表示 -->
           <div tabindex={index} role="button" class="w-15">
             <div
               class="avatar {$onlineUserListStore.find(
@@ -163,6 +174,7 @@
         </div>
 
         <div class="flex flex-col gap-1 w-full">
+          <!-- ユーザー名、日付補油時 -->
           <div class="flex gap-2 items-center">
             <span class="font-bold text-sm">
               {$userListStore.find((user) => user.id === message.userId)?.name}
@@ -172,10 +184,12 @@
               >{formatDate(message.createdAt)}</span
             >
           </div>
+          <!-- メッセージ -->
           <div class="break-words break-all">
             {@html linkify(message.content)}
           </div>
 
+          <!-- URLプレビュー -->
           {#if message.MessageUrlPreview && message.MessageUrlPreview.length > 0}
             <div class="mt-2 p-2 border rounded-lg">
               {#each message.MessageUrlPreview as preview}
@@ -214,6 +228,7 @@
             </div>
           {/if}
 
+          <!-- ファイル添付表示 -->
           {#if message.MessageFileAttached && message.MessageFileAttached.length > 0}
             <div class="flex flex-col gap-1 rounded-lg md:max-w-lg">
               {#each message.MessageFileAttached as fileData}
@@ -222,9 +237,14 @@
             </div>
           {/if}
         </div>
-        <HoverMenu messageId={message.id} hoverMessageId={hoverMessageID} isLast={index === 0}/>
+        <HoverMenu
+          messageId={message.id}
+          hoverMessageId={hoverMessageID}
+          isLast={index === 0}
+        />
       </div>
 
+      <!-- 日付変更線 -->
       {#if isDateChanged(message)}
         <div class="flex items-center justify-center my-4">
           <hr class="border-t border-gray-300 w-full" />
