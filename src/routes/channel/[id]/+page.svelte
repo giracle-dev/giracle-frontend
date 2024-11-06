@@ -176,7 +176,7 @@
       {/if}
 
       <div
-        class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300 rounded-md"
+        class="flex p-2 items-start mb-4 w-full hover:bg-base-300 rounded-md"
         role="log"
         id={"message::" + message.id}
         on:mouseover={() => onHover(message.id)}
