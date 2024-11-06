@@ -118,6 +118,37 @@
     }
   };
 
+  /**
+   * 前と同じメッセージ送信者かどうか
+   * @param index
+   */
+  const isSameSender = (index: number): boolean => {
+    // 前の投稿の日付と比較
+    const currentMessage = $channelHistoryStore.history[index];
+    // currentMessageDateの前の投稿の日付を取得
+    const previousMessage = $channelHistoryStore.history[index + 1];
+
+    //前のメッセージがない場合はfalse
+    if (!previousMessage) return false;
+    //日付が違う場合はfalse
+    if (isDateChanged(currentMessage)) {
+      return false;
+    }
+    //ひとつ前と今のメッセージの時差が５分以内ならfalse
+    if (
+      currentMessage.createdAt.valueOf() - previousMessage.createdAt.valueOf() <
+      1000 * 60 * 5
+    ) {
+      return false;
+    }
+    //同じユーザーの場合はtrue
+    if (currentMessage && previousMessage) {
+      return currentMessage.userId === previousMessage.userId;
+    } else {
+      return false;
+    }
+  };
+
   let hoverMessageID: string = "";
 
   const onHover = (id: string) => {
@@ -149,41 +180,47 @@
         on:focus={() => onHover(message.id)}
         on:blur={() => onEndHover()}
       >
-        <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-        <div class="dropdown dropdown-right dropdown-end">
-          <!-- アイコン表示 -->
-          <div tabindex={index} role="button" class="w-15">
-            <div
-              class="avatar {$onlineUserListStore.find(
-                (v) => v === message.userId,
-              ) !== undefined
-                ? 'online'
-                : 'offline'} "
-            >
-              <div class="w-8 rounded-full">
-                <img src="/api/user/icon/{message.userId}" alt="userIcon" />
+        {#if !isSameSender(index)}
+          <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+          <div class="dropdown dropdown-right dropdown-end">
+            <!-- アイコン表示 -->
+            <div tabindex={index} role="button" class="w-15">
+              <div
+                class="avatar {$onlineUserListStore.find(
+                  (v) => v === message.userId,
+                ) !== undefined
+                  ? 'online'
+                  : 'offline'} "
+              >
+                <div class="w-8 rounded-full">
+                  <img src="/api/user/icon/{message.userId}" alt="userIcon" />
+                </div>
               </div>
             </div>
+            <div
+              tabindex={index}
+              class="shadow m-0 p-0 card card-compact dropdown-content bg-base-100 rounded-box w-64 z-40"
+            >
+              <UserProfile userId={message.userId} />
+            </div>
           </div>
-          <div
-            tabindex={index}
-            class="shadow m-0 p-0 card card-compact dropdown-content bg-base-100 rounded-box w-64 z-40"
-          >
-            <UserProfile userId={message.userId} />
-          </div>
-        </div>
+        {/if}
 
         <div class="flex flex-col gap-1 w-full">
-          <!-- ユーザー名、日付補油時 -->
-          <div class="flex gap-2 items-center">
-            <span class="font-bold text-sm">
-              {$userListStore.find((user) => user.id === message.userId)?.name}
-            </span>
+          {#if !isSameSender(index)}
+            <!-- ユーザー名、日付表示 -->
+            <div class="flex gap-2 items-center">
+              <span class="font-bold text-sm">
+                {$userListStore.find((user) => user.id === message.userId)
+                  ?.name}
+              </span>
 
-            <span class="text-xs text-gray-500"
-              >{formatDate(message.createdAt)}</span
-            >
-          </div>
+              <span class="text-xs text-gray-500"
+                >{formatDate(message.createdAt)}</span
+              >
+            </div>
+          {/if}
+
           <!-- メッセージ -->
           <div class="break-words break-all">
             {@html linkify(message.content)}
@@ -237,6 +274,7 @@
             </div>
           {/if}
         </div>
+        <!-- ホバーメニュー -->
         <HoverMenu
           messageId={message.id}
           hoverMessageId={hoverMessageID}
