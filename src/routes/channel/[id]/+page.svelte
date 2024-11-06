@@ -33,7 +33,11 @@
     MessageContainer?.addEventListener("scroll", scrollHandler);
 
     //既読時間を更新させてみる
-    await updateReadTime($page.params.id, $channelHistoryStore.history[0]?.createdAt, false);
+    await updateReadTime(
+      $page.params.id,
+      $channelHistoryStore.history[0]?.createdAt,
+      false,
+    );
 
     //既読時間のところまでスクロールする
     $channelHistoryStore.history.forEach((message) => {
@@ -52,10 +56,17 @@
       await getChannelHistory();
 
       //既読時間を更新させてみる
-      await updateReadTime(get(page).params.id, get(channelHistoryStore).history[0]?.createdAt, false);
+      await updateReadTime(
+        get(page).params.id,
+        get(channelHistoryStore).history[0]?.createdAt,
+        false,
+      );
       //既読時間のところまでスクロールする
       get(channelHistoryStore).history.forEach((message) => {
-        if (message.createdAt === get(MessageReadTimeBeforeStore)[get(page).params.id]) {
+        if (
+          message.createdAt ===
+          get(MessageReadTimeBeforeStore)[get(page).params.id]
+        ) {
           document.getElementById("message::" + message.id)?.scrollIntoView();
           return;
         }
@@ -75,7 +86,7 @@
     updateReadTime(
       $page.params.id,
       $channelHistoryStore.history[0]?.createdAt,
-      false
+      false,
     );
   };
 
@@ -107,6 +118,40 @@
     }
   };
 
+  /**
+   * 前と同じメッセージ送信者、あるいは５分以内の送信ならアバターを表示しないようにする
+   * @param message - IMessage
+   */
+  const displayAvatar = (message: IMessage): boolean => {
+    const currentMessageIndex = get(channelHistoryStore).history.findIndex(
+      (m) => m.id === message.id,
+    );
+    const currentMessage =
+      get(channelHistoryStore).history[currentMessageIndex];
+    // currentMessageDateの前の投稿を取得
+    const previousMessage =
+      get(channelHistoryStore).history[currentMessageIndex + 1];
+
+    //前のメッセージがない場合は表示
+    if (!previousMessage) return true;
+    //違うユーザーの場合は表示
+    if (currentMessage.userId !== previousMessage.userId) return true;
+    //日付が違う場合は表示
+    if (isDateChanged(currentMessage)) {
+      return true;
+    }
+    //ひとつ前と今のメッセージの時差が５分以上なら表示
+    if (
+      new Date(currentMessage.createdAt).valueOf() -
+        new Date(previousMessage.createdAt).valueOf() >
+      1000 * 60 * 5
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
   let hoverMessageID: string = "";
 
   const onHover = (id: string) => {
@@ -118,19 +163,19 @@
     hoverMessageID = "";
   };
 </script>
+
 <div class="h-full w-full flex flex-col px-1 pb-2">
   <div
     id="messageContainer"
     class="flex-grow flex flex-col-reverse overflow-y-auto"
   >
     {#each $channelHistoryStore.history as message, index}
-
       {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] && index !== 0}
         <NewMessageLine />
       {/if}
 
       <div
-        class="flex p-2 items-start mb-4 gap-2 w-full hover:bg-base-300"
+        class="flex py-1 px-2 items-start mb-1 w-full hover:bg-base-300 rounded-md"
         role="log"
         id={"message::" + message.id}
         on:mouseover={() => onHover(message.id)}
@@ -138,44 +183,55 @@
         on:focus={() => onHover(message.id)}
         on:blur={() => onEndHover()}
       >
-
-        <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-        <div class="dropdown dropdown-right dropdown-end">
-          <div tabindex={index} role="button" class="w-15">
-            <div
-              class="avatar {$onlineUserListStore.find(
-                (v) => v === message.userId,
-              ) !== undefined
-                ? 'online'
-                : 'offline'} "
-            >
-              <div class="w-8 rounded-full">
-                <img src="/api/user/icon/{message.userId}" alt="userIcon" />
+        {#if displayAvatar(message)}
+          <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+          <div class="dropdown dropdown-right dropdown-end shrink-0 w-[50px]">
+            <!-- アイコン表示 -->
+            <div tabindex={index} role="button" class="w-15 mx-auto">
+              <div
+                class="avatar {$onlineUserListStore.find(
+                  (v) => v === message.userId,
+                ) !== undefined
+                  ? 'online'
+                  : 'offline'} "
+              >
+                <div class="w-8 rounded-full">
+                  <img src="/api/user/icon/{message.userId}" alt="userIcon" />
+                </div>
               </div>
             </div>
-          </div>
-          <div
-            tabindex={index}
-            class="shadow m-0 p-0 card card-compact dropdown-content bg-base-100 rounded-box w-64 z-40"
-          >
-            <UserProfile userId={message.userId} />
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-1 w-full">
-          <div class="flex gap-2 items-center">
-            <span class="font-bold text-sm">
-              {$userListStore.find((user) => user.id === message.userId)?.name}
-            </span>
-
-            <span class="text-xs text-gray-500"
-              >{formatDate(message.createdAt)}</span
+            <div
+              tabindex={index}
+              class="shadow m-0 p-0 card card-compact dropdown-content bg-base-100 rounded-box w-64 z-40"
             >
+              <UserProfile userId={message.userId} />
+            </div>
           </div>
+        {/if}
+
+        <div
+          class={`flex flex-col gap-1 w-full ${!displayAvatar(message) ? "ml-[50px]" : null}`}
+        >
+          {#if displayAvatar(message)}
+            <!-- ユーザー名、日付表示 -->
+            <div class="flex gap-2 items-center">
+              <span class="font-bold text-sm">
+                {$userListStore.find((user) => user.id === message.userId)
+                  ?.name}
+              </span>
+
+              <span class="text-xs text-gray-500"
+                >{formatDate(message.createdAt)}</span
+              >
+            </div>
+          {/if}
+
+          <!-- メッセージ -->
           <div class="break-words break-all">
             {@html linkify(message.content)}
           </div>
 
+          <!-- URLプレビュー -->
           {#if message.MessageUrlPreview && message.MessageUrlPreview.length > 0}
             <div class="mt-2 p-2 border rounded-lg">
               {#each message.MessageUrlPreview as preview}
@@ -214,6 +270,7 @@
             </div>
           {/if}
 
+          <!-- ファイル添付表示 -->
           {#if message.MessageFileAttached && message.MessageFileAttached.length > 0}
             <div class="flex flex-col gap-1 rounded-lg md:max-w-lg">
               {#each message.MessageFileAttached as fileData}
@@ -222,9 +279,15 @@
             </div>
           {/if}
         </div>
-        <HoverMenu messageId={message.id} hoverMessageId={hoverMessageID} isLast={index === 0}/>
+        <!-- ホバーメニュー -->
+        <HoverMenu
+          messageId={message.id}
+          hoverMessageId={hoverMessageID}
+          isLast={index === 0}
+        />
       </div>
 
+      <!-- 日付変更線 -->
       {#if isDateChanged(message)}
         <div class="flex items-center justify-center my-4">
           <hr class="border-t border-gray-300 w-full" />
