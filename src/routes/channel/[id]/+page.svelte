@@ -120,7 +120,7 @@
 
   /**
    * 前と同じメッセージ送信者、あるいは５分以内の送信ならアバターを表示しないようにする
-   * @param index
+   * @param message - IMessage
    */
   const displayAvatar = (message: IMessage): boolean => {
     const currentMessageIndex = get(channelHistoryStore).history.findIndex(
@@ -175,7 +175,7 @@
       {/if}
 
       <div
-        class="flex p-2 items-start mb-4 w-full hover:bg-base-300 rounded-md"
+        class="flex py-1 px-2 items-start mb-1 w-full hover:bg-base-300 rounded-md"
         role="log"
         id={"message::" + message.id}
         on:mouseover={() => onHover(message.id)}
@@ -185,9 +185,9 @@
       >
         {#if displayAvatar(message)}
           <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-          <div class="dropdown dropdown-right dropdown-end w-[50px]">
+          <div class="dropdown dropdown-right dropdown-end shrink-0 w-[50px]">
             <!-- アイコン表示 -->
-            <div tabindex={index} role="button" class="w-15">
+            <div tabindex={index} role="button" class="w-15 mx-auto">
               <div
                 class="avatar {$onlineUserListStore.find(
                   (v) => v === message.userId,
