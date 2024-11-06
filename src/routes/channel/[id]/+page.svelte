@@ -186,7 +186,7 @@
       >
         {#if !isSameSender(message)}
           <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-          <div class="dropdown dropdown-right dropdown-end">
+          <div class="dropdown dropdown-right dropdown-end w-[50px]">
             <!-- アイコン表示 -->
             <div tabindex={index} role="button" class="w-15">
               <div
@@ -210,7 +210,9 @@
           </div>
         {/if}
 
-        <div class="flex flex-col gap-1 w-full">
+        <div
+          class={`flex flex-col gap-1 w-full ${isSameSender(message) ? "ml-[50px]" : null}`}
+        >
           {#if !isSameSender(message)}
             <!-- ユーザー名、日付表示 -->
             <div class="flex gap-2 items-center">
