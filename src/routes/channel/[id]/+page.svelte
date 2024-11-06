@@ -122,16 +122,21 @@
    * 前と同じメッセージ送信者かどうか
    * @param index
    */
-  const isSameSender = (index: number): boolean => {
+  const isSameSender = (message: IMessage): boolean => {
     // 前の投稿の日付と比較
-    const currentMessage = $channelHistoryStore.history[index];
+    const currentMessageIndex = $channelHistoryStore.history.findIndex(
+      (m) => m.id === message.id,
+    );
+    const currentMessage = $channelHistoryStore.history[currentMessageIndex];
     // currentMessageDateの前の投稿の日付を取得
-    const previousMessage = $channelHistoryStore.history[index + 1];
+    const previousMessage =
+      $channelHistoryStore.history[currentMessageIndex + 1];
 
     //前のメッセージがない場合はfalse
     if (!previousMessage) return false;
     //日付が違う場合はfalse
     if (isDateChanged(currentMessage)) {
+      console.log("isDateChanged");
       return false;
     }
     //ひとつ前と今のメッセージの時差が５分以内ならfalse
@@ -139,12 +144,14 @@
       currentMessage.createdAt.valueOf() - previousMessage.createdAt.valueOf() <
       1000 * 60 * 5
     ) {
+      console.log("５分以上経過");
       return false;
     }
     //同じユーザーの場合はtrue
     if (currentMessage && previousMessage) {
       return currentMessage.userId === previousMessage.userId;
     } else {
+      console.log("違う送信者");
       return false;
     }
   };
@@ -180,7 +187,7 @@
         on:focus={() => onHover(message.id)}
         on:blur={() => onEndHover()}
       >
-        {#if !isSameSender(index)}
+        {#if !isSameSender(message)}
           <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
           <div class="dropdown dropdown-right dropdown-end">
             <!-- アイコン表示 -->
@@ -207,7 +214,7 @@
         {/if}
 
         <div class="flex flex-col gap-1 w-full">
-          {#if !isSameSender(index)}
+          {#if !isSameSender(message)}
             <!-- ユーザー名、日付表示 -->
             <div class="flex gap-2 items-center">
               <span class="font-bold text-sm">
