@@ -142,7 +142,8 @@
     }
     //ひとつ前と今のメッセージの時差が５分以上なら表示
     if (
-      currentMessage.createdAt.valueOf() - previousMessage.createdAt.valueOf() >
+      new Date(currentMessage.createdAt).valueOf() -
+        new Date(previousMessage.createdAt).valueOf() >
       1000 * 60 * 5
     ) {
       return true;
