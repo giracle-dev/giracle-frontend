@@ -119,26 +119,26 @@
   };
 
   /**
-   * 前と同じメッセージ送信者かどうか
+   * 前と同じメッセージ送信者、あるいは５分以内の送信ならアバターを表示しないようにする
    * @param index
    */
   const displayAvatar = (message: IMessage): boolean => {
-    // 前の投稿の日付と比較
     const currentMessageIndex = $channelHistoryStore.history.findIndex(
       (m) => m.id === message.id,
     );
     const currentMessage = $channelHistoryStore.history[currentMessageIndex];
-    // currentMessageDateの前の投稿の日付を取得
+    // currentMessageDateの前の投稿を取得
     const previousMessage =
       $channelHistoryStore.history[currentMessageIndex + 1];
 
-    //前のメッセージがない場合はfalse
+    //前のメッセージがない場合は表示
     if (!previousMessage) return true;
     //日付が違う場合はfalse
+    //日付が違う場合は表示
     if (isDateChanged(currentMessage)) {
       return true;
     }
-    //ひとつ前と今のメッセージの時差が５分以内ならfalse
+    //ひとつ前と今のメッセージの時差が５分以上なら表示
     if (
       currentMessage.createdAt.valueOf() - previousMessage.createdAt.valueOf() <
       1000 * 60 * 5
