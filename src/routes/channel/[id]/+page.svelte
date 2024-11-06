@@ -123,13 +123,14 @@
    * @param index
    */
   const displayAvatar = (message: IMessage): boolean => {
-    const currentMessageIndex = $channelHistoryStore.history.findIndex(
+    const currentMessageIndex = get(channelHistoryStore).history.findIndex(
       (m) => m.id === message.id,
     );
-    const currentMessage = $channelHistoryStore.history[currentMessageIndex];
+    const currentMessage =
+      get(channelHistoryStore).history[currentMessageIndex];
     // currentMessageDateの前の投稿を取得
     const previousMessage =
-      $channelHistoryStore.history[currentMessageIndex + 1];
+      get(channelHistoryStore).history[currentMessageIndex + 1];
 
     //前のメッセージがない場合は表示
     if (!previousMessage) return true;
