@@ -133,24 +133,21 @@
 
     //前のメッセージがない場合は表示
     if (!previousMessage) return true;
-    //日付が違う場合はfalse
+    //違うユーザーの場合は表示
+    if (currentMessage.userId !== previousMessage.userId) return true;
     //日付が違う場合は表示
     if (isDateChanged(currentMessage)) {
       return true;
     }
     //ひとつ前と今のメッセージの時差が５分以上なら表示
     if (
-      currentMessage.createdAt.valueOf() - previousMessage.createdAt.valueOf() <
+      currentMessage.createdAt.valueOf() - previousMessage.createdAt.valueOf() >
       1000 * 60 * 5
     ) {
-      return false;
-    }
-    //同じユーザーの場合はtrue
-    if (currentMessage && previousMessage) {
-      return currentMessage.userId !== previousMessage.userId;
-    } else {
       return true;
     }
+
+    return false;
   };
 
   let hoverMessageID: string = "";
