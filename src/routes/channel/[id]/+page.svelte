@@ -136,7 +136,6 @@
     if (!previousMessage) return false;
     //日付が違う場合はfalse
     if (isDateChanged(currentMessage)) {
-      console.log("isDateChanged");
       return false;
     }
     //ひとつ前と今のメッセージの時差が５分以内ならfalse
@@ -144,14 +143,12 @@
       currentMessage.createdAt.valueOf() - previousMessage.createdAt.valueOf() <
       1000 * 60 * 5
     ) {
-      console.log("５分以上経過");
       return false;
     }
     //同じユーザーの場合はtrue
     if (currentMessage && previousMessage) {
       return currentMessage.userId === previousMessage.userId;
     } else {
-      console.log("違う送信者");
       return false;
     }
   };
