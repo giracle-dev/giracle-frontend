@@ -15,6 +15,7 @@
   import type { Theme } from "daisyui";
   import { changeThema } from "$lib/utils/thema";
   import { get } from "svelte/store";
+  import { IconPlugX } from "@tabler/icons-svelte";
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
@@ -144,9 +145,14 @@
 <Toast />
 
 {#if hiddenDefaultLayout.includes($page.url.pathname) || isSettingPage()}
-  <div class="card mx-2 mt-1 px-4 py-2 bg-base-200">
-    <p>サーバーから切断されました。</p>
-  </div>
+  {#if $wsStatusStore === WebSocket.CLOSED}
+    <div class="mx-2 mt-1">
+      <div role="alert" class="alert alert-error">
+        <IconPlugX />
+        <p>サーバーから切断されました。再接続しています...</p>
+      </div>
+    </div>
+  {/if}
   <slot />
 {:else}
   <Drawer
@@ -162,8 +168,11 @@
       class="h-screen flex flex-col"
     >
       {#if $wsStatusStore === WebSocket.CLOSED}
-        <div class="card mx-2 mt-1 px-4 py-2 bg-base-200">
-          <p>サーバーから切断されました。再接続しています...</p>
+        <div class="mx-2 mt-1">
+          <div role="alert" class="alert alert-error">
+            <IconPlugX />
+            <p>サーバーから切断されました。再接続しています...</p>
+          </div>
         </div>
       {/if}
       <Header
