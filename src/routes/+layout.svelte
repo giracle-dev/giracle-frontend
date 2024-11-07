@@ -139,6 +139,7 @@
   {#each pwaAssetsHead.links as link}
     <link {...link} />
   {/each}
+  <title>Giracle</title>
   {@html webManifestLink}
 </svelte:head>
 
