@@ -63,6 +63,11 @@ export interface IResponseGetReadTime {
   }[]
 }
 
+export interface IResponseGetInbox {
+  message: "Fetched inbox",
+  data: IInbox[]
+}
+
 export interface IResponseSearchMessage {
   message: "Searched messages",
   data: IMessage[]
