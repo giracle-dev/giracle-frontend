@@ -9,6 +9,7 @@ import type { IResponseUSerVerifyToken } from "./types/IUser";
 import { serverInfoStore } from "./store/serverInfo";
 import messageRepository from "./repositories/messageRepository";
 import { hasNewMessageStore, MessageReadTimeStore, MessageReadTimeBeforeStore } from "./store/messageReadTime";
+import { inboxStore } from "./store/inbox";
 
 const userRepository = repositoryFactory.get("user");
 const channelRepository = repositoryFactory.get("channel");
@@ -38,6 +39,11 @@ export const init = async () => {
       response,
     );
     myUserStore.set({ ...get(myUserStore), ...response.data });
+  });
+  //自分向けの通知を取得
+  await messageRepository.getInbox().then((response) => {
+    console.log("middleware :: init : response(getInbox)->", response);
+    inboxStore.set(response.data);
   });
   //新着があるか調べる
   await messageRepository.getHasNewMessage().then((response) => {
