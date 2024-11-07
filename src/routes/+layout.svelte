@@ -16,6 +16,7 @@
   import { changeThema } from "$lib/utils/thema";
   import { get } from "svelte/store";
   import { IconPlugX } from "@tabler/icons-svelte";
+  import { hasAnyNewMessageDerived } from "$lib/store/messageReadTime";
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
@@ -139,7 +140,9 @@
   {#each pwaAssetsHead.links as link}
     <link {...link} />
   {/each}
-  <title>Giracle</title>
+  <title>
+    {$hasAnyNewMessageDerived ? "*" : ""} Giracle
+  </title>
   {@html webManifestLink}
 </svelte:head>
 
