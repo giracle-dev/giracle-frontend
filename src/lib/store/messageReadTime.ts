@@ -1,5 +1,5 @@
 import type { IChannel } from "$lib/types/IChannel";
-import { writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 
 //初期値
 const initialHasNewMessage: {[key: IChannel["id"]]: boolean} = {};
@@ -15,4 +15,12 @@ export const MessageReadTimeBeforeStore = writable<{[key: string]: Date}>(
 //新着メッセージの有無Store
 export const hasNewMessageStore = writable<{[key: IChannel["id"]]: boolean}>(
   initialHasNewMessage,
+);
+
+//新着が一つでもあるかどうか
+export const hasAnyNewMessageDerived = derived(
+  hasNewMessageStore,
+  ($hasNewMessageStore) => {
+    return Object.values($hasNewMessageStore).some(value => value === true);
+  }
 );
