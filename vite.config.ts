@@ -1,6 +1,7 @@
 import { sveltekit } from "@sveltejs/kit/vite";
 import { defineConfig } from "vite";
 import { SvelteKitPWA } from "@vite-pwa/sveltekit";
+import pkg from "./package.json" with { type: "json" };
 
 export default defineConfig({
   plugins: [
@@ -42,6 +43,9 @@ export default defineConfig({
       },
     }),
   ],
+  define: {
+    __VERSION__: `"${pkg.version}"`,
+  },
   server: {
     proxy: {
       "/api": {

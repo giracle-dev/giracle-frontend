@@ -1,15 +1,18 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import {
-      IconUser,
-      IconCirclesRelation,
-      IconMailFilled,
-      IconServer,
-      IconHomeCog, IconDeviceFloppy,
+    IconUser,
+    IconCirclesRelation,
+    IconMailFilled,
+    IconServer,
+    IconHomeCog,
+    IconDeviceFloppy,
   } from "@tabler/icons-svelte";
+
+  const version = __VERSION__;
 </script>
 
-<div class="m-2">
+<div class="m-2 flex flex-col">
   <h3 class="w-full font-bold">基本設定</h3>
   <div class="flex items-center gap-5 m-5">
     <div class=" flex flex-col">
@@ -51,8 +54,8 @@
     </div>
     <div class=" flex flex-col">
       <button
-              class="btn btn-ghost mx-auto btn-circle"
-              on:click={() => {
+        class="btn btn-ghost mx-auto btn-circle"
+        on:click={() => {
           goto("/setting/storage-manage");
         }}
       >
@@ -83,4 +86,9 @@
       <div class="text-xs">招待管理</div>
     </div>
   </div>
+
+  <p class="text-right text-sm">
+    バージョン :
+    <code>{version}</code>
+  </p>
 </div>
