@@ -17,7 +17,7 @@
 
 <div class="relative">
   <div
-    class="join join-horizontal indicator absolute -top-5 right-0 pr-7 {messageId ===
+    class="indicator absolute -top-5 right-0 pr-7 {messageId ===
       hoverMessageId || isHoverDropDown
       ? ''
       : 'hidden'} "
