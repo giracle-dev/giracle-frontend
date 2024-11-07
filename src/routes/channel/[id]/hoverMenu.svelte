@@ -9,10 +9,6 @@
 
   let isDisplayDeleteModal: boolean = false;
   let isHoverDropDown: boolean = false;
-
-  onMount(() => {
-    console.log(isLast + " :" + messageId);
-  });
 </script>
 
 <div class="relative">
