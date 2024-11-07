@@ -4,7 +4,12 @@ import { ReadTimeUpdated } from "./message/ReadTimeUpdated";
 import { userConnectWsOn } from "./user/userConnected";
 import { userDisconnectedWsOn } from "./user/userDisconnected";
 import { deleteMessageWsOn } from "./message/deleteMessage";
+import { writable } from "svelte/store";
+
+//WSインスタンス
 export let ws: WebSocket = new WebSocket("/ws");
+//WS接続状態Store
+export const wsStatusStore = writable<WebSocket["readyState"]>(ws.readyState);
 
 //WS接続がエラーで閉じられた場合のフラグ
 let FLAGwsError = false;
@@ -19,6 +24,8 @@ export const initWS = () => {
     console.log("INIT.ws :: initWS : open->", event);
     //エラーフラグをリセット
     FLAGwsError = false;
+    //接続状態を更新
+    wsStatusStore.set(ws.readyState);
   };
 
   ws.onerror = (event) => {
@@ -49,6 +56,8 @@ export const initWS = () => {
   ws.onclose = (event) => {
     console.log("INIT.ws :: initWS : close->", event);
 
+    //接続状態を更新
+    wsStatusStore.set(ws.readyState);
     //エラーで閉じられた場合は再接続しない
     if (FLAGwsError) return;
 

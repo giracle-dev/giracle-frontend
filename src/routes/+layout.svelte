@@ -1,5 +1,6 @@
 <script lang="ts">
   import "../app.css";
+  import { wsStatusStore } from "$lib/wsHandler/INIT.ws";
   import { onMount } from "svelte";
   import { authMiddleware, pwaMiddleware } from "$lib/middleware";
   import Drawer from "$lib/components/Drawer/Drawer.svelte";
@@ -14,6 +15,7 @@
   import type { Theme } from "daisyui";
   import { changeThema } from "$lib/utils/thema";
   import { get } from "svelte/store";
+  import { IconPlugX } from "@tabler/icons-svelte";
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
@@ -143,6 +145,14 @@
 <Toast />
 
 {#if hiddenDefaultLayout.includes($page.url.pathname) || isSettingPage()}
+  {#if $wsStatusStore === WebSocket.CLOSED}
+    <div class="mx-2 mt-1">
+      <div role="alert" class="alert alert-error">
+        <IconPlugX />
+        <p>サーバーから切断されました。再接続しています...</p>
+      </div>
+    </div>
+  {/if}
   <slot />
 {:else}
   <Drawer
@@ -155,8 +165,16 @@
     <div
       on:touchstart={handleTouchStart}
       on:touchend={handleTouchEnd}
-      class="h-[calc(100svh-4rem)]"
+      class="h-screen flex flex-col"
     >
+      {#if $wsStatusStore === WebSocket.CLOSED}
+        <div class="mx-2 mt-1">
+          <div role="alert" class="alert alert-error">
+            <IconPlugX />
+            <p>サーバーから切断されました。再接続しています...</p>
+          </div>
+        </div>
+      {/if}
       <Header
         on:drawer={() => {
           onChangeDrawer();
