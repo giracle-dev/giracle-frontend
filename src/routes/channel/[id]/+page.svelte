@@ -164,11 +164,8 @@
   };
 </script>
 
-<div class="h-full w-full flex flex-col px-1 pb-2">
-  <div
-    id="messageContainer"
-    class="flex-grow flex flex-col-reverse overflow-y-auto"
-  >
+<div class="h-full w-full flex flex-col px-1 pb-2 overflow-y-auto">
+  <div id="messageContainer" class="grow flex flex-col-reverse overflow-y-auto">
     {#each $channelHistoryStore.history as message, index}
       {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] && index !== 0}
         <NewMessageLine />

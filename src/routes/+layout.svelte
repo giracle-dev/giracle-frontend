@@ -1,5 +1,6 @@
 <script lang="ts">
   import "../app.css";
+  import { wsStatusStore } from "$lib/wsHandler/INIT.ws";
   import { onMount } from "svelte";
   import { authMiddleware, pwaMiddleware } from "$lib/middleware";
   import Drawer from "$lib/components/Drawer/Drawer.svelte";
@@ -143,6 +144,9 @@
 <Toast />
 
 {#if hiddenDefaultLayout.includes($page.url.pathname) || isSettingPage()}
+  <div class="card mx-2 mt-1 px-4 py-2 bg-base-200">
+    <p>サーバーから切断されました。</p>
+  </div>
   <slot />
 {:else}
   <Drawer
@@ -155,8 +159,13 @@
     <div
       on:touchstart={handleTouchStart}
       on:touchend={handleTouchEnd}
-      class="h-[calc(100svh-4rem)]"
+      class="h-screen flex flex-col"
     >
+      {#if $wsStatusStore === WebSocket.CLOSED}
+        <div class="card mx-2 mt-1 px-4 py-2 bg-base-200">
+          <p>サーバーから切断されました。再接続しています...</p>
+        </div>
+      {/if}
       <Header
         on:drawer={() => {
           onChangeDrawer();
