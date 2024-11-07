@@ -33,6 +33,17 @@ export default {
       throw new Error("messageRepository :: getInbox : エラー");
     return await response.json();
   },
+  readInboxItem: async (messageId: string): Promise<void> => {
+    const response = await fetch("/api/message/inbox/read", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ messageId }),
+    });
+    if (!response.ok)
+      throw new Error("messageRepository :: readInboxItem : エラー");
+    return await response.json();
+  },
   getReadTime: async (): Promise<IResponseGetReadTime> => {
     const response = await fetch("/api/message/read-time/get", {
       method: "GET",
