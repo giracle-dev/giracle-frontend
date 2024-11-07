@@ -87,7 +87,7 @@
     </div>
   </div>
 
-  <p class="text-right text-sm">
+  <p class="mt-10 text-right text-sm">
     バージョン :
     <code>{version}</code>
   </p>
