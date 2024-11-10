@@ -23,6 +23,7 @@
   import { MessageReadTimeBeforeStore } from "$lib/store/messageReadTime";
   import type { IMessage } from "$lib/types/IMessage";
   import { get } from "svelte/store";
+  import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
 
   onMount(async () => {
     //console.log("/channel/[id] :: onMount : $page.params.id->", $page.params.id);
@@ -85,13 +86,17 @@
   /**
    * タブのアクティブが切り替わったら既読処理をする
    */
-  const readItOnPageVisible = () => {
+  const readItOnPageVisible = async () => {
     console.log("/channel/[id] :: readItOnPageVisible");
-    updateReadTime(
+    await updateReadTime(
       $page.params.id,
       $channelHistoryStore.history[0]?.createdAt,
       false,
     );
+    //Inbox用の既読処理
+    for (const message of get(channelHistoryStore).history) {
+      await ReadInboxItem(message.id);
+    }
   };
 
   /**
