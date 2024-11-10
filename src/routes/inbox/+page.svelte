@@ -36,7 +36,12 @@
   {#if groupByChannel}
     {#each $channelListStore as channel}
       {#if $inboxStore.some((item) => item.Message.channelId === channel.id)}
-        <div class="text-xl mb-2 text-gray-500"># {channel.name}</div>
+        <a
+          href="/channel/{channel.id}"
+          class="flex items-center gap-2 p-2 hover:bg-base-100"
+        >
+          <div class="text-xl mb-2 text-gray-500"># {channel.name}</div>
+        </a>
         <div class="flex flex-col gap-1">
           {#each $inboxStore.filter((item) => item.Message.channelId === channel.id) as inboxItem, index}
             <CompactMessageRender message={inboxItem.Message} />
