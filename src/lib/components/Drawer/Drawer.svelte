@@ -4,6 +4,7 @@
     IconSettings,
     IconPointFilled,
     IconSearch,
+    IconMail,
   } from "@tabler/icons-svelte";
   import { goto } from "$app/navigation";
   import { myUserStore, onlineUserListStore } from "$lib/store/user";
@@ -95,6 +96,16 @@
           {/each}
         {/if}
       </ul>
+
+      <!-- インボックス -->
+      <a href="/inbox">
+        <div
+          class={`${$page.url.pathname === "/inbox" ? "bg-primary text-primary-content" : "hover:bg-base-300"} rounded-lg p-3 flex flex-row items-center gap-3`}
+        >
+          <IconMail size={20} />
+          <p>通知</p>
+        </div>
+      </a>
 
       <!-- search -->
       <a href="/search">

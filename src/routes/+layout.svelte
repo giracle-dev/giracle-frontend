@@ -128,8 +128,12 @@
         headerTitle = "メッセージ検索";
         headerIcon = "channelList";
         break;
+      case "/inbox":
+        headerTitle = "通知一覧";
+        headerIcon = "channelList";
+        break;
       default:
-        headerTitle = "None Title";
+        headerTitle = "";
         headerIcon = "channel";
         break;
     }
