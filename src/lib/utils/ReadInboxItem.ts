@@ -24,6 +24,8 @@ export const ReadInboxItem = async (messageId: string) => {
     inboxStore.update((inbox) => {
       return inbox.filter((i) => i.messageId !== message.id);
     });
+  }).catch((e) => { 
+    console.error("ReadInboxItem :: エラー->", e);
   });
   return;
 };
