@@ -4,6 +4,7 @@ import { hasNewMessageStore } from "$lib/store/messageReadTime";
 import { get } from "svelte/store";
 import { page } from "$app/stores";
 import updateReadTime from "$lib/utils/updateReadTime";
+import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
 
 interface IResponseWsSendMessage {
   signal: "message::SendMessage";
@@ -33,6 +34,8 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
       if (WINDOW_FOCUS) {
         //既読時間も更新させる
         await updateReadTime(data.data.channelId, data.data.createdAt, true);
+        //Inbox用の既読処理
+        await ReadInboxItem(data.data.channelId);
         //console.log("sendMessage :: sendMessageWsOn : フォーカスされているから同期", WINDOW_FOCUS);
       } else {
         //新着設定
