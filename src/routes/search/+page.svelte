@@ -7,9 +7,6 @@
     IconLink,
   } from "@tabler/icons-svelte";
   import type { IMessage } from "$lib/types/IMessage";
-  import { userListStore } from "$lib/store/user";
-  import FilePreview from "../channel/[id]/FilePreview.svelte";
-  import { channelListStore } from "$lib/store/channel";
   import CompactMessageRender from "$lib/components/unique/CompactMessageRender.svelte";
   const messageRepository = repositoryFactory.get("message");
 
