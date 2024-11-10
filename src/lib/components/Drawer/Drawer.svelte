@@ -81,7 +81,7 @@
                 <a href="/channel/{channel.id}" on:click={handleDrawer}>
                   <div class="truncate">{channel.name}</div>
                   {#if $inboxStore.some((inbox) => inbox.Message.channelId === channel.id)}
-                    <span>(未読)</span>
+                    <IconPointFilled class="ml-auto text-error" />
                   {/if}
                   {#if $hasNewMessageStore[channel.id]}
                     <IconPointFilled class="ml-auto" />
