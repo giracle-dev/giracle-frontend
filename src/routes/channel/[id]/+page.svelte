@@ -1,7 +1,11 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { channelHistoryStore } from "$lib/store/channelHistory";
-  import { onlineUserListStore, userListStore } from "$lib/store/user";
+  import {
+    onlineUserListStore,
+    userListStore,
+    myUserStore,
+  } from "$lib/store/user";
   import {
     formatDate,
     getChannelHistory,
@@ -172,7 +176,7 @@
       {/if}
 
       <div
-        class="flex py-1 px-2 items-start mb-1 w-full hover:bg-base-300 rounded-md"
+        class={`flex py-1 px-2 items-start mb-1 w-full hover:bg-base-300 rounded-md ${message.content.includes("@<" + get(myUserStore).id + ">") ? "bg-neutral" : ""}`}
         role="log"
         id={"message::" + message.id}
         on:mouseover={() => onHover(message.id)}
