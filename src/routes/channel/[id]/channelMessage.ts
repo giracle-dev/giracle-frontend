@@ -7,6 +7,7 @@ import { inboxStore } from "$lib/store/inbox";
 import type { IChannel } from "$lib/types/IChannel";
 import type { IMessage } from "$lib/types/IMessage";
 import { get } from "svelte/store";
+import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
 const messageRepository = repositoryFactory.get("message");
 const channelRepository = repositoryFactory.get("channel");
 
@@ -91,13 +92,7 @@ export const getChannelHistory = async (
       for (const message of res.data.history) {
         const msgFind = inboxForCurrentChannel.find((i) => i.messageId === message.id);
         if (msgFind) {
-          messageRepository.readInboxItem(msgFind.messageId).then(() => {
-            console.log("channelMessage :: getChannelHistory : 既読にする->", msgFind.messageId);
-          });
-          //StoreからInbox項目を削除
-          inboxStore.update((inbox) => {
-            return inbox.filter((i) => i.messageId !== msgFind.messageId);
-          });
+         ReadInboxItem(msgFind.messageId);
         }
       }
     }).catch((err) => {
