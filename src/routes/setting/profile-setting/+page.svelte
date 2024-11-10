@@ -60,7 +60,7 @@
             ...toast,
             {
               message: "パスワードの変更に失敗しました。",
-              type: "success",
+              type: "error",
             },
           ];
         });
