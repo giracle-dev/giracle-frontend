@@ -17,13 +17,39 @@
   } from "@tabler/icons-svelte";
   import type { IChannel } from "$lib/types/IChannel";
   import CompactMessageRender from "$lib/components/unique/CompactMessageRender.svelte";
+
+  let groupByChannel: boolean = false;
 </script>
 
 <div class="container px-2 pt-2 h-full max-w-[1150px] mx-auto overflow-y-auto">
+  <div class="form-control">
+    <label class="label cursor-pointer">
+      <span class="label-text">チャンネルで分ける</span>
+      <input type="checkbox" bind:checked={groupByChannel} class="checkbox" />
+    </label>
+  </div>
+
   {#if $inboxStore.length === 0}
     <div class="text-center text-xl text-gray-500">通知はありません</div>
   {/if}
-  {#each $inboxStore as inboxItem, index}
-    <CompactMessageRender message={inboxItem.Message} />
-  {/each}
+
+  {#if groupByChannel}
+    {#each $channelListStore as channel}
+      {#if $inboxStore.some((item) => item.Message.channelId === channel.id)}
+        <div class="text-xl mb-2 text-gray-500"># {channel.name}</div>
+        <div class="flex flex-col gap-1">
+          {#each $inboxStore.filter((item) => item.Message.channelId === channel.id) as inboxItem, index}
+            <CompactMessageRender message={inboxItem.Message} />
+          {/each}
+        </div>
+        <div class="divider" />
+      {/if}
+    {/each}
+  {:else}
+    <div class="flex flex-col gap-2">
+      {#each $inboxStore as inboxItem, index}
+        <CompactMessageRender message={inboxItem.Message} />
+      {/each}
+    </div>
+  {/if}
 </div>
