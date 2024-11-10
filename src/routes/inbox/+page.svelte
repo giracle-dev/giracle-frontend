@@ -1,21 +1,6 @@
 <script lang="ts">
-  import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
-  import { myUserStore } from "$lib/store/user";
   import { inboxStore } from "$lib/store/inbox";
-  import { page } from "$app/stores";
-  import { serverInfoStore } from "$lib/store/serverInfo";
-  import { hasNewMessageStore } from "$lib/store/messageReadTime";
   import { channelListStore } from "$lib/store/channel";
-  import { onlineUserListStore } from "$lib/store/user";
-  import { createEventDispatcher } from "svelte";
-  import { goto } from "$app/navigation";
-  import {
-    IconSettings,
-    IconPointFilled,
-    IconSearch,
-    IconMail,
-  } from "@tabler/icons-svelte";
-  import type { IChannel } from "$lib/types/IChannel";
   import CompactMessageRender from "$lib/components/unique/CompactMessageRender.svelte";
   import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
   import { get } from "svelte/store";
