@@ -3,6 +3,7 @@ import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
 import { channelHistoryStore } from "$lib/store/channelHistory";
 import { toastStore } from "$lib/store/toast";
 import { userListStore } from "$lib/store/user";
+import { inboxStore } from "$lib/store/inbox";
 import type { IChannel } from "$lib/types/IChannel";
 import type { IMessage } from "$lib/types/IMessage";
 import { get } from "svelte/store";
@@ -82,6 +83,22 @@ export const getChannelHistory = async (
         }));
       } else {
         channelHistoryStore.set(res.data);
+      }
+
+      //このチャンネル用のInbox取得
+      const inboxForCurrentChannel = get(inboxStore).filter((i) => i.Message.channelId === get(page).params.id);
+      //取得した履歴にInbox内のメッセージがあれば既読にする
+      for (const message of res.data.history) {
+        const msgFind = inboxForCurrentChannel.find((i) => i.messageId === message.id);
+        if (msgFind) {
+          messageRepository.readInboxItem(msgFind.messageId).then(() => {
+            console.log("channelMessage :: getChannelHistory : 既読にする->", msgFind.messageId);
+          });
+          //StoreからInbox項目を削除
+          inboxStore.update((inbox) => {
+            return inbox.filter((i) => i.messageId !== msgFind.messageId);
+          });
+        }
       }
     }).catch((err) => {
       console.log("channelMessage :: getChannelHistory : err->", err);
