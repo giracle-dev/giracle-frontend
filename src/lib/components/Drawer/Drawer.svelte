@@ -72,7 +72,7 @@
       <!-- ボーダー -->
       <div class="border-t border-base-300 my-2"></div>
 
-      <!-- Sidebar content here -->
+      <!-- チャンネルボタン -->
       <ul class="grow overflow-y-auto py-2 w-full">
         <li><a href="/channel" on:click={handleDrawer}>チャンネル一覧</a></li>
         {#if channelList && channelList.length > 0}
@@ -84,7 +84,7 @@
                   {#if $inboxStore.some((inbox) => inbox.Message.channelId === channel.id)}
                     <IconPointFilled class="ml-auto text-error" />
                   {/if}
-                  {#if $hasNewMessageStore[channel.id]}
+                  {#if !$inboxStore.some((inbox) => inbox.Message.channelId === channel.id) && $hasNewMessageStore[channel.id]}
                     <IconPointFilled class="ml-auto" />
                   {/if}
                   {#if channel.id === $page.params.id}
