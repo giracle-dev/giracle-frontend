@@ -2,6 +2,7 @@
   import { channelListStore } from "$lib/store/channel";
   import { userListStore } from "$lib/store/user";
   import type { IMessage } from "$lib/types/IMessage";
+  import { linkify } from "../../../routes/channel/[id]/channelMessage";
   import FilePreview from "../../../routes/channel/[id]/FilePreview.svelte";
 
   export let message: IMessage;
@@ -28,7 +29,10 @@
       </div>
       {$userListStore.find((user) => user.id === message.userId)?.name}
     </div>
-    <p class="my-2">{message.content}</p>
+
+    <div class="my-2 break-words break-all">
+      {@html linkify(message.content)}
+    </div>
 
     <!-- URLプレビュー -->
     {#if message.MessageUrlPreview}
