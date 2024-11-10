@@ -7,6 +7,7 @@
   } from "@tabler/icons-svelte";
   import { goto } from "$app/navigation";
   import { myUserStore, onlineUserListStore } from "$lib/store/user";
+  import { inboxStore } from "$lib/store/inbox";
   import type { IChannel } from "$lib/types/IChannel";
   import { page } from "$app/stores";
   import { serverInfoStore } from "$lib/store/serverInfo";
@@ -79,6 +80,9 @@
               <li class="">
                 <a href="/channel/{channel.id}" on:click={handleDrawer}>
                   <div class="truncate">{channel.name}</div>
+                  {#if $inboxStore.some((inbox) => inbox.Message.channelId === channel.id)}
+                    <span>(未読)</span>
+                  {/if}
                   {#if $hasNewMessageStore[channel.id]}
                     <IconPointFilled class="ml-auto" />
                   {/if}
