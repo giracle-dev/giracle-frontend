@@ -104,6 +104,10 @@
         >
           <IconMail size={20} />
           <p>通知</p>
+          {#if $inboxStore.length > 0}
+            <span class="ml-auto badge badge-primary">{$inboxStore.length}</span
+            >
+          {/if}
         </div>
       </a>
 
