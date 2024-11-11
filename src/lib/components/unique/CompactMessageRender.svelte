@@ -24,9 +24,11 @@
     <!-- ユーザーとメッセージ本文 -->
     <div class="divider my-1"></div>
     <div class="flex flex-row items-center gap-2">
-      <div class="w-8 rounded-full">
-        <img src="/api/user/icon/{message.userId}" alt="userIcon" />
-      </div>
+      <img
+        src="/api/user/icon/{message.userId}"
+        alt="userIcon"
+        class="w-8 h-8 rounded-full object-cover"
+      />
       {$userListStore.find((user) => user.id === message.userId)?.name}
     </div>
 
