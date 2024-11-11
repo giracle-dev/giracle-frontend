@@ -5,6 +5,8 @@ import { userConnectWsOn } from "./user/userConnected";
 import { userDisconnectedWsOn } from "./user/userDisconnected";
 import { deleteMessageWsOn } from "./message/deleteMessage";
 import { writable } from "svelte/store";
+import { inboxAddedWsOn } from "./message/inboxAdded";
+import { inboxDeletedWsOn } from "./message/inboxDelete";
 
 //WSインスタンス
 export let ws: WebSocket = new WebSocket("/ws");
@@ -40,6 +42,8 @@ export const initWS = () => {
       sendMessageWsOn(json);
       updateMessageWsOn(json);
       deleteMessageWsOn(json);
+      inboxAddedWsOn(json);
+      inboxDeletedWsOn(json);
       userConnectWsOn(json);
       userDisconnectedWsOn(json);
       ReadTimeUpdated(json);

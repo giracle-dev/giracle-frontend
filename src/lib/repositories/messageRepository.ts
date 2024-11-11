@@ -1,4 +1,4 @@
-import type { IResponseGetReadTime, IResponseHasNewMessage, IResponseSearchMessage } from "$lib/types/IMessage";
+import type { IResponseGetInbox, IResponseGetReadTime, IResponseHasNewMessage, IResponseSearchMessage } from "$lib/types/IMessage";
 
 export default {
   sendMessage: async (channelId: string, message: string, fileIds: string[]): Promise<void> => {
@@ -21,6 +21,27 @@ export default {
     });
     if (!response.ok)
       throw new Error("messageRepository :: deleteMessage : エラー");
+    return await response.json();
+  },
+  getInbox: async (): Promise<IResponseGetInbox> => {
+    const response = await fetch("/api/message/inbox", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok)
+      throw new Error("messageRepository :: getInbox : エラー");
+    return await response.json();
+  },
+  readInboxItem: async (messageId: string): Promise<void> => {
+    const response = await fetch("/api/message/inbox/read", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ messageId }),
+    });
+    if (!response.ok)
+      throw new Error("messageRepository :: readInboxItem : エラー");
     return await response.json();
   },
   getReadTime: async (): Promise<IResponseGetReadTime> => {

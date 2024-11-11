@@ -11,6 +11,14 @@ export interface IMessage {
   MessageFileAttached: IMessageFileAttached[]
 }
 
+export interface IInbox {
+  type: "event" | "mention" | "reply";
+  userId: string;
+  messageId: string;
+  Message: IMessage;
+  happendAt: Date;
+}
+
 export interface IMessageUrlPreview {
   description: string;
   faviconLink: string;
@@ -53,6 +61,11 @@ export interface IResponseGetReadTime {
     userId: string,
     readTime: Date
   }[]
+}
+
+export interface IResponseGetInbox {
+  message: "Fetched inbox",
+  data: IInbox[]
 }
 
 export interface IResponseSearchMessage {

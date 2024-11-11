@@ -4,9 +4,11 @@
     IconSettings,
     IconPointFilled,
     IconSearch,
+    IconMail,
   } from "@tabler/icons-svelte";
   import { goto } from "$app/navigation";
   import { myUserStore, onlineUserListStore } from "$lib/store/user";
+  import { inboxStore } from "$lib/store/inbox";
   import type { IChannel } from "$lib/types/IChannel";
   import { page } from "$app/stores";
   import { serverInfoStore } from "$lib/store/serverInfo";
@@ -70,7 +72,7 @@
       <!-- ボーダー -->
       <div class="border-t border-base-300 my-2"></div>
 
-      <!-- Sidebar content here -->
+      <!-- チャンネルボタン -->
       <ul class="grow overflow-y-auto py-2 w-full">
         <li><a href="/channel" on:click={handleDrawer}>チャンネル一覧</a></li>
         {#if channelList && channelList.length > 0}
@@ -79,7 +81,10 @@
               <li class="">
                 <a href="/channel/{channel.id}" on:click={handleDrawer}>
                   <div class="truncate">{channel.name}</div>
-                  {#if $hasNewMessageStore[channel.id]}
+                  {#if $inboxStore.some((inbox) => inbox.Message.channelId === channel.id)}
+                    <IconPointFilled class="ml-auto text-error" />
+                  {/if}
+                  {#if !$inboxStore.some((inbox) => inbox.Message.channelId === channel.id) && $hasNewMessageStore[channel.id]}
                     <IconPointFilled class="ml-auto" />
                   {/if}
                   {#if channel.id === $page.params.id}
@@ -91,6 +96,20 @@
           {/each}
         {/if}
       </ul>
+
+      <!-- インボックス -->
+      <a href="/inbox">
+        <div
+          class={`${$page.url.pathname === "/inbox" ? "bg-primary text-primary-content" : "hover:bg-base-300"} rounded-lg p-3 flex flex-row items-center gap-3`}
+        >
+          <IconMail size={20} />
+          <p>通知</p>
+          {#if $inboxStore.length > 0}
+            <span class="ml-auto badge badge-primary">{$inboxStore.length}</span
+            >
+          {/if}
+        </div>
+      </a>
 
       <!-- search -->
       <a href="/search">
