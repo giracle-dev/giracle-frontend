@@ -38,21 +38,36 @@ export const formatDate = (date: Date): string => {
 /**
  * チャンネルメッセージを取得する
  * @param targetMessage
+ * @param direction (older | newer)
+ * @param messageIdFrom
  * @returns void (channelHistoryStoreにメッセージを追加)
  */
 export const getChannelHistory = async (
   targetMessage?: IMessage,
   direction?: "older" | "newer",
+  messageIdFrom?: string,
 ) => {
   if (direction === "older" && get(channelHistoryStore).atTop) return;
   if (direction === "newer" && get(channelHistoryStore).atEnd) return;
+
+  const createMessageIdFrom = () => {
+    if (targetMessage) {
+      return targetMessage.id;
+    } else if (messageIdFrom) {
+      return messageIdFrom;
+    } else {
+      return undefined;
+    }
+  };
+
   await channelRepository
     .getHistory(get(page).params.id, {
-      messageIdFrom: targetMessage?.id ?? undefined,
+      messageIdFrom: createMessageIdFrom(),
       fetchDirection: direction ?? undefined,
       fetchLength: 30,
     })
     .then((res) => {
+      console.log("/channel/[id] :: getChannelHistory : res->", res);
       if (direction === "older") {
         // 配列の一番下に追加
         // 重複しているメッセージを除外
@@ -87,15 +102,20 @@ export const getChannelHistory = async (
       }
 
       //このチャンネル用のInbox取得
-      const inboxForCurrentChannel = get(inboxStore).filter((i) => i.Message.channelId === get(page).params.id);
+      const inboxForCurrentChannel = get(inboxStore).filter(
+        (i) => i.Message.channelId === get(page).params.id,
+      );
       //取得した履歴にInbox内のメッセージがあれば既読にする
       for (const message of res.data.history) {
-        const msgFind = inboxForCurrentChannel.find((i) => i.messageId === message.id);
+        const msgFind = inboxForCurrentChannel.find(
+          (i) => i.messageId === message.id,
+        );
         if (msgFind) {
-         ReadInboxItem(msgFind.messageId);
+          ReadInboxItem(msgFind.messageId);
         }
       }
-    }).catch((err) => {
+    })
+    .catch((err) => {
       console.log("channelMessage :: getChannelHistory : err->", err);
     });
 };
@@ -127,6 +147,7 @@ export const scrollHandler = async () => {
     }
 
     if (isBottom) {
+      console.log("scrollHandler :: isBottom");
       const targetMessage = get(channelHistoryStore).history[0];
       if (isScrollLoading) return;
       isScrollLoading = true;

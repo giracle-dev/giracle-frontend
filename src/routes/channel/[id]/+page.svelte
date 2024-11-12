@@ -24,6 +24,9 @@
   import type { IMessage } from "$lib/types/IMessage";
   import { get } from "svelte/store";
   import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
+  const urlSearchParams = $page.url.searchParams;
+
+  let messageId = urlSearchParams.get("messageId");
 
   onMount(async () => {
     //console.log("/channel/[id] :: onMount : $page.params.id->", $page.params.id);
@@ -31,7 +34,8 @@
     while ($userListStore.length === 0) {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
-    await getChannelHistory();
+    messageId = urlSearchParams.get("messageId");
+    await getChannelHistory(undefined, undefined, messageId || undefined);
     const MessageContainer = document.getElementById("messageContainer");
 
     //スクロール監視
@@ -53,6 +57,18 @@
     });
 
     window.addEventListener("focus", readItOnPageVisible);
+
+    // スクロールバーがない場合、上下のメッセージを取得
+    if (
+      MessageContainer &&
+      MessageContainer.scrollHeight === MessageContainer.clientHeight
+    ) {
+      const lastMessage =
+        $channelHistoryStore.history[$channelHistoryStore.history.length - 1];
+      const firstMessage = $channelHistoryStore.history[0];
+      await getChannelHistory(lastMessage, "newer");
+      await getChannelHistory(firstMessage, "older");
+    }
   });
 
   $: (async () => {
