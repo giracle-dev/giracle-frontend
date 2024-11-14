@@ -83,15 +83,18 @@
               <li>
                 <a href="/channel/{channel.id}" on:click={handleDrawer} class="flex flex-row items-center px-4 py-3 md:px-4 md:py-2 hover:bg-neutral rounded">
                   <div class="truncate">{channel.name}</div>
-                  {#if $inboxStore.some((inbox) => inbox.Message.channelId === channel.id)}
-                    <IconPointFilled class="ml-auto text-error" />
-                  {/if}
-                  {#if !$inboxStore.some((inbox) => inbox.Message.channelId === channel.id) && $hasNewMessageStore[channel.id]}
-                    <IconPointFilled class="ml-auto" />
-                  {/if}
-                  {#if channel.id === $page.params.id}
-                    <span class="ml-auto badge badge-primary">&larr;</span>
-                  {/if}
+
+                  <div class="flex flex-row items-center ml-auto gap-1">
+                    {#if $inboxStore.some((inbox) => inbox.Message.channelId === channel.id)}
+                      <IconPointFilled class="text-error" />
+                    {/if}
+                    {#if !$inboxStore.some((inbox) => inbox.Message.channelId === channel.id) && $hasNewMessageStore[channel.id]}
+                      <IconPointFilled />
+                    {/if}
+                    {#if channel.id === $page.params.id}
+                      <span class="badge badge-primary">&larr;</span>
+                    {/if}
+                  </div>
                 </a>
               </li>
             {/if}
