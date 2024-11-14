@@ -135,9 +135,9 @@
               alt="user"
               class="w-10 h-10 rounded-full object-cover"
             />
-            <div class=" truncate">
+            <span class=" truncate">
               {$myUserStore.name}
-            </div>
+            </span>
           </summary>
           <div
             class=" dropdown-content bg-base-100 rounded-md z-[1] w-56 shadow"
