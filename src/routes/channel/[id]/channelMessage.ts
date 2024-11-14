@@ -65,7 +65,7 @@ export const getChannelHistory = async (
   await channelRepository
     .getHistory(get(page).params.id, {
       messageIdFrom: createMessageIdFrom(),
-      targetMessageTime: targetMessageTime ?? undefined,
+      messageTimeFrom: targetMessageTime ?? undefined,
       fetchDirection: direction ?? undefined,
       fetchLength: 30,
     })
