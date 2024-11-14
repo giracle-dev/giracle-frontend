@@ -42,6 +42,7 @@ export interface IMessageFileAttached {
 
 export interface IRequestChannelHistoryBody {
   messageIdFrom?: string;
+  targetMessageTime?: Date;
   messageTimeFrom?: Date;
   fetchLength?: number;
   fetchDirection?: "older" | "newer";

@@ -20,13 +20,17 @@
   import FilePreview from "./FilePreview.svelte";
   import MessageInput from "./MessageInput.svelte";
   import NewMessageLine from "./NewMessageLine.svelte";
-  import { MessageReadTimeBeforeStore } from "$lib/store/messageReadTime";
+  import {
+    MessageReadTimeBeforeStore,
+    MessageReadTimeStore,
+  } from "$lib/store/messageReadTime";
   import type { IMessage } from "$lib/types/IMessage";
   import { get } from "svelte/store";
   import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
   const urlSearchParams = $page.url.searchParams;
 
   let messageId = urlSearchParams.get("messageId");
+  let alreadyMounted = false;
 
   onMount(async () => {
     //console.log("/channel/[id] :: onMount : $page.params.id->", $page.params.id);
@@ -35,7 +39,15 @@
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
     messageId = urlSearchParams.get("messageId");
-    await getChannelHistory(undefined, undefined, messageId || undefined);
+    //既読時間
+    const readTime = get(MessageReadTimeStore)[$page.params.id];
+    //履歴取得
+    await getChannelHistory(
+      undefined,
+      readTime,
+      "older",
+      messageId || undefined,
+    );
     const MessageContainer = document.getElementById("messageContainer");
 
     //スクロール監視
@@ -66,15 +78,20 @@
       const lastMessage =
         $channelHistoryStore.history[$channelHistoryStore.history.length - 1];
       const firstMessage = $channelHistoryStore.history[0];
-      await getChannelHistory(lastMessage, "newer");
-      await getChannelHistory(firstMessage, "older");
+      await getChannelHistory(lastMessage, undefined, "newer");
+      await getChannelHistory(firstMessage, undefined, "older");
     }
+
+    alreadyMounted = true;
   });
 
   $: (async () => {
     //console.log("/channel/[id] :: $ : page.params.id->", $page.params.id);
     if ($page.params.id) {
-      await getChannelHistory();
+      await getChannelHistory(
+        undefined,
+        get(MessageReadTimeStore)[$page.params.id],
+      );
 
       //既読時間を更新させてみる
       await updateReadTime(

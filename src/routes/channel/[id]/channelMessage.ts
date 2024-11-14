@@ -38,12 +38,14 @@ export const formatDate = (date: Date): string => {
 /**
  * チャンネルメッセージを取得する
  * @param targetMessage
+ * @param targetMessageTime
  * @param direction (older | newer)
  * @param messageIdFrom
  * @returns void (channelHistoryStoreにメッセージを追加)
  */
 export const getChannelHistory = async (
   targetMessage?: IMessage,
+  targetMessageTime?: Date,
   direction?: "older" | "newer",
   messageIdFrom?: string,
 ) => {
@@ -63,6 +65,7 @@ export const getChannelHistory = async (
   await channelRepository
     .getHistory(get(page).params.id, {
       messageIdFrom: createMessageIdFrom(),
+      targetMessageTime: targetMessageTime ?? undefined,
       fetchDirection: direction ?? undefined,
       fetchLength: 30,
     })
@@ -141,7 +144,7 @@ export const scrollHandler = async () => {
         ];
       if (isScrollLoading) return;
       isScrollLoading = true;
-      await getChannelHistory(targetMessage, "older").then(() => {
+      await getChannelHistory(targetMessage, undefined, "older").then(() => {
         isScrollLoading = false;
       });
     }
@@ -151,7 +154,7 @@ export const scrollHandler = async () => {
       const targetMessage = get(channelHistoryStore).history[0];
       if (isScrollLoading) return;
       isScrollLoading = true;
-      await getChannelHistory(targetMessage, "newer").then(() => {
+      await getChannelHistory(targetMessage, undefined, "newer").then(() => {
         isScrollLoading = false;
       });
     }
