@@ -81,7 +81,7 @@
           {#each channelList as channel}
             {#if $myUserStore.ChannelJoin && $myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
               <li>
-                <a href="/channel/{channel.id}" on:click={handleDrawer} class="flex flex-row px-4 py-3 md:px-4 md:py-2 hover:bg-neutral rounded">
+                <a href="/channel/{channel.id}" on:click={handleDrawer} class="flex flex-row items-center px-4 py-3 md:px-4 md:py-2 hover:bg-neutral rounded">
                   <div class="truncate">{channel.name}</div>
                   {#if $inboxStore.some((inbox) => inbox.Message.channelId === channel.id)}
                     <IconPointFilled class="ml-auto text-error" />
