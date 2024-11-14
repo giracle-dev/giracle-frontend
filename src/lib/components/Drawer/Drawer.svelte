@@ -24,7 +24,7 @@
   }
 </script>
 
-<div class="drawer lg:drawer-open">
+<div class="drawer lg:drawer-open w-full">
   <input
     id="my-drawer-2"
     type="checkbox"
@@ -35,6 +35,8 @@
   <div class="drawer-content w-full">
     <slot />
   </div>
+
+  <!-- ここからサイドバー -->
   <div class="drawer-side">
     <label
       for="my-drawer-2"
@@ -42,10 +44,10 @@
       class="drawer-overlay flex flex-col"
     />
     <div
-      class=" menu bg-base-200 text-base-content min-h-full w-60 md:w-60 p-2"
+      class="flex flex-col bg-base-200 text-base-content h-full w-60 p-2"
     >
       <div
-        class=" relative flex items-center justify-between h-[64px] bg-[url('/api/server/banner')] bg-center bg-cover"
+        class=" relative flex items-center justify-between h-[64px] md:h-[100px] bg-[url('/api/server/banner')] bg-center bg-cover"
       >
         <div
           class="absolute top-0 px-1 text-primary-content text-xl font-bold w-full bg-opacity-70 bg-base-300"
@@ -73,13 +75,13 @@
       <div class="border-t border-base-300 my-2"></div>
 
       <!-- チャンネルボタン -->
-      <ul class="grow overflow-y-auto py-2 w-full">
-        <li><a href="/channel" on:click={handleDrawer}>チャンネル一覧</a></li>
+      <ul class="grow overflow-y-auto py-2 w-full shrink">
+        <li class="hover:bg-neutral rounded px-3 py-1"><a href="/channel" on:click={handleDrawer}>チャンネル一覧</a></li>
         {#if channelList && channelList.length > 0}
           {#each channelList as channel}
             {#if $myUserStore.ChannelJoin && $myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
-              <li class="">
-                <a href="/channel/{channel.id}" on:click={handleDrawer}>
+              <li>
+                <a href="/channel/{channel.id}" on:click={handleDrawer} class="flex flex-row px-4 py-3 md:px-4 md:py-2 hover:bg-neutral rounded">
                   <div class="truncate">{channel.name}</div>
                   {#if $inboxStore.some((inbox) => inbox.Message.channelId === channel.id)}
                     <IconPointFilled class="ml-auto text-error" />
@@ -88,7 +90,7 @@
                     <IconPointFilled class="ml-auto" />
                   {/if}
                   {#if channel.id === $page.params.id}
-                    <span class="badge badge-primary">&larr;</span>
+                    <span class="ml-auto badge badge-primary">&larr;</span>
                   {/if}
                 </a>
               </li>
