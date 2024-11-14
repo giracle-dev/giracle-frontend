@@ -123,7 +123,7 @@ export const getChannelHistory = async (
     });
 
   //現在のスクロール位置を調べて必要ならさらにメッセージを取得する
-  checkScrollAndFetch();
+  setTimeout(checkScrollAndFetch, 100);
 };
 
 /**
