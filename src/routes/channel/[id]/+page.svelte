@@ -45,7 +45,7 @@
     await getChannelHistory(
       undefined,
       readTime,
-      "older",
+      "newer",
       messageId || undefined,
     );
     const MessageContainer = document.getElementById("messageContainer");
@@ -86,11 +86,19 @@
   });
 
   $: (async () => {
-    //console.log("/channel/[id] :: $ : page.params.id->", $page.params.id);
-    if ($page.params.id) {
+    console.log("/channel/[id] :: $ : page.params.id->", $page.params.id);
+    //if ($page.params.id) {
+    if (alreadyMounted) {
+      channelHistoryStore.update(() => ({
+        history: [],
+        atEnd: false,
+        atTop: false,
+      }));
+
       await getChannelHistory(
         undefined,
         get(MessageReadTimeStore)[$page.params.id],
+        "newer",
       );
 
       //既読時間を更新させてみる
