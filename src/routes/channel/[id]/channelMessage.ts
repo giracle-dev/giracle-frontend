@@ -121,6 +121,9 @@ export const getChannelHistory = async (
     .catch((err) => {
       console.log("channelMessage :: getChannelHistory : err->", err);
     });
+
+  //現在のスクロール位置を調べて必要ならさらにメッセージを取得する
+  checkScrollAndFetch();
 };
 
 /**
@@ -160,6 +163,34 @@ export const scrollHandler = async () => {
     }
   }
 };
+
+/**
+ * 現在のスクロール位置を取得し、必要ならチャンネルメッセージを取得する
+ */
+const checkScrollAndFetch = async () => {
+  const MessageContainer = document.getElementById("messageContainer");
+
+  // スクロールが一番上まで行ったかどうか
+  if (MessageContainer) {
+    //100は誤差範囲のため
+    const isScrolledToTop =
+      Math.abs(MessageContainer.scrollTop) >=
+      MessageContainer.scrollHeight - MessageContainer.clientHeight - 100;
+    const isBottom = MessageContainer?.scrollTop === 0;
+
+    if (isScrolledToTop) {
+      const targetMessage =
+        get(channelHistoryStore).history.at(-1);
+      await getChannelHistory(targetMessage, undefined, "older");
+    }
+
+    if (isBottom) {
+      console.log("scrollHandler :: isBottom");
+      const targetMessage = get(channelHistoryStore).history[0];
+      await getChannelHistory(targetMessage, undefined, "newer");
+    }
+  }
+}
 
 /**
  *　メッセージをリンクに変換する
