@@ -35,6 +35,7 @@ export const formatDate = (date: Date): string => {
   return year + "/" + month + "/" + day + " " + d.toLocaleTimeString();
 };
 
+let fetchedMessageIdFrom: string | undefined = undefined;
 /**
  * チャンネルメッセージを取得する
  * @param targetMessage
@@ -72,6 +73,7 @@ export const getChannelHistory = async (
     .then((res) => {
       console.log("/channel/[id] :: getChannelHistory : res->", res);
       if (direction === "older") {
+        fetchedMessageIdFrom = get(channelHistoryStore).history.at(-1)?.id;
         // 配列の一番下に追加
         // 重複しているメッセージを除外
         const newMessages = res.data.history.filter(
@@ -86,7 +88,18 @@ export const getChannelHistory = async (
           atTop: res.data.atTop,
           atEnd: messages.atEnd,
         }));
+
+        if (get(channelHistoryStore).history.length > 90) {
+          // 90件以上のメッセージがある場合、新しいメッセージを削除
+          channelHistoryStore.update((messages) => ({
+            history: messages.history.slice(-90),
+            atTop: messages.atTop,
+            atEnd: false,
+          }));
+        }
       } else if (direction === "newer") {
+        console.log("channelMessage :: getChannelHistory : channelHistoryStore ->", get(channelHistoryStore).history[0]);
+        fetchedMessageIdFrom = get(channelHistoryStore).history[0]?.id;
         // 重複しているメッセージを除外
         const newMessages = res.data.history.filter(
           (message) =>
@@ -100,9 +113,22 @@ export const getChannelHistory = async (
           atTop: messages.atTop,
           atEnd: res.data.atEnd,
         }));
+
+        if (get(channelHistoryStore).history.length > 90) {
+          // 90件以上のメッセージがある場合、古いメッセージを削除
+          channelHistoryStore.update((messages) => ({
+            history: messages.history.slice(0, 90),
+            atTop: false,
+            atEnd: messages.atEnd,
+          }));
+        }
       } else {
         channelHistoryStore.set(res.data);
       }
+
+      //メッセージIDが指定されている場合、そのメッセージまでスクロールする
+      console.log("channelMessage :: getChannelHistory : messageIdFrom->", document.getElementById("message::" + fetchedMessageIdFrom), fetchedMessageIdFrom);
+      document.getElementById("message::" + fetchedMessageIdFrom)?.scrollIntoView();
 
       //このチャンネル用のInbox取得
       const inboxForCurrentChannel = get(inboxStore).filter(
