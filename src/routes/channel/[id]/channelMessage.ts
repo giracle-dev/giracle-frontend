@@ -35,25 +35,46 @@ export const formatDate = (date: Date): string => {
   return year + "/" + month + "/" + day + " " + d.toLocaleTimeString();
 };
 
+let fetchedMessageIdFrom: string | undefined = undefined;
 /**
  * チャンネルメッセージを取得する
  * @param targetMessage
+ * @param targetMessageTime
+ * @param direction (older | newer)
+ * @param messageIdFrom
  * @returns void (channelHistoryStoreにメッセージを追加)
  */
 export const getChannelHistory = async (
   targetMessage?: IMessage,
+  targetMessageTime?: Date,
   direction?: "older" | "newer",
+  messageIdFrom?: string,
 ) => {
   if (direction === "older" && get(channelHistoryStore).atTop) return;
   if (direction === "newer" && get(channelHistoryStore).atEnd) return;
+
+  const createMessageIdFrom = () => {
+    if (targetMessage) {
+      return targetMessage.id;
+    } else if (messageIdFrom) {
+      return messageIdFrom;
+    } else {
+      return undefined;
+    }
+  };
+
   await channelRepository
     .getHistory(get(page).params.id, {
-      messageIdFrom: targetMessage?.id ?? undefined,
+      messageIdFrom: createMessageIdFrom(),
+      messageTimeFrom: targetMessageTime ?? undefined,
       fetchDirection: direction ?? undefined,
       fetchLength: 30,
     })
     .then((res) => {
+      console.log("/channel/[id] :: getChannelHistory : res->", res);
       if (direction === "older") {
+        fetchedMessageIdFrom = get(channelHistoryStore).history.at(-1)?.id;
+        //console.log("channelMessage :: getChannelHistory : fetchedMessageIdFrom今 ->", fetchedMessageIdFrom);
         // 配列の一番下に追加
         // 重複しているメッセージを除外
         const newMessages = res.data.history.filter(
@@ -68,7 +89,18 @@ export const getChannelHistory = async (
           atTop: res.data.atTop,
           atEnd: messages.atEnd,
         }));
+
+        if (get(channelHistoryStore).history.length > 90) {
+          // 90件以上のメッセージがある場合、新しいメッセージを削除
+          channelHistoryStore.update((messages) => ({
+            history: messages.history.slice(-90),
+            atTop: messages.atTop,
+            atEnd: false,
+          }));
+        }
       } else if (direction === "newer") {
+        fetchedMessageIdFrom = get(channelHistoryStore).history[0]?.id;
+
         // 重複しているメッセージを除外
         const newMessages = res.data.history.filter(
           (message) =>
@@ -82,22 +114,45 @@ export const getChannelHistory = async (
           atTop: messages.atTop,
           atEnd: res.data.atEnd,
         }));
+
+        if (get(channelHistoryStore).history.length > 90) {
+          // 90件以上のメッセージがある場合、古いメッセージを削除
+          channelHistoryStore.update((messages) => ({
+            history: messages.history.slice(0, 90),
+            atTop: false,
+            atEnd: messages.atEnd,
+          }));
+        }
       } else {
         channelHistoryStore.set(res.data);
       }
 
+      //メッセージIDが指定されている場合、そのメッセージまでスクロールする
+      //console.log("channelMessage :: getChannelHistory : messageIdFrom->", document.getElementById("message::" + fetchedMessageIdFrom), fetchedMessageIdFrom);
+      setTimeout(() => {
+        document.getElementById("message::" + fetchedMessageIdFrom)?.scrollIntoView(direction === "newer" ? false : { block:"start" });
+      });
+
       //このチャンネル用のInbox取得
-      const inboxForCurrentChannel = get(inboxStore).filter((i) => i.Message.channelId === get(page).params.id);
+      const inboxForCurrentChannel = get(inboxStore).filter(
+        (i) => i.Message.channelId === get(page).params.id,
+      );
       //取得した履歴にInbox内のメッセージがあれば既読にする
       for (const message of res.data.history) {
-        const msgFind = inboxForCurrentChannel.find((i) => i.messageId === message.id);
+        const msgFind = inboxForCurrentChannel.find(
+          (i) => i.messageId === message.id,
+        );
         if (msgFind) {
-         ReadInboxItem(msgFind.messageId);
+          ReadInboxItem(msgFind.messageId);
         }
       }
-    }).catch((err) => {
+    })
+    .catch((err) => {
       console.log("channelMessage :: getChannelHistory : err->", err);
     });
+
+  //現在のスクロール位置を調べて必要ならさらにメッセージを取得する
+  setTimeout(checkScrollAndFetch, 100);
 };
 
 /**
@@ -121,21 +176,50 @@ export const scrollHandler = async () => {
         ];
       if (isScrollLoading) return;
       isScrollLoading = true;
-      await getChannelHistory(targetMessage, "older").then(() => {
+      await getChannelHistory(targetMessage, undefined, "older").then(() => {
         isScrollLoading = false;
       });
     }
 
     if (isBottom) {
+      console.log("scrollHandler :: isBottom");
       const targetMessage = get(channelHistoryStore).history[0];
       if (isScrollLoading) return;
       isScrollLoading = true;
-      await getChannelHistory(targetMessage, "newer").then(() => {
+      await getChannelHistory(targetMessage, undefined, "newer").then(() => {
         isScrollLoading = false;
       });
     }
   }
 };
+
+/**
+ * 現在のスクロール位置を取得し、必要ならチャンネルメッセージを取得する
+ */
+const checkScrollAndFetch = async () => {
+  const MessageContainer = document.getElementById("messageContainer");
+
+  // スクロールが一番上まで行ったかどうか
+  if (MessageContainer) {
+    //100は誤差範囲のため
+    const isScrolledToTop =
+      Math.abs(MessageContainer.scrollTop) >=
+      MessageContainer.scrollHeight - MessageContainer.clientHeight - 100;
+    const isBottom = MessageContainer?.scrollTop === 0;
+
+    if (isScrolledToTop) {
+      const targetMessage =
+        get(channelHistoryStore).history.at(-1);
+      await getChannelHistory(targetMessage, undefined, "older");
+    }
+
+    if (isBottom) {
+      console.log("scrollHandler :: isBottom");
+      const targetMessage = get(channelHistoryStore).history[0];
+      await getChannelHistory(targetMessage, undefined, "newer");
+    }
+  }
+}
 
 /**
  *　メッセージをリンクに変換する
@@ -249,11 +333,11 @@ export const linkify = (text: string) => {
 export const sendMessage = async (event: CustomEvent) => {
   const message = event.detail.message;
   const fileIds = event.detail.fileIds;
-  console.log("/channel/[id] :: sendMessage : message->", message);
+  //console.log("/channel/[id] :: sendMessage : message->", message);
   await messageRepository
     .sendMessage(get(page).params.id, message, fileIds)
     .then((res) => {
-      console.log("/channel/[id] :: sendMessage : res->", res);
+      //console.log("/channel/[id] :: sendMessage : res->", res);
     })
     .catch((err) => {
       console.error("/channel/[id] :: sendMessage : err->", err);

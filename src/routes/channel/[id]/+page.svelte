@@ -20,10 +20,17 @@
   import FilePreview from "./FilePreview.svelte";
   import MessageInput from "./MessageInput.svelte";
   import NewMessageLine from "./NewMessageLine.svelte";
-  import { MessageReadTimeBeforeStore } from "$lib/store/messageReadTime";
+  import {
+    MessageReadTimeBeforeStore,
+    MessageReadTimeStore,
+  } from "$lib/store/messageReadTime";
   import type { IMessage } from "$lib/types/IMessage";
   import { get } from "svelte/store";
   import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
+  const urlSearchParams = $page.url.searchParams;
+
+  let messageId = urlSearchParams.get("messageId");
+  let alreadyMounted = false;
 
   onMount(async () => {
     //console.log("/channel/[id] :: onMount : $page.params.id->", $page.params.id);
@@ -31,7 +38,16 @@
     while ($userListStore.length === 0) {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
-    await getChannelHistory();
+    messageId = urlSearchParams.get("messageId");
+    //既読時間
+    const readTime = get(MessageReadTimeStore)[$page.params.id];
+    //履歴取得
+    await getChannelHistory(
+      undefined,
+      readTime,
+      "newer",
+      messageId || undefined,
+    );
     const MessageContainer = document.getElementById("messageContainer");
 
     //スクロール監視
@@ -53,12 +69,37 @@
     });
 
     window.addEventListener("focus", readItOnPageVisible);
+
+    // スクロールバーがない場合、上下のメッセージを取得
+    if (
+      MessageContainer &&
+      MessageContainer.scrollHeight === MessageContainer.clientHeight
+    ) {
+      const lastMessage =
+        $channelHistoryStore.history[$channelHistoryStore.history.length - 1];
+      const firstMessage = $channelHistoryStore.history[0];
+      await getChannelHistory(lastMessage, undefined, "newer");
+      await getChannelHistory(firstMessage, undefined, "older");
+    }
+
+    alreadyMounted = true;
   });
 
   $: (async () => {
-    //console.log("/channel/[id] :: $ : page.params.id->", $page.params.id);
-    if ($page.params.id) {
-      await getChannelHistory();
+    console.log("/channel/[id] :: $ : page.params.id->", $page.params.id);
+    //if ($page.params.id) {
+    if (alreadyMounted) {
+      channelHistoryStore.update(() => ({
+        history: [],
+        atEnd: false,
+        atTop: false,
+      }));
+
+      await getChannelHistory(
+        undefined,
+        get(MessageReadTimeStore)[$page.params.id],
+        "newer",
+      );
 
       //既読時間を更新させてみる
       await updateReadTime(
