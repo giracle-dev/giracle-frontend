@@ -74,6 +74,7 @@ export const getChannelHistory = async (
       console.log("/channel/[id] :: getChannelHistory : res->", res);
       if (direction === "older") {
         fetchedMessageIdFrom = get(channelHistoryStore).history.at(-1)?.id;
+        //console.log("channelMessage :: getChannelHistory : fetchedMessageIdFrom今 ->", fetchedMessageIdFrom);
         // 配列の一番下に追加
         // 重複しているメッセージを除外
         const newMessages = res.data.history.filter(
@@ -100,6 +101,7 @@ export const getChannelHistory = async (
       } else if (direction === "newer") {
         console.log("channelMessage :: getChannelHistory : channelHistoryStore ->", get(channelHistoryStore).history[0]);
         fetchedMessageIdFrom = get(channelHistoryStore).history[0]?.id;
+
         // 重複しているメッセージを除外
         const newMessages = res.data.history.filter(
           (message) =>
@@ -127,8 +129,10 @@ export const getChannelHistory = async (
       }
 
       //メッセージIDが指定されている場合、そのメッセージまでスクロールする
-      console.log("channelMessage :: getChannelHistory : messageIdFrom->", document.getElementById("message::" + fetchedMessageIdFrom), fetchedMessageIdFrom);
-      document.getElementById("message::" + fetchedMessageIdFrom)?.scrollIntoView();
+      //console.log("channelMessage :: getChannelHistory : messageIdFrom->", document.getElementById("message::" + fetchedMessageIdFrom), fetchedMessageIdFrom);
+      setTimeout(() => {
+        document.getElementById("message::" + fetchedMessageIdFrom)?.scrollIntoView(false);
+      });
 
       //このチャンネル用のInbox取得
       const inboxForCurrentChannel = get(inboxStore).filter(
