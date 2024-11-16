@@ -99,7 +99,6 @@ export const getChannelHistory = async (
           }));
         }
       } else if (direction === "newer") {
-        console.log("channelMessage :: getChannelHistory : channelHistoryStore ->", get(channelHistoryStore).history[0]);
         fetchedMessageIdFrom = get(channelHistoryStore).history[0]?.id;
 
         // 重複しているメッセージを除外
@@ -334,11 +333,11 @@ export const linkify = (text: string) => {
 export const sendMessage = async (event: CustomEvent) => {
   const message = event.detail.message;
   const fileIds = event.detail.fileIds;
-  console.log("/channel/[id] :: sendMessage : message->", message);
+  //console.log("/channel/[id] :: sendMessage : message->", message);
   await messageRepository
     .sendMessage(get(page).params.id, message, fileIds)
     .then((res) => {
-      console.log("/channel/[id] :: sendMessage : res->", res);
+      //console.log("/channel/[id] :: sendMessage : res->", res);
     })
     .catch((err) => {
       console.error("/channel/[id] :: sendMessage : err->", err);
