@@ -130,7 +130,7 @@ export const getChannelHistory = async (
       //メッセージIDが指定されている場合、そのメッセージまでスクロールする
       //console.log("channelMessage :: getChannelHistory : messageIdFrom->", document.getElementById("message::" + fetchedMessageIdFrom), fetchedMessageIdFrom);
       setTimeout(() => {
-        document.getElementById("message::" + fetchedMessageIdFrom)?.scrollIntoView(false);
+        document.getElementById("message::" + fetchedMessageIdFrom)?.scrollIntoView(direction === "newer" ? false : { block:"start" });
       });
 
       //このチャンネル用のInbox取得
