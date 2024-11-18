@@ -7,7 +7,7 @@
   let displayMode: "JOINED_USERS" | "MANAGE_PANEL" = "JOINED_USERS";
 </script>
 
-<div class="absolute drawer drawer-end lg:drawer-open">
+<div class="absolute drawer drawer-end">
   <input id="channel-drawer" type="checkbox" class="drawer-toggle" />
   <!--
     <div class="drawer-content flex flex-col items-center justify-center">
