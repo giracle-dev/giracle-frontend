@@ -1,11 +1,3 @@
-<script lang="ts">
-  function openDrawer() {
-    const el = document.getElementById("channel-drawer") as HTMLInputElement;
-    if (!el) return;
-    el.checked = true;
-  }
-</script>
-
 <div class="absolute drawer drawer-end lg:drawer-open">
   <input id="channel-drawer" type="checkbox" class="drawer-toggle" />
   <!--
@@ -27,6 +19,3 @@
     </ul>
   </div>
 </div>
-<button on:click={openDrawer} class="btn btn-secondary"
-  >Open Drawer with JS</button
->
