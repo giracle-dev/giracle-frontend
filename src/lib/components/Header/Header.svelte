@@ -42,12 +42,14 @@
   <div class="flex-none lg:block">
     <ul class="menu menu-horizontal">
       <!-- Navbar menu content here -->
-      <button
-        on:click={openChannelSidebarPROXY}
-        class="btn btn-square btn-ghost"
-      >
-        <IconLayoutSidebarLeftCollapseFilled />
-      </button>
+      {#if headerIcon === "channel"}
+        <button
+          on:click={openChannelSidebarPROXY}
+          class="btn btn-square btn-ghost"
+        >
+          <IconLayoutSidebarLeftCollapseFilled />
+        </button>
+      {/if}
     </ul>
   </div>
 </div>
