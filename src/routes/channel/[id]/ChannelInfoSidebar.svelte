@@ -1,11 +1,20 @@
-<div class="drawer drawer-end lg:drawer-open">
+<script lang="ts">
+  function openDrawer() {
+    const el = document.getElementById("channel-drawer") as HTMLInputElement;
+    if (!el) return;
+    el.checked = true;
+  }
+</script>
+
+<div class="absolute drawer drawer-end lg:drawer-open">
   <input id="channel-drawer" type="checkbox" class="drawer-toggle" />
-  <div class="drawer-content flex flex-col items-center justify-center">
-    <!-- Page content here -->
-    <label for="channel-drawer" class="btn btn-primary drawer-button">
-      Open drawer
-    </label>
-  </div>
+  <!--
+    <div class="drawer-content flex flex-col items-center justify-center">
+      <label for="channel-drawer" class="btn btn-primary drawer-button">
+        Open drawer
+      </label>
+    </div>
+  -->
   <div class="drawer-side">
     <label
       for="channel-drawer"
@@ -18,3 +27,6 @@
     </ul>
   </div>
 </div>
+<button on:click={openDrawer} class="btn btn-secondary"
+  >Open Drawer with JS</button
+>
