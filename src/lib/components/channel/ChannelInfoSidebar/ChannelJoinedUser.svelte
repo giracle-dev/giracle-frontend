@@ -15,15 +15,15 @@
   onMount(() => getJoinedUser());
 </script>
 
-<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-4">
   {#each users as user}
     <div class="flex flex-row items-center gap-3">
       <div class="avatar">
-        <div class="w-6 rounded-full">
+        <div class="w-8 rounded-full">
           <img alt="icon" src={`/api/user/icon/` + user.id} />
         </div>
       </div>
-      <p class="truncate text-base">{user.name}</p>
+      <p class="truncate text-lg">{user.name}</p>
     </div>
   {/each}
 </div>
