@@ -15,9 +15,15 @@
   onMount(() => getJoinedUser());
 </script>
 
-<div>
-  チャンネル参加者リスト
+<div class="flex flex-col gap-3">
   {#each users as user}
-    <p>{user.name}</p>
+    <div class="flex flex-row items-center gap-3">
+      <div class="avatar">
+        <div class="w-6 rounded-full">
+          <img alt="icon" src={`/api/user/icon/` + user.id} />
+        </div>
+      </div>
+      <p class="truncate text-base">{user.name}</p>
+    </div>
   {/each}
 </div>
