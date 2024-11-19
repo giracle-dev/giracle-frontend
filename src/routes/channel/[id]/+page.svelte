@@ -28,6 +28,7 @@
   import { get } from "svelte/store";
   import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
   import ChannelInfoSidebar from "./ChannelInfoSidebar.svelte";
+  import { channelListStore } from "$lib/store/channel";
   const urlSearchParams = $page.url.searchParams;
 
   let messageId = urlSearchParams.get("messageId");
@@ -358,7 +359,9 @@
   </div>
 </div>
 <div>
-  <ChannelInfoSidebar />
+  {#if $channelListStore.find((c) => c.id === $page.params.id) !== undefined}
+    <ChannelInfoSidebar />
+  {/if}
 </div>
 
 <style>
