@@ -34,15 +34,15 @@
         </div>
       </div>
 
-      <div class="join mx-auto">
+      <div class="join mx-auto w-full">
         <button
           on:click={() => (displayMode = "JOINED_USERS")}
-          class={`btn join-item ${displayMode === "JOINED_USERS" ? "btn-primary" : ""}`}
+          class={`btn w-1/2 join-item ${displayMode === "JOINED_USERS" ? "btn-primary" : ""}`}
           >参加者</button
         >
         <button
           on:click={() => (displayMode = "MANAGE_PANEL")}
-          class={`btn join-item ${displayMode === "MANAGE_PANEL" ? "btn-primary" : ""}`}
+          class={`btn w-1/2 join-item ${displayMode === "MANAGE_PANEL" ? "btn-primary" : ""}`}
           >管理</button
         >
       </div>
