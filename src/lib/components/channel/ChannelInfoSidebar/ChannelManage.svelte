@@ -3,6 +3,8 @@
   import { channelListStore } from "$lib/store/channel";
   import { get } from "svelte/store";
   import { page } from "$app/stores";
+  import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
+  const channelRepository = repositoryFactory.get("channel");
 
   let currentChannelInfo = structuredClone(get(channelListStore)).find(
     (c) => c.id === $page.params.id,
@@ -29,6 +31,23 @@
     } else {
       isChanged = false;
     }
+  };
+
+  /**
+   * チャンネル情報を更新する
+   */
+  const updateChannel = () => {
+    if (!currentChannelInfo) return;
+
+    channelRepository
+      .updateChannel({
+        channelId: currentChannelInfo.id,
+        name: channelName,
+        description: channelDescription,
+      })
+      .catch((e) => {
+        console.error("ChannelManage :: updateChannel : e->", e);
+      });
   };
 </script>
 
@@ -59,7 +78,11 @@
   </label>
 
   <div class="flex flex-col gap-2">
-    <button class="btn btn-primary" disabled={!isChanged}>適用</button>
+    <button
+      on:click={updateChannel}
+      class="btn btn-primary"
+      disabled={!isChanged}>適用</button
+    >
     <button
       on:click={() => {
         channelName = currentChannelInfo?.name;
