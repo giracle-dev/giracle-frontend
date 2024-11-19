@@ -10,12 +10,11 @@
     (c) => c.id === $page.params.id,
   );
   //入力用
-  let channelName = get(channelListStore).find(
-    (c) => c.id === $page.params.id,
-  )?.name;
-  let channelDescription = get(channelListStore).find(
-    (c) => c.id === $page.params.id,
-  )?.description;
+  let channelName =
+    get(channelListStore).find((c) => c.id === $page.params.id)?.name || "";
+  let channelDescription =
+    get(channelListStore).find((c) => c.id === $page.params.id)?.description ||
+    "";
   let isChanged = false;
 
   /**
@@ -85,8 +84,8 @@
     >
     <button
       on:click={() => {
-        channelName = currentChannelInfo?.name;
-        channelDescription = currentChannelInfo?.description;
+        channelName = currentChannelInfo?.name || "";
+        channelDescription = currentChannelInfo?.description || "";
         checkChanged();
       }}
       class="btn"
