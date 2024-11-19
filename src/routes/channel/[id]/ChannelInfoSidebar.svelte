@@ -30,7 +30,7 @@
       <!-- Sidebar content here -->
       <div class="card truncate bg-base-100 w-full py-3 px-4">
         <div class="card-title">
-          # {get(channelListStore).find((c) => c.id === $page.params.id)?.name}
+          # {$channelListStore.find((c) => c.id === $page.params.id)?.name}
         </div>
       </div>
 
