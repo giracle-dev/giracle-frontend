@@ -44,6 +44,11 @@
         name: channelName,
         description: channelDescription,
       })
+      .then((res) => {
+        if (res) {
+          isChanged = false;
+        }
+      })
       .catch((e) => {
         console.error("ChannelManage :: updateChannel : e->", e);
       });
