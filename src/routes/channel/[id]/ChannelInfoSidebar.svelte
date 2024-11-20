@@ -47,7 +47,7 @@
         >
       </div>
 
-      <div class="card overflow-y-auto h-full bg-base-100 py-3 px-4">
+      <div class="card h-full w-full bg-base-100 z-0 py-3 px-4">
         {#if displayMode === "JOINED_USERS"}
           <ChannelJoinedUser />
         {/if}
