@@ -100,7 +100,7 @@
       await getChannelHistory(
         undefined,
         get(MessageReadTimeStore)[$page.params.id],
-        "newer",
+        "older",
       );
 
       //既読時間を更新させてみる
