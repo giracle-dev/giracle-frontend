@@ -7,6 +7,7 @@ import { get } from "svelte/store";
 import { page } from "$app/stores";
 import updateReadTime from "$lib/utils/updateReadTime";
 import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
+import { goto } from "$app/navigation";
 
 interface IResponseWsSendMessage {
   signal: "message::SendMessage";
@@ -87,9 +88,15 @@ const notify = (msg: IMessage) => {
   //チャンネル名とユーザー名を取得
   let channelName = get(channelListStore).find((channel) => channel.id === msg.channelId)?.name;
   let sendersName = get(userListStore).find((user) => user.id === msg.userId)?.name;
+  
   //通知を出す
   NOTIFICATION_INSTNCE = new Notification("#" + channelName + " :: " + sendersName, {
     body: msg.content,
     icon: "/api/users/icon/" + msg.userId,
+    
   });
+  //通知がクリックされたらチャンネルに飛ぶ
+  NOTIFICATION_INSTNCE.onclick = () => {
+    goto("/channel/" + msg.channelId);
+  };
 }
