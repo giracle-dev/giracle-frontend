@@ -1,7 +1,7 @@
 import type { IMessage } from "$lib/types/IMessage";
 import { channelHistoryStore } from "$lib/store/channelHistory";
 import { hasNewMessageStore } from "$lib/store/messageReadTime";
-import { userListStore } from "$lib/store/user";
+import { myUserStore, userListStore } from "$lib/store/user";
 import { channelListStore } from "$lib/store/channel";
 import { get } from "svelte/store";
 import { page } from "$app/stores";
@@ -51,7 +51,8 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
           }
         ));
 
-        notify(data.data);
+        //自分に対するメンション文があるなら通知
+        if (data.data.content.includes("@<" + get(myUserStore).id + ">")) notify(data.data);
       }
 
       //履歴Storeへ追加
@@ -70,7 +71,8 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
       ));
       //console.log("hasNewMessageStore", get(hasNewMessageStore)[data.data.channelId]);
 
-      notify(data.data);
+      //自分に対するメンション文があるなら通知
+      if (data.data.content.includes("@<" + get(myUserStore).id + ">")) notify(data.data);
     }
   }
 };
