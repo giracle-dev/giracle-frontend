@@ -1,6 +1,8 @@
 import type { IMessage } from "$lib/types/IMessage";
 import { channelHistoryStore } from "$lib/store/channelHistory";
 import { hasNewMessageStore } from "$lib/store/messageReadTime";
+import { userListStore } from "$lib/store/user";
+import { channelListStore } from "$lib/store/channel";
 import { get } from "svelte/store";
 import { page } from "$app/stores";
 import updateReadTime from "$lib/utils/updateReadTime";
@@ -24,6 +26,9 @@ window.addEventListener('blur', () => {
   WINDOW_FOCUS = false;
 });
 
+//ブラウザ通知用インスタンス
+let NOTIFICATION_INSTNCE: Notification | null = null;
+
 export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
   if (data.signal === "message::SendMessage") {
     console.log("message::SendMessage====>", data.data);
@@ -45,6 +50,16 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
             [data.data.channelId]: true,
           }
         ));
+
+        //通知が表示されていることを考慮して閉じておく
+        NOTIFICATION_INSTNCE?.close;
+        //チャンネル名とユーザー名を取得
+        let channelName = get(channelListStore).find((channel) => channel.id === data.data.channelId)?.name;
+        let sendersName = get(userListStore).find((user) => user.id === data.data.userId)?.name;
+        //通知を出す
+        NOTIFICATION_INSTNCE = new Notification("#" + channelName + " :: " + sendersName, {
+          body: data.data.content,
+        });
       }
 
       //履歴Storeへ追加
