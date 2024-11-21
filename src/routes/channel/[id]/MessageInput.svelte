@@ -89,7 +89,7 @@
   };
 
   const adjustTextareaHeight = () => {
-    console.log("adjustTextareaHeight", textarea);
+    //console.log("adjustTextareaHeight", textarea);
     if (textarea) {
       textarea.style.height = "42px"; // 一旦高さをリセット
       textarea.style.height = Math.min(textarea.scrollHeight, 200) + "px"; // 最大200pxまで広げる
