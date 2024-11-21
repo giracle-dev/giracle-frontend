@@ -77,6 +77,16 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
         }
       ));
       //console.log("hasNewMessageStore", get(hasNewMessageStore)[data.data.channelId]);
+
+      //通知が表示されていることを考慮して閉じておく
+      NOTIFICATION_INSTNCE?.close;
+      //チャンネル名とユーザー名を取得
+      let channelName = get(channelListStore).find((channel) => channel.id === data.data.channelId)?.name;
+      let sendersName = get(userListStore).find((user) => user.id === data.data.userId)?.name;
+      //通知を出す
+      NOTIFICATION_INSTNCE = new Notification("#" + channelName + " :: " + sendersName, {
+        body: data.data.content,
+      });
     }
   }
 };
