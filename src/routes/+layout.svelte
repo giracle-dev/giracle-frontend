@@ -87,6 +87,11 @@
 
     console.log("layoutMiddlewareを実行します");
     await authMiddleware();
+
+    //ブラウザの通知許可を求める
+    if (Notification.permission === "default") {
+      Notification.requestPermission();
+    }
   });
 
   /**
