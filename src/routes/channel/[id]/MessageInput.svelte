@@ -203,7 +203,7 @@
           <button
             class="p-2 text-left w-full flex items-center gap-2 {index ===
             selectedUserIndex
-              ? 'bg-gray-200'
+              ? 'bg-gray-200 text-neutral'
               : ''}"
             on:click={() => selectUser(user)}
             on:keydown={(event) => {
