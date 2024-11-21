@@ -51,15 +51,7 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
           }
         ));
 
-        //通知が表示されていることを考慮して閉じておく
-        NOTIFICATION_INSTNCE?.close;
-        //チャンネル名とユーザー名を取得
-        let channelName = get(channelListStore).find((channel) => channel.id === data.data.channelId)?.name;
-        let sendersName = get(userListStore).find((user) => user.id === data.data.userId)?.name;
-        //通知を出す
-        NOTIFICATION_INSTNCE = new Notification("#" + channelName + " :: " + sendersName, {
-          body: data.data.content,
-        });
+        notify(data.data);
       }
 
       //履歴Storeへ追加
@@ -78,15 +70,24 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
       ));
       //console.log("hasNewMessageStore", get(hasNewMessageStore)[data.data.channelId]);
 
-      //通知が表示されていることを考慮して閉じておく
-      NOTIFICATION_INSTNCE?.close;
-      //チャンネル名とユーザー名を取得
-      let channelName = get(channelListStore).find((channel) => channel.id === data.data.channelId)?.name;
-      let sendersName = get(userListStore).find((user) => user.id === data.data.userId)?.name;
-      //通知を出す
-      NOTIFICATION_INSTNCE = new Notification("#" + channelName + " :: " + sendersName, {
-        body: data.data.content,
-      });
+      notify(data.data);
     }
   }
 };
+
+/**
+ * ブラウザ通知を出す
+ * @param msg 通知するメッセージデータ
+ */
+const notify = (msg: IMessage) => {
+  //通知が表示されていることを考慮して閉じておく
+  if (NOTIFICATION_INSTNCE) NOTIFICATION_INSTNCE.close();
+  //チャンネル名とユーザー名を取得
+  let channelName = get(channelListStore).find((channel) => channel.id === msg.channelId)?.name;
+  let sendersName = get(userListStore).find((user) => user.id === msg.userId)?.name;
+  //通知を出す
+  NOTIFICATION_INSTNCE = new Notification("#" + channelName + " :: " + sendersName, {
+    body: msg.content,
+    icon: "/api/users/icon/" + msg.userId,
+  });
+}
