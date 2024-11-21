@@ -21,7 +21,7 @@
   let mentionListVisible = false;
   let mentionQuery = "";
   let filteredUserList: IUser[] = [];
-  let selectedUserIndex = -1; // 選択されたユーザーのインデックスを保持
+  let selectedUserIndex = 0; // 選択されたユーザーのインデックスを保持
 
   const dispatch = createEventDispatcher();
 
@@ -168,6 +168,7 @@
       filteredUserList = Object.values(userList).filter((user) =>
         user.name.toLowerCase().includes(mentionQuery.toLowerCase()),
       );
+      selectedUserIndex = 0;
       console.log("filteredUserList", filteredUserList);
       mentionListVisible = filteredUserList.length > 0;
     } else {
