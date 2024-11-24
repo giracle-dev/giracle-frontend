@@ -21,7 +21,7 @@
   let mentionListVisible = false;
   let mentionQuery = "";
   let filteredUserList: IUser[] = [];
-  let selectedUserIndex = -1; // 選択されたユーザーのインデックスを保持
+  let selectedUserIndex = 0; // 選択されたユーザーのインデックスを保持
 
   const dispatch = createEventDispatcher();
 
@@ -89,7 +89,7 @@
   };
 
   const adjustTextareaHeight = () => {
-    console.log("adjustTextareaHeight", textarea);
+    //console.log("adjustTextareaHeight", textarea);
     if (textarea) {
       textarea.style.height = "42px"; // 一旦高さをリセット
       textarea.style.height = Math.min(textarea.scrollHeight, 200) + "px"; // 最大200pxまで広げる
@@ -168,6 +168,7 @@
       filteredUserList = Object.values(userList).filter((user) =>
         user.name.toLowerCase().includes(mentionQuery.toLowerCase()),
       );
+      selectedUserIndex = 0;
       console.log("filteredUserList", filteredUserList);
       mentionListVisible = filteredUserList.length > 0;
     } else {
@@ -202,7 +203,7 @@
           <button
             class="p-2 text-left w-full flex items-center gap-2 {index ===
             selectedUserIndex
-              ? 'bg-gray-200'
+              ? 'bg-gray-200 text-neutral'
               : ''}"
             on:click={() => selectUser(user)}
             on:keydown={(event) => {
