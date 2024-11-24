@@ -31,7 +31,7 @@ export const initWS = () => {
     //接続状態を更新
     wsStatusStore.set(ws.readyState);
 
-    //オンラインユーザー情報取得
+    //オンラインユーザー情報を同期する
     const userRepository = repositoryFactory.get("user");
     userRepository.getOnline().then((response) => {
       console.log(
