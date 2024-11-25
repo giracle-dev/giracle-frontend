@@ -29,6 +29,8 @@
   import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
   import ChannelInfoSidebar from "./ChannelInfoSidebar.svelte";
   import { channelListStore } from "$lib/store/channel";
+  import { myRolePowerStore } from "$lib/store/myRolePower";
+  import Id from "@tabler/icons-svelte/icons/id";
   const urlSearchParams = $page.url.searchParams;
 
   let messageId = urlSearchParams.get("messageId");
@@ -227,9 +229,17 @@
         class={`flex py-1 px-2 items-start mb-1 w-full hover:bg-base-300 rounded-md ${message.content.includes("@<" + get(myUserStore).id + ">") ? "bg-neutral" : ""}`}
         role="log"
         id={"message::" + message.id}
-        on:mouseover={() => onHover(message.id)}
+        on:mouseover={() =>
+          $myRolePowerStore.manageServer ||
+          get(myUserStore).id === message.userId
+            ? onHover(message.id)
+            : null}
         on:mouseout={() => onEndHover()}
-        on:focus={() => onHover(message.id)}
+        on:focus={() =>
+          $myRolePowerStore.manageServer ||
+          get(myUserStore).id === message.userId
+            ? onHover(message.id)
+            : null}
         on:blur={() => onEndHover()}
       >
         {#if displayAvatar(message)}
