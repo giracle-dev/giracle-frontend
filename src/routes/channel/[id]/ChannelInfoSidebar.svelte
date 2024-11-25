@@ -49,7 +49,7 @@
 
       <div class="card h-full w-full bg-base-100 z-0 py-3 px-4">
         {#if displayMode === "JOINED_USERS"}
-          <ChannelJoinedUser />
+          <ChannelJoinedUser channelId={$page.params.id} />
         {/if}
         {#if displayMode === "MANAGE_PANEL"}
           <ChannelManage channelId={$page.params.id} />
