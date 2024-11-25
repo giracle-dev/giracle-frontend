@@ -43,9 +43,7 @@
       aria-label="close sidebar"
       class="drawer-overlay flex flex-col"
     />
-    <div
-      class="flex flex-col bg-base-200 text-base-content h-full w-60 p-2"
-    >
+    <div class="flex flex-col bg-base-200 text-base-content h-full w-60 p-2">
       <div
         class=" relative flex items-center justify-between h-[64px] md:h-[100px] bg-[url('/api/server/banner')] bg-center bg-cover"
       >
@@ -76,12 +74,20 @@
 
       <!-- チャンネルボタン -->
       <ul class="grow overflow-y-auto py-2 w-full shrink">
-        <li class="hover:bg-neutral rounded px-3 py-1"><a href="/channel" on:click={handleDrawer}>チャンネル一覧</a></li>
+        <a href="/channel" on:click={handleDrawer}>
+          <li class="hover:bg-neutral rounded-md px-4 py-3 md:px-4 md:py-2">
+            チャンネル一覧
+          </li>
+        </a>
         {#if channelList && channelList.length > 0}
           {#each channelList as channel}
             {#if $myUserStore.ChannelJoin && $myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
               <li>
-                <a href="/channel/{channel.id}" on:click={handleDrawer} class="flex flex-row items-center px-4 py-3 md:px-4 md:py-2 hover:bg-neutral rounded">
+                <a
+                  href="/channel/{channel.id}"
+                  on:click={handleDrawer}
+                  class="flex flex-row items-center px-4 py-3 md:px-4 md:py-2 hover:bg-neutral rounded-md"
+                >
                   <div class="truncate">{channel.name}</div>
 
                   <div class="flex flex-row items-center ml-auto gap-1">
