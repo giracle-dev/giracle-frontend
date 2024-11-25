@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import { myRolePowerStore } from "$lib/store/myRolePower";
   import {
     IconUser,
     IconCirclesRelation,
@@ -8,6 +9,7 @@
     IconHomeCog,
     IconDeviceFloppy,
   } from "@tabler/icons-svelte";
+  import { get } from "svelte/store";
 
   const version = __VERSION__;
 </script>
@@ -39,52 +41,62 @@
     </div>
   </div>
 
-  <h3 class="w-full font-bold">サーバー管理設定</h3>
+  {#if get(myRolePowerStore).manageRole || get(myRolePowerStore).manageServer}
+    <h3 class="w-full font-bold">サーバー管理設定</h3>
+  {/if}
   <div class="flex items-center gap-5 m-5">
-    <div class=" flex flex-col">
-      <button
-        class="btn btn-ghost mx-auto btn-circle"
-        on:click={() => {
-          goto("/setting/server-manage");
-        }}
-      >
-        <IconServer size={16} />
-      </button>
-      <div class="text-xs">サーバー管理</div>
-    </div>
-    <div class=" flex flex-col">
-      <button
-        class="btn btn-ghost mx-auto btn-circle"
-        on:click={() => {
-          goto("/setting/storage-manage");
-        }}
-      >
-        <IconDeviceFloppy size={16} />
-      </button>
-      <div class="text-xs">ストレージ管理</div>
-    </div>
-    <div class=" flex flex-col">
-      <button
-        class="btn btn-ghost mx-auto btn-circle"
-        on:click={() => {
-          goto("/setting/role-setting");
-        }}
-      >
-        <IconCirclesRelation size={16} />
-      </button>
-      <div class="text-xs">ロール管理</div>
-    </div>
-    <div class=" flex flex-col">
-      <button
-        class="btn btn-ghost mx-auto btn-circle"
-        on:click={() => {
-          goto("/setting/invite-setting");
-        }}
-      >
-        <IconMailFilled size={16} />
-      </button>
-      <div class="text-xs">招待管理</div>
-    </div>
+    {#if get(myRolePowerStore).manageServer}
+      <div class=" flex flex-col">
+        <button
+          class="btn btn-ghost mx-auto btn-circle"
+          on:click={() => {
+            goto("/setting/server-manage");
+          }}
+        >
+          <IconServer size={16} />
+        </button>
+        <div class="text-xs">サーバー管理</div>
+      </div>
+      <div class=" flex flex-col">
+        <button
+          class="btn btn-ghost mx-auto btn-circle"
+          on:click={() => {
+            goto("/setting/storage-manage");
+          }}
+        >
+          <IconDeviceFloppy size={16} />
+        </button>
+        <div class="text-xs">ストレージ管理</div>
+      </div>
+    {/if}
+
+    {#if get(myRolePowerStore).manageRole || get(myRolePowerStore).manageServer}
+      <div class=" flex flex-col">
+        <button
+          class="btn btn-ghost mx-auto btn-circle"
+          on:click={() => {
+            goto("/setting/role-setting");
+          }}
+        >
+          <IconCirclesRelation size={16} />
+        </button>
+        <div class="text-xs">ロール管理</div>
+      </div>
+    {/if}
+
+    {#if get(myRolePowerStore).manageServer}
+      <div class=" flex flex-col">
+        <button
+          class="btn btn-ghost mx-auto btn-circle"
+          on:click={() => {
+            goto("/setting/invite-setting");
+          }}
+        >
+          <IconMailFilled size={16} />
+        </button>
+        <div class="text-xs">招待管理</div>
+      </div>
+    {/if}
   </div>
 
   <p class="mt-10 text-right text-sm">
