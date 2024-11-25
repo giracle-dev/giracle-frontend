@@ -14,6 +14,7 @@ import { roleLinkedWsOn } from "./role/roleLinked";
 import { roleUnlinkedWsOn } from "./role/roleUnlinked";
 import { roleUpdatedWsOn } from "./role/roleUpdated";
 import { roleDeletedWsOn } from "./role/roleDeleted";
+import { roleCreatedWsOn } from "./role/roleCreated";
 
 //WSインスタンス
 export let ws: WebSocket = new WebSocket("/ws");
@@ -64,6 +65,7 @@ export const initWS = () => {
       roleUnlinkedWsOn(json);
       roleUpdatedWsOn(json);
       roleDeletedWsOn(json);
+      roleCreatedWsOn(json);
       inboxAddedWsOn(json);
       inboxDeletedWsOn(json);
       userConnectWsOn(json);
