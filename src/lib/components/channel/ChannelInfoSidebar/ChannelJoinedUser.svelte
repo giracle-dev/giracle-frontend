@@ -2,22 +2,16 @@
   import { page } from "$app/stores";
   import { onlineUserListStore, userListStore } from "$lib/store/user";
   import UserProfile from "$lib/components/unique/userProfile.svelte";
-  import type { IUser } from "$lib/types/IUser";
-  import { onMount } from "svelte";
 
-  let users: IUser[] = [];
-
-  const getJoinedUser = () => {
-    users = $userListStore.filter((user) =>
-      user.ChannelJoin.some((c) => c.channelId === $page.params.id),
+  const getJoinedUser = (_channelId: string) => {
+    return $userListStore.filter((user) =>
+      user.ChannelJoin.some((c) => c.channelId === _channelId),
     );
   };
-
-  onMount(() => getJoinedUser());
 </script>
 
 <div class="flex flex-col z-0 gap-4">
-  {#each users as user, index}
+  {#each getJoinedUser($page.params.id) as user, index}
     <div class="flex flex-row items-center gap-3">
       <div class="dropdown dropdown-right dropdown-end z-40">
         <!-- アイコン表示 -->
