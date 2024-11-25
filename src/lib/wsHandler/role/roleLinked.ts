@@ -3,11 +3,11 @@ import { myUserStore } from "$lib/store/user";
 import { get } from "svelte/store";
 
 interface IResponseWsRoleLinked {
-    signal: "role::Linked";
-    data: {
-      userId: string,
-      roleId: string,
-    };
+  signal: "role::Linked";
+  data: {
+    userId: string,
+    roleId: string,
+  };
 }
 
 export const roleLinkedWsOn = async (data: IResponseWsRoleLinked) => {
