@@ -4,6 +4,7 @@
   import { channelListStore } from "$lib/store/channel";
   import { get } from "svelte/store";
   import ChannelManage from "$lib/components/channel/ChannelInfoSidebar/ChannelManage.svelte";
+  import { myRolePowerStore } from "$lib/store/myRolePower";
 
   let displayMode: "JOINED_USERS" | "MANAGE_PANEL" = "JOINED_USERS";
   let isDisplayed = false;
@@ -43,7 +44,8 @@
         <button
           on:click={() => (displayMode = "MANAGE_PANEL")}
           class={`btn w-1/2 join-item ${displayMode === "MANAGE_PANEL" ? "btn-primary" : ""}`}
-          >管理</button
+          disabled={!$myRolePowerStore.manageChannel &&
+            !$myRolePowerStore.manageServer}>管理</button
         >
       </div>
 
