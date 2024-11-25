@@ -1,21 +1,32 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { channelListStore } from "$lib/store/channel";
   import { get } from "svelte/store";
-  import { page } from "$app/stores";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
+  import type { IChannel } from "$lib/types/IChannel";
   const channelRepository = repositoryFactory.get("channel");
 
-  let currentChannelInfo = structuredClone(get(channelListStore)).find(
-    (c) => c.id === $page.params.id,
-  );
+  //props
+  export let channelId: string;
+
+  let currentChannelInfo: IChannel | undefined;
   //入力用
-  let channelName =
-    get(channelListStore).find((c) => c.id === $page.params.id)?.name || "";
-  let channelDescription =
-    get(channelListStore).find((c) => c.id === $page.params.id)?.description ||
-    "";
+  let channelName: string;
+  let channelDescription: string;
   let isChanged = false;
+
+  /**
+   * データ初期化
+   */
+  const initialize = () => {
+    currentChannelInfo = structuredClone(get(channelListStore)).find(
+      (c) => c.id === channelId,
+    );
+    channelName =
+      get(channelListStore).find((c) => c.id === channelId)?.name || "";
+    channelDescription =
+      get(channelListStore).find((c) => c.id === channelId)?.description || "";
+    checkChanged();
+  };
 
   /**
    * 変化検知用
@@ -53,6 +64,9 @@
         console.error("ChannelManage :: updateChannel : e->", e);
       });
   };
+
+  //マウント時あるいはチャンネル移動時にデータ初期化実行
+  $: channelId && initialize();
 </script>
 
 <div class="flex flex-col gap-4">

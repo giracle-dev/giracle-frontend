@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { page } from "$app/stores";
   import { onlineUserListStore, userListStore } from "$lib/store/user";
   import UserProfile from "$lib/components/unique/userProfile.svelte";
+
+  //props
+  export let channelId: string;
 
   const getJoinedUser = (_channelId: string) => {
     return $userListStore.filter((user) =>
@@ -11,7 +13,7 @@
 </script>
 
 <div class="flex flex-col z-0 gap-4">
-  {#each getJoinedUser($page.params.id) as user, index}
+  {#each getJoinedUser(channelId) as user, index}
     <div class="flex flex-row items-center gap-3">
       <div class="dropdown dropdown-right dropdown-end z-40">
         <!-- アイコン表示 -->
