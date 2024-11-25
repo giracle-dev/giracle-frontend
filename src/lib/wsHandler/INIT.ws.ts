@@ -11,6 +11,7 @@ import { updateChannelWsOn } from "./channel/updateChannel";
 import { onlineUserListStore } from "$lib/store/user";
 import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
 import { roleLinkedWsOn } from "./role/roleLinked";
+import { roleUnlinkedWsOn } from "./role/roleUnlinked";
 
 //WSインスタンス
 export let ws: WebSocket = new WebSocket("/ws");
@@ -58,6 +59,7 @@ export const initWS = () => {
       deleteMessageWsOn(json);
       updateChannelWsOn(json);
       roleLinkedWsOn(json);
+      roleUnlinkedWsOn(json);
       inboxAddedWsOn(json);
       inboxDeletedWsOn(json);
       userConnectWsOn(json);
