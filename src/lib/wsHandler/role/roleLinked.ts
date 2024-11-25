@@ -2,7 +2,7 @@ import { updateMyRolePower } from "$lib/store/myRolePower";
 import { myUserStore } from "$lib/store/user";
 import { get } from "svelte/store";
 
-interface IResponseWsDeleteMessage {
+interface IResponseWsRoleLinked {
     signal: "role::Linked";
     data: {
       userId: string,
@@ -10,7 +10,7 @@ interface IResponseWsDeleteMessage {
     };
 }
 
-export const roleLinkedWsOn = async (data: IResponseWsDeleteMessage) => {
+export const roleLinkedWsOn = async (data: IResponseWsRoleLinked) => {
   if (data.signal === "role::Linked") {
     if (data.data.userId === get(myUserStore).id) {
       //自分のユーザーStore更新
