@@ -18,6 +18,14 @@ export const myRolePowerStore = writable({
 export const updateMyRolePower = () => {
   const myRoleIds = get(myUserStore).RoleLink.map((r) => r.roleId);
   const myRoleInfos = get(roleListStore).filter((r) => myRoleIds.includes(r.id));
+  //初期化
+  myRolePowerStore.set({
+    manageServer: false,
+    manageChannel: false,
+    manageRole: false,
+    manageUser: false
+  });
+  //権限を更新
   for (const role of myRoleInfos) {
     if (role.manageServer) myRolePowerStore.update((r) => ({ ...r, manageServer: true }));
     if (role.manageChannel) myRolePowerStore.update((r) => ({ ...r, manageChannel: true }));
