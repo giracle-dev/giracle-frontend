@@ -52,7 +52,7 @@
           <ChannelJoinedUser />
         {/if}
         {#if displayMode === "MANAGE_PANEL"}
-          <ChannelManage />
+          <ChannelManage channelId={$page.params.id} />
         {/if}
       </div>
     </ul>
