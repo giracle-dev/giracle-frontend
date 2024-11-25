@@ -81,7 +81,11 @@
           {#each channelList as channel}
             {#if $myUserStore.ChannelJoin && $myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
               <li>
-                <a href="/channel/{channel.id}" on:click={handleDrawer} class="flex flex-row items-center px-4 py-3 md:px-4 md:py-2 hover:bg-neutral rounded">
+                <a
+                  href="/channel/{channel.id}"
+                  on:click={handleDrawer}
+                  class="flex flex-row items-center px-4 py-3 md:px-4 md:py-2 hover:bg-neutral rounded-md"
+                >
                   <div class="truncate">{channel.name}</div>
 
                   <div class="flex flex-row items-center ml-auto gap-1">
