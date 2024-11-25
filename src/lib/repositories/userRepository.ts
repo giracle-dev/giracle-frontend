@@ -122,6 +122,18 @@ export default {
     if (!response.ok) throw new Error("userRepository :: userList :: エラー");
     return await response.json();
   },
+  searchUser: async (opt: { username?: string, joinedChannel?: string }) => {
+    let query = "";
+    if (opt.username) query += `username=${opt.username}`;
+    if (opt.joinedChannel) query += `&joinedChannel=${opt.joinedChannel}`;
+    const response = await fetch("/api/user/search?" + query, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("userRepository :: searchUser :: エラー");
+    return await response.json();
+  },
   getOnline: async (): Promise<IResponseOnlineUserList> => {
     const response = await fetch("/api/user/get-online", {
       method: "GET",

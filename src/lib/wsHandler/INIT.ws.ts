@@ -7,6 +7,7 @@ import { deleteMessageWsOn } from "./message/deleteMessage";
 import { writable } from "svelte/store";
 import { inboxAddedWsOn } from "./message/inboxAdded";
 import { inboxDeletedWsOn } from "./message/inboxDelete";
+import { updateChannelWsOn } from "./channel/updateChannel";
 import { onlineUserListStore } from "$lib/store/user";
 import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
 
@@ -54,6 +55,7 @@ export const initWS = () => {
       sendMessageWsOn(json);
       updateMessageWsOn(json);
       deleteMessageWsOn(json);
+      updateChannelWsOn(json);
       inboxAddedWsOn(json);
       inboxDeletedWsOn(json);
       userConnectWsOn(json);

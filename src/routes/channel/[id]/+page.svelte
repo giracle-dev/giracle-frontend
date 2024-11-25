@@ -27,6 +27,8 @@
   import type { IMessage } from "$lib/types/IMessage";
   import { get } from "svelte/store";
   import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
+  import ChannelInfoSidebar from "./ChannelInfoSidebar.svelte";
+  import { channelListStore } from "$lib/store/channel";
   const urlSearchParams = $page.url.searchParams;
 
   let messageId = urlSearchParams.get("messageId");
@@ -98,7 +100,7 @@
       await getChannelHistory(
         undefined,
         get(MessageReadTimeStore)[$page.params.id],
-        "newer",
+        "older",
       );
 
       //既読時間を更新させてみる
@@ -214,7 +216,7 @@
   };
 </script>
 
-<div class="h-full w-full flex flex-col px-1 pb-2 overflow-y-auto">
+<div class="flex grow flex-col px-1 pb-2 overflow-y-auto">
   <div id="messageContainer" class="grow flex flex-col-reverse overflow-y-auto">
     {#each $channelHistoryStore.history as message, index}
       {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] && index !== 0}
@@ -298,7 +300,9 @@
                       {preview.title}
                     </a>
                     <div class="md:ml-4 md:flex-grow md:min-w-0 md:max-w-100">
-                      <p class="break-words break-all">{preview.description}</p>
+                      <p class="break-words break-all">
+                        {preview.description}
+                      </p>
                     </div>
                   </div>
                   {#if preview.imageLink}
@@ -353,6 +357,11 @@
   <div class="flex gap-1">
     <MessageInput on:sendMessage={sendMessage} />
   </div>
+</div>
+<div>
+  {#if $channelListStore.find((c) => c.id === $page.params.id) !== undefined}
+    <ChannelInfoSidebar />
+  {/if}
 </div>
 
 <style>

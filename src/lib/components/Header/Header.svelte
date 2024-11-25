@@ -1,6 +1,10 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { IconTextWrapDisabled, IconListSearch } from "@tabler/icons-svelte";
+  import {
+    IconTextWrapDisabled,
+    IconListSearch,
+    IconLayoutSidebarLeftCollapseFilled,
+  } from "@tabler/icons-svelte";
 
   export let headerTitle: string = "None Title";
 
@@ -11,6 +15,13 @@
   function handleDrawer() {
     dispatch("drawer");
   }
+
+  //チャンネルサイドバーを展開する
+  const openChannelSidebarPROXY = () => {
+    const el = document.getElementById("channel-drawer") as HTMLInputElement;
+    if (!el) return;
+    el.checked = true;
+  };
 </script>
 
 <div class="navbar h-8 w-full">
@@ -28,10 +39,17 @@
     {/if}
     {headerTitle}
   </div>
-  <div class="hidden flex-none lg:block">
+  <div class="flex-none lg:block">
     <ul class="menu menu-horizontal">
       <!-- Navbar menu content here -->
-      <li>ltem</li>
+      {#if headerIcon === "channel"}
+        <button
+          on:click={openChannelSidebarPROXY}
+          class="btn btn-square btn-ghost"
+        >
+          <IconLayoutSidebarLeftCollapseFilled />
+        </button>
+      {/if}
     </ul>
   </div>
 </div>
