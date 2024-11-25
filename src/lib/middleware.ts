@@ -10,8 +10,11 @@ import { serverInfoStore } from "./store/serverInfo";
 import messageRepository from "./repositories/messageRepository";
 import { hasNewMessageStore, MessageReadTimeStore, MessageReadTimeBeforeStore } from "./store/messageReadTime";
 import { inboxStore } from "./store/inbox";
+import { roleListStore } from "./store/role";
+import { updateMyRolePower } from "./store/myRolePower";
 
 const userRepository = repositoryFactory.get("user");
+const roleRepository = repositoryFactory.get("role");
 const channelRepository = repositoryFactory.get("channel");
 const serverRepository = repositoryFactory.get("server");
 
@@ -68,6 +71,12 @@ export const init = async () => {
   await channelRepository.getChannel().then((response) => {
     console.log(response);
     channelListStore.set(response.data);
+  });
+  //ロール一覧を取得
+  await roleRepository.getRoleList().then((response) => {
+    roleListStore.set(response.data);
+    //自分の権限情報を更新
+    updateMyRolePower();
   });
   // ユーザー一覧取得
   await userRepository.userList().then((response) => {
