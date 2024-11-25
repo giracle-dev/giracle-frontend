@@ -13,6 +13,7 @@ import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
 import { roleLinkedWsOn } from "./role/roleLinked";
 import { roleUnlinkedWsOn } from "./role/roleUnlinked";
 import { roleUpdatedWsOn } from "./role/roleUpdated";
+import { roleDeletedWsOn } from "./role/roleDeleted";
 
 //WSインスタンス
 export let ws: WebSocket = new WebSocket("/ws");
@@ -62,6 +63,7 @@ export const initWS = () => {
       roleLinkedWsOn(json);
       roleUnlinkedWsOn(json);
       roleUpdatedWsOn(json);
+      roleDeletedWsOn(json);
       inboxAddedWsOn(json);
       inboxDeletedWsOn(json);
       userConnectWsOn(json);
