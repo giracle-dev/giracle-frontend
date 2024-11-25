@@ -32,4 +32,5 @@ export const updateMyRolePower = () => {
     if (role.manageRole) myRolePowerStore.update((r) => ({ ...r, manageRole: true }));
     if (role.manageUser) myRolePowerStore.update((r) => ({ ...r, manageUser: true }));
   }
+  //console.log("updateMyRolePower", get(myRolePowerStore));
 }
