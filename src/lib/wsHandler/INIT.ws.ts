@@ -8,6 +8,8 @@ import { writable } from "svelte/store";
 import { inboxAddedWsOn } from "./message/inboxAdded";
 import { inboxDeletedWsOn } from "./message/inboxDelete";
 import { updateChannelWsOn } from "./channel/updateChannel";
+import { onlineUserListStore } from "$lib/store/user";
+import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
 
 //WSインスタンス
 export let ws: WebSocket = new WebSocket("/ws");
@@ -29,6 +31,16 @@ export const initWS = () => {
     FLAGwsError = false;
     //接続状態を更新
     wsStatusStore.set(ws.readyState);
+
+    //オンラインユーザー情報を同期する
+    const userRepository = repositoryFactory.get("user");
+    userRepository.getOnline().then((response) => {
+      console.log(
+        "INIT.ws :: onmessage : response(getOnline)->",
+        response,
+      );
+      onlineUserListStore.set(response.data);
+    });
   };
 
   ws.onerror = (event) => {
