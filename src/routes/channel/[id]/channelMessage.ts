@@ -8,6 +8,7 @@ import type { IChannel } from "$lib/types/IChannel";
 import type { IMessage } from "$lib/types/IMessage";
 import { get } from "svelte/store";
 import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
+import updateReadTime from "$lib/utils/updateReadTime";
 const messageRepository = repositoryFactory.get("message");
 const channelRepository = repositoryFactory.get("channel");
 
@@ -184,6 +185,12 @@ export const scrollHandler = async () => {
     if (isBottom) {
       console.log("scrollHandler :: isBottom");
       const targetMessage = get(channelHistoryStore).history[0];
+      //既読時間を更新する
+      await updateReadTime(
+        get(page).params.id,
+        get(channelHistoryStore).history[0].createdAt,
+        false,
+      );
       if (isScrollLoading) return;
       isScrollLoading = true;
       await getChannelHistory(targetMessage, undefined, "newer").then(() => {
