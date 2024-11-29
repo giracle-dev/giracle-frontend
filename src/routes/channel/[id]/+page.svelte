@@ -363,6 +363,10 @@
         </div>
       {/if}
     {/each}
+
+    {#if $channelHistoryStore.atTop}
+      <p class="text-center mb-3 text-neutral-500">ここが最後</p>
+    {/if}
   </div>
   <div class="flex gap-1">
     <MessageInput on:sendMessage={sendMessage} />
