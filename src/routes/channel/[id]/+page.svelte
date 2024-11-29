@@ -226,7 +226,7 @@
       {/if}
 
       <div
-        class={`flex py-1 px-2 items-start mb-1 w-full hover:bg-base-300 rounded-md ${message.content.includes("@<" + get(myUserStore).id + ">") ? "bg-neutral" : ""}`}
+        class={`flex py-1 px-2 items-start w-full hover:bg-base-300 rounded-md ${message.content.includes("@<" + get(myUserStore).id + ">") ? "bg-neutral" : ""}`}
         role="log"
         id={"message::" + message.id}
         on:mouseover={() =>
