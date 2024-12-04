@@ -30,7 +30,7 @@
   import ChannelInfoSidebar from "./ChannelInfoSidebar.svelte";
   import { channelListStore } from "$lib/store/channel";
   import { myRolePowerStore } from "$lib/store/myRolePower";
-  import Id from "@tabler/icons-svelte/icons/id";
+  import SystemMessage from "./SystemMessage.svelte";
   const urlSearchParams = $page.url.searchParams;
 
   let messageId = urlSearchParams.get("messageId");
@@ -225,142 +225,149 @@
         <NewMessageLine />
       {/if}
 
-      <div
-        class={`flex py-1 px-2 items-start w-full hover:bg-base-300 rounded-md ${message.content.includes("@<" + get(myUserStore).id + ">") ? "bg-neutral" : ""}`}
-        role="log"
-        id={"message::" + message.id}
-        on:mouseover={() =>
-          $myRolePowerStore.manageServer ||
-          get(myUserStore).id === message.userId
-            ? onHover(message.id)
-            : null}
-        on:mouseout={() => onEndHover()}
-        on:focus={() =>
-          $myRolePowerStore.manageServer ||
-          get(myUserStore).id === message.userId
-            ? onHover(message.id)
-            : null}
-        on:blur={() => onEndHover()}
-      >
-        {#if displayAvatar(message)}
-          <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-          <div class="dropdown dropdown-right dropdown-end shrink-0 w-[50px]">
-            <!-- アイコン表示 -->
-            <div tabindex={index} role="button" class="w-15 mx-auto">
-              <div
-                class="avatar {$onlineUserListStore.find(
-                  (v) => v === message.userId,
-                ) !== undefined
-                  ? 'online'
-                  : 'offline'} "
-              >
-                <div class="w-8 rounded-full">
-                  <img src="/api/user/icon/{message.userId}" alt="userIcon" />
-                </div>
-              </div>
-            </div>
-            <div
-              tabindex={index}
-              class="shadow m-0 p-0 card card-compact dropdown-content bg-base-100 rounded-box w-64 z-40"
-            >
-              <UserProfile userId={message.userId} />
-            </div>
-          </div>
-        {/if}
-
+      <!-- メッセージ自体のレンダー -->
+      {#if message.isSystemMessage}
+        <div>
+          <SystemMessage messageContent={message.content} />
+        </div>
+      {:else}
         <div
-          class={`flex flex-col gap-1 w-full ${!displayAvatar(message) ? "ml-[50px]" : null}`}
+          class={`flex py-1 px-2 items-start w-full hover:bg-base-300 rounded-md ${message.content.includes("@<" + get(myUserStore).id + ">") ? "bg-neutral" : ""}`}
+          role="log"
+          id={"message::" + message.id}
+          on:mouseover={() =>
+            $myRolePowerStore.manageServer ||
+            get(myUserStore).id === message.userId
+              ? onHover(message.id)
+              : null}
+          on:mouseout={() => onEndHover()}
+          on:focus={() =>
+            $myRolePowerStore.manageServer ||
+            get(myUserStore).id === message.userId
+              ? onHover(message.id)
+              : null}
+          on:blur={() => onEndHover()}
         >
           {#if displayAvatar(message)}
-            <!-- ユーザー名、日付表示 -->
-            <div class="flex gap-2 items-center">
-              <span class="font-bold text-sm">
-                {$userListStore.find((user) => user.id === message.userId)
-                  ?.name}
-              </span>
-
-              <span class="text-xs text-gray-500"
-                >{formatDate(message.createdAt)}</span
-              >
-            </div>
-          {/if}
-
-          <!-- メッセージ -->
-          <div class="break-words break-all">
-            {@html linkify(message.content)}
-          </div>
-
-          <!-- URLプレビュー -->
-          {#if message.MessageUrlPreview && message.MessageUrlPreview.length > 0}
-            <div class="mt-2 p-2 border rounded-lg">
-              {#each message.MessageUrlPreview as preview}
-                <div class="md:flex flex-row">
-                  <div class="md:ml-4 md:flex-grow md:min-w-0 md:basis-1/2">
-                    <a
-                      href={preview.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="text-blue-700 md:flex-shrink-0 break-words break-all"
-                    >
-                      <img
-                        src={preview.faviconLink}
-                        alt="Favicon"
-                        class="inline w-4 h-4 mr-1"
-                      />
-                      {preview.title}
-                    </a>
-                    <div class="md:ml-4 md:flex-grow md:min-w-0 md:max-w-100">
-                      <p class="break-words break-all">
-                        {preview.description}
-                      </p>
-                    </div>
+            <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+            <div class="dropdown dropdown-right dropdown-end shrink-0 w-[50px]">
+              <!-- アイコン表示 -->
+              <div tabindex={index} role="button" class="w-15 mx-auto">
+                <div
+                  class="avatar {$onlineUserListStore.find(
+                    (v) => v === message.userId,
+                  ) !== undefined
+                    ? 'online'
+                    : 'offline'} "
+                >
+                  <div class="w-8 rounded-full">
+                    <img src="/api/user/icon/{message.userId}" alt="userIcon" />
                   </div>
-                  {#if preview.imageLink}
-                    <div
-                      class="h-30 sm:h-20 md:h-40 md:w-fit overflow-hidden md:ml-4"
-                    >
-                      <img
-                        src={preview.imageLink}
-                        alt={`Preview image for ${preview.title}`}
-                        class="mt-2 w-full h-full object-cover rounded-lg"
-                      />
-                    </div>
-                  {/if}
                 </div>
-              {/each}
+              </div>
+              <div
+                tabindex={index}
+                class="shadow m-0 p-0 card card-compact dropdown-content bg-base-100 rounded-box w-64 z-40"
+              >
+                <UserProfile userId={message.userId} />
+              </div>
             </div>
           {/if}
 
-          <!-- ファイル添付表示 -->
-          {#if message.MessageFileAttached && message.MessageFileAttached.length > 0}
-            <div class="flex flex-col gap-1 rounded-lg md:max-w-lg">
-              {#each message.MessageFileAttached as fileData}
-                <FilePreview {fileData} />
-              {/each}
-            </div>
-          {/if}
-        </div>
-        <!-- ホバーメニュー -->
-        <HoverMenu
-          messageId={message.id}
-          hoverMessageId={hoverMessageID}
-          isLast={index === 0}
-        />
-      </div>
+          <div
+            class={`flex flex-col gap-1 w-full ${!displayAvatar(message) ? "ml-[50px]" : null}`}
+          >
+            {#if displayAvatar(message)}
+              <!-- ユーザー名、日付表示 -->
+              <div class="flex gap-2 items-center">
+                <span class="font-bold text-sm">
+                  {$userListStore.find((user) => user.id === message.userId)
+                    ?.name}
+                </span>
 
-      <!-- 日付変更線 -->
-      {#if isDateChanged(message)}
-        <div class="flex items-center justify-center my-4">
-          <hr class="border-t border-gray-300 w-full" />
-          <span class="px-2 text-gray-500 text-sm">
-            {new Date(message.createdAt).toLocaleDateString("ja-JP", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            })}
-          </span>
-          <hr class="border-t border-gray-300 w-full" />
+                <span class="text-xs text-gray-500"
+                  >{formatDate(message.createdAt)}</span
+                >
+              </div>
+            {/if}
+
+            <!-- メッセージ -->
+            <div class="break-words break-all">
+              {@html linkify(message.content)}
+            </div>
+
+            <!-- URLプレビュー -->
+            {#if message.MessageUrlPreview && message.MessageUrlPreview.length > 0}
+              <div class="mt-2 p-2 border rounded-lg">
+                {#each message.MessageUrlPreview as preview}
+                  <div class="md:flex flex-row">
+                    <div class="md:ml-4 md:flex-grow md:min-w-0 md:basis-1/2">
+                      <a
+                        href={preview.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-blue-700 md:flex-shrink-0 break-words break-all"
+                      >
+                        <img
+                          src={preview.faviconLink}
+                          alt="Favicon"
+                          class="inline w-4 h-4 mr-1"
+                        />
+                        {preview.title}
+                      </a>
+                      <div class="md:ml-4 md:flex-grow md:min-w-0 md:max-w-100">
+                        <p class="break-words break-all">
+                          {preview.description}
+                        </p>
+                      </div>
+                    </div>
+                    {#if preview.imageLink}
+                      <div
+                        class="h-30 sm:h-20 md:h-40 md:w-fit overflow-hidden md:ml-4"
+                      >
+                        <img
+                          src={preview.imageLink}
+                          alt={`Preview image for ${preview.title}`}
+                          class="mt-2 w-full h-full object-cover rounded-lg"
+                        />
+                      </div>
+                    {/if}
+                  </div>
+                {/each}
+              </div>
+            {/if}
+
+            <!-- ファイル添付表示 -->
+            {#if message.MessageFileAttached && message.MessageFileAttached.length > 0}
+              <div class="flex flex-col gap-1 rounded-lg md:max-w-lg">
+                {#each message.MessageFileAttached as fileData}
+                  <FilePreview {fileData} />
+                {/each}
+              </div>
+            {/if}
+          </div>
+          <!-- ホバーメニュー -->
+          <HoverMenu
+            messageId={message.id}
+            hoverMessageId={hoverMessageID}
+            isLast={index === 0}
+          />
         </div>
+
+        <!-- 日付変更線 -->
+        {#if isDateChanged(message)}
+          <div class="flex items-center justify-center my-4">
+            <hr class="border-t border-gray-300 w-full" />
+            <span class="px-2 text-gray-500 text-sm">
+              {new Date(message.createdAt).toLocaleDateString("ja-JP", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })}
+            </span>
+            <hr class="border-t border-gray-300 w-full" />
+          </div>
+        {/if}
       {/if}
     {/each}
 
