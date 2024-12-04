@@ -6,6 +6,7 @@
     IconSettings,
     IconEggFilled,
     IconMessageChatbotFilled,
+    IconList,
   } from "@tabler/icons-svelte";
   import { toastStore } from "$lib/store/toast";
   import { goto } from "$app/navigation";
@@ -321,7 +322,7 @@
       <div class="divider" />
 
       <span class="text-xl font-bold flex flex-row items-center">
-        <IconMessageChatbotFilled size={24} />
+        <IconList size={24} />
         デフォルト参加チャンネル
       </span>
       <div>
