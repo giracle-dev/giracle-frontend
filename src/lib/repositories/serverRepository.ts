@@ -19,6 +19,7 @@ export default {
   changeConfig: async (
     RegisterAvailable: boolean,
     RegisterInviteOnly: boolean,
+    RegisterAnnounceChannelId: string,
     MessageMaxLength: number,
     DefaultJoinChannel: string[]
   ): Promise<IResponseGetConfig> => {
@@ -29,6 +30,7 @@ export default {
       body: JSON.stringify({
         RegisterAvailable,
         RegisterInviteOnly,
+        RegisterAnnounceChannelId,
         MessageMaxLength,
         DefaultJoinChannel
       }),

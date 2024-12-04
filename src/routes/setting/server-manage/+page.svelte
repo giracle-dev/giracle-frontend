@@ -6,11 +6,15 @@
     IconSettings,
     IconEggFilled,
     IconMessageChatbotFilled,
+    IconList,
+    IconBellFilled,
   } from "@tabler/icons-svelte";
   import { toastStore } from "$lib/store/toast";
   import { goto } from "$app/navigation";
   import SearchChannelAndSelect from "$lib/components/unique/SearchChannelAndSelect.svelte";
   import type { IChannel } from "$lib/types/IChannel";
+  import { channelListStore } from "$lib/store/channel";
+  import { get } from "svelte/store";
   const serverRepository = repositoryFactory.get("server");
 
   //バナー画像
@@ -23,6 +27,7 @@
     RegisterInviteOnly: false,
     MessageMaxLength: 5000,
     defaultJoinChannel: [],
+    RegisterAnnounceChannelId: "",
   };
   //サーバー設定
   let serverConfig: IServer = {
@@ -32,23 +37,26 @@
     RegisterInviteOnly: false,
     MessageMaxLength: 0,
     defaultJoinChannel: [],
+    RegisterAnnounceChannelId: "",
   };
   let defaultJoinChannelArr: IChannel[] = [];
+  let registerAnnounceChannel: IChannel[] = [];
   let configChanged = false;
 
   //サーバー設定が更新されたと設定
   const setChanged = () => {
+    /*
     console.log(
       "setChanged",
       JSON.stringify(serverConfig),
       JSON.stringify(serverConfigNow),
     );
+    */
     configChanged =
       JSON.stringify(serverConfig) !== JSON.stringify(serverConfigNow);
   };
 
-  $: if (defaultJoinChannelArr) {
-    console.log("defaultJoinChannelArr", defaultJoinChannelArr);
+  $: if (defaultJoinChannelArr && registerAnnounceChannel) {
     for (const channel of defaultJoinChannelArr) {
       if (
         serverConfigNow.defaultJoinChannel.findIndex(
@@ -58,6 +66,12 @@
         configChanged = true;
         break;
       }
+    }
+    if (
+      serverConfigNow.RegisterAnnounceChannelId !==
+      registerAnnounceChannel[0]?.id
+    ) {
+      configChanged = true;
     }
   }
 
@@ -69,6 +83,9 @@
         serverConfigNow = structuredClone(res.data);
         serverConfig = res.data;
         defaultJoinChannelArr = structuredClone(res.data.defaultJoinChannel);
+        registerAnnounceChannel = get(channelListStore).filter(
+          (c) => c.id === serverConfig.RegisterAnnounceChannelId,
+        );
         setChanged();
       })
       .catch((err) => {
@@ -123,6 +140,7 @@
       .changeConfig(
         serverConfig.RegisterAvailable,
         serverConfig.RegisterInviteOnly,
+        registerAnnounceChannel[0]?.id,
         serverConfig.MessageMaxLength,
         defaultJoinChannelArr.map((c) => c.id),
       )
@@ -162,7 +180,6 @@
   //サーバーバナーを変更する
   const changeServerBanner = async () => {
     if (bannerImageObj) {
-      console.log("changeServerBanner", bannerImageObj[0]);
       await serverRepository
         .changeBanner(bannerImageObj[0])
         .then((res) => {
@@ -321,11 +338,21 @@
       <div class="divider" />
 
       <span class="text-xl font-bold flex flex-row items-center">
-        <IconMessageChatbotFilled size={24} />
+        <IconList size={24} />
         デフォルト参加チャンネル
       </span>
       <div>
         <SearchChannelAndSelect bind:selection={defaultJoinChannelArr} />
+      </div>
+
+      <div class="divider" />
+
+      <span class="text-xl font-bold flex flex-row items-center">
+        <IconBellFilled size={24} />
+        新規登録時の通知チャンネル
+      </span>
+      <div>
+        <SearchChannelAndSelect bind:selection={registerAnnounceChannel} />
       </div>
     </div>
   </div>
@@ -336,6 +363,9 @@
         <button
           on:click={() => {
             serverConfig = structuredClone(serverConfigNow);
+            registerAnnounceChannel = get(channelListStore).filter(
+              (c) => c.id === serverConfig.RegisterAnnounceChannelId,
+            );
             setChanged();
           }}
           class="btn grow">元に戻す</button
