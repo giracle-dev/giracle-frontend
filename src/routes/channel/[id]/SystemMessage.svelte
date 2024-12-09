@@ -1,6 +1,8 @@
 <script lang="ts">
   import { userListStore } from "$lib/store/user";
   import type { IMessage } from "$lib/types/IMessage";
+
+  //props
   export let message: IMessage = {
     channelId: "",
     content: "",
@@ -19,16 +21,24 @@
     CHANNEL_LEFT: "がチャンネルから脱退しました。",
   };
 
-  //メッセージの内容をJSON形式にパース
-  const messageJson: {
-    messageTerm: TSystemMessageTerm;
+  let messageJson: {
+    messageTerm: TSystemMessageTerm | "";
     targetUserId: string;
-  } = JSON.parse(message.content);
+  } = {
+    messageTerm: "",
+    targetUserId: "",
+  };
+
+  $: {
+    if (message.content) {
+      messageJson = JSON.parse(message.content);
+    }
+  }
 </script>
 
-<div class="p-2 card bg-base-200">
+<div class="p-1">
   <div
-    class="px-4 text-content-400 text-center flex flex-row items-center gap-2"
+    class="px-4 py-2 card bg-base-200 text-content-400 text-center flex flex-row items-center gap-2"
   >
     <div class="w-6">
       <img src="/api/user/icon/{messageJson}" alt="userIcon" />
@@ -37,6 +47,8 @@
       {$userListStore.find((user) => user.id === messageJson.targetUserId)
         ?.name}
     </div>
-    {SystemMessageMap[messageJson.messageTerm]}
+    {messageJson.messageTerm !== ""
+      ? SystemMessageMap[messageJson.messageTerm]
+      : "..."}
   </div>
 </div>

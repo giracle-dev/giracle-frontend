@@ -67,7 +67,9 @@
     //既読時間のところまでスクロールする
     $channelHistoryStore.history.forEach((message) => {
       if (message.createdAt === $MessageReadTimeBeforeStore[$page.params.id]) {
-        document.getElementById("message::" + message.id)?.scrollIntoView();
+        document.getElementById("message::" + message.id)?.scrollIntoView({
+          block: "start",
+        });
         return;
       }
     });
