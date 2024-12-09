@@ -376,7 +376,13 @@
     {/if}
   </div>
   <div class="flex gap-1">
-    <MessageInput on:sendMessage={sendMessage} />
+    {#if $channelListStore.find((c) => c.id === $page.params.id)?.isArchived}
+      <div class="card text-center px-2 py-4 bg-base-200 w-full">
+        <p>このチャンネルはアーカイブされています</p>
+      </div>
+    {:else}
+      <MessageInput on:sendMessage={sendMessage} />
+    {/if}
   </div>
 </div>
 <div>
