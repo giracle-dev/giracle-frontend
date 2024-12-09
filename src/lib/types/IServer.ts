@@ -32,6 +32,7 @@ export interface IServer {
   introduction: string;
   RegisterAvailable: boolean;
   RegisterInviteOnly: boolean;
+  RegisterAnnounceChannelId: string;
   MessageMaxLength: number;
   defaultJoinChannel: IChannel[]
 }
