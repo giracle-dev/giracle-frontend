@@ -227,7 +227,7 @@
 
       <!-- メッセージ自体のレンダー -->
       {#if message.isSystemMessage}
-        <SystemMessage messageContent={message.content} />
+        <SystemMessage {message} />
       {:else}
         <div
           class={`flex py-1 px-2 items-start w-full hover:bg-base-300 rounded-md ${message.content.includes("@<" + get(myUserStore).id + ">") ? "bg-neutral" : ""}`}

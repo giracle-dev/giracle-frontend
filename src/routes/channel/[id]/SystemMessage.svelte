@@ -1,6 +1,16 @@
 <script lang="ts">
-  export let messageContent = "";
   import { userListStore } from "$lib/store/user";
+  import type { IMessage } from "$lib/types/IMessage";
+  export let message: IMessage = {
+    channelId: "",
+    content: "",
+    createdAt: new Date(0),
+    id: "",
+    isSystemMessage: false,
+    userId: "",
+    MessageUrlPreview: [],
+    MessageFileAttached: [],
+  };
 
   type TSystemMessageTerm = "WELCOME" | "CHANNEL_JOIN" | "CHANNEL_LEFT";
   const SystemMessageMap: Record<TSystemMessageTerm, string> = {
@@ -13,12 +23,12 @@
   const messageJson: {
     messageTerm: TSystemMessageTerm;
     targetUserId: string;
-  } = JSON.parse(messageContent);
+  } = JSON.parse(message.content);
 </script>
 
-<div class="p-2">
+<div class="p-2 card bg-base-200">
   <div
-    class="card bg-base-200 shadow-xl px-4 py-3 flex flex-row items-center gap-2"
+    class="px-4 text-content-400 text-center flex flex-row items-center gap-2"
   >
     <div class="w-6">
       <img src="/api/user/icon/{messageJson}" alt="userIcon" />
