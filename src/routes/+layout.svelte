@@ -4,7 +4,6 @@
   import { onMount } from "svelte";
   import { authMiddleware, pwaMiddleware } from "$lib/middleware";
   import Drawer from "$lib/components/Drawer/Drawer.svelte";
-  import Header from "$lib/components/Header/Header.svelte";
   import { page } from "$app/stores";
   import { pwaAssetsHead } from "virtual:pwa-assets/head";
   import { pwaInfo } from "virtual:pwa-info";
@@ -14,7 +13,6 @@
   import { themaStore } from "$lib/store/thema";
   import type { Theme } from "daisyui";
   import { changeThema } from "$lib/utils/thema";
-  import { get } from "svelte/store";
   import { IconPlugX } from "@tabler/icons-svelte";
   import { hasAnyNewMessageDerived } from "$lib/store/messageReadTime";
 
@@ -33,7 +31,8 @@
     return false;
   }
 
-  let openDrawer = false;
+  //サイドバーを展開するためだけの参照
+  import { openDrawer } from "$lib/store/drawer";
 
   let touchStartX = 0;
   let touchEndX = 0;
@@ -54,14 +53,17 @@
     handleSwipeGesture();
   };
 
-  const onChangeDrawer = () => {
-    openDrawer = !openDrawer;
-  };
+  /**
+   * サイドバーの開閉を切り替える
+   */
+  function onChangeDrawer() {
+    openDrawer.update((v) => !v);
+  }
 
   const handleSwipeGesture = () => {
     if (touchEndX - touchStartX > 50 && touchStartY - touchEndY < 50) {
       // 右スワイプ
-      openDrawer = true;
+      openDrawer.update((v) => true);
     }
   };
 
@@ -169,7 +171,7 @@
   <slot />
 {:else}
   <Drawer
-    {openDrawer}
+    openDrawer={$openDrawer}
     on:drawer={() => {
       onChangeDrawer();
     }}
@@ -188,13 +190,15 @@
           </div>
         </div>
       {/if}
-      <Header
-        on:drawer={() => {
-          onChangeDrawer();
-        }}
-        {headerTitle}
-        {headerIcon}
-      />
+      <!--
+        <Header
+          on:drawer={() => {
+            onChangeDrawer();
+          }}
+          {headerTitle}
+          {headerIcon}
+        />
+      -->
       <slot />
     </div>
   </Drawer>
