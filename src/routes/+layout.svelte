@@ -4,7 +4,6 @@
   import { onMount } from "svelte";
   import { authMiddleware, pwaMiddleware } from "$lib/middleware";
   import Drawer from "$lib/components/Drawer/Drawer.svelte";
-  import Header from "$lib/components/Header/Header.svelte";
   import { page } from "$app/stores";
   import { pwaAssetsHead } from "virtual:pwa-assets/head";
   import { pwaInfo } from "virtual:pwa-info";
@@ -14,7 +13,6 @@
   import { themaStore } from "$lib/store/thema";
   import type { Theme } from "daisyui";
   import { changeThema } from "$lib/utils/thema";
-  import { get } from "svelte/store";
   import { IconPlugX } from "@tabler/icons-svelte";
   import { hasAnyNewMessageDerived } from "$lib/store/messageReadTime";
 
