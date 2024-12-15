@@ -395,8 +395,8 @@
 
 <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
   <div class="modal-box">
-    <h3 class="text-lg font-bold">Hello!</h3>
-    <p class="py-4">Press ESC key or click the button below to close</p>
+    <h3 class="text-lg font-bold">チャンネルの作成</h3>
+    <p class="py-4">作成するチャンネル名を入力してください。</p>
     <input
       type="text"
       class="w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-200 focus:border-indigo-200 sm:text-sm"
