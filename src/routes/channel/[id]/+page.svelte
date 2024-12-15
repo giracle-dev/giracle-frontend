@@ -34,6 +34,7 @@
   import { IconLockOpen2 } from "@tabler/icons-svelte";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { toastStore } from "$lib/store/toast";
+  import ChannelHeader from "./ChannelHeader.svelte";
   const urlSearchParams = $page.url.searchParams;
 
   let messageId = urlSearchParams.get("messageId");
@@ -258,6 +259,10 @@
 </script>
 
 <div class="flex grow flex-col px-1 pb-2 overflow-y-auto">
+  <ChannelHeader
+    headerTitle={$channelListStore.find((c) => c.id === $page.params.id)?.name}
+  />
+
   <div id="messageContainer" class="grow flex flex-col-reverse overflow-y-auto">
     {#each $channelHistoryStore.history as message, index}
       {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] && index !== 0}
@@ -412,6 +417,7 @@
       <p class="text-center mb-3 text-neutral-500">ここが最後</p>
     {/if}
   </div>
+
   <div class="flex gap-1">
     {#if $channelListStore.find((c) => c.id === $page.params.id)?.isArchived}
       <div
