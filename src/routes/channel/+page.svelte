@@ -14,6 +14,7 @@
   import { IconDotsVertical } from "@tabler/icons-svelte";
   import { IconArchive } from "@tabler/icons-svelte";
   import { toastStore } from "$lib/store/toast";
+  import ChannelHeader from "./[id]/ChannelHeader.svelte";
   const channelRepository = repositoryFactory.get("channel");
 
   let my_modal_5: HTMLDialogElement;
@@ -272,6 +273,7 @@
 </script>
 
 <div class="m-2">
+  <ChannelHeader headerTitle="チャンネル一覧" />
   <!-- ボタン表示 -->
   <div class="flex flex-row w-full py-1">
     <div class="form-control w-full">

@@ -33,7 +33,8 @@
     return false;
   }
 
-  let openDrawer = false;
+  //サイドバーを展開するためだけの参照
+  import { openDrawer } from "$lib/store/drawer";
 
   let touchStartX = 0;
   let touchEndX = 0;
@@ -54,14 +55,17 @@
     handleSwipeGesture();
   };
 
-  const onChangeDrawer = () => {
-    openDrawer = !openDrawer;
-  };
+  /**
+   * サイドバーの開閉を切り替える
+   */
+  function onChangeDrawer() {
+    openDrawer.update((v) => !v);
+  }
 
   const handleSwipeGesture = () => {
     if (touchEndX - touchStartX > 50 && touchStartY - touchEndY < 50) {
       // 右スワイプ
-      openDrawer = true;
+      openDrawer.update((v) => true);
     }
   };
 
@@ -169,7 +173,7 @@
   <slot />
 {:else}
   <Drawer
-    {openDrawer}
+    openDrawer={$openDrawer}
     on:drawer={() => {
       onChangeDrawer();
     }}
@@ -188,13 +192,15 @@
           </div>
         </div>
       {/if}
-      <Header
-        on:drawer={() => {
-          onChangeDrawer();
-        }}
-        {headerTitle}
-        {headerIcon}
-      />
+      <!--
+        <Header
+          on:drawer={() => {
+            onChangeDrawer();
+          }}
+          {headerTitle}
+          {headerIcon}
+        />
+      -->
       <slot />
     </div>
   </Drawer>
