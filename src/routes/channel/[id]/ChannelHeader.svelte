@@ -23,7 +23,7 @@
   };
 </script>
 
-<div class="navbar h-8 w-full">
+<div class="bg-base-200 rounded-md navbar h-8 w-full">
   <div class="flex-none lg:hidden">
     <button class="px-2" on:click={handleDrawer}>
       <IconTextWrapDisabled size={20} />
