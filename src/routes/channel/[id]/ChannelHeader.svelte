@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import { openDrawer } from "$lib/store/drawer";
   import {
     IconTextWrapDisabled,
@@ -8,8 +7,6 @@
   import { page } from "$app/stores";
 
   export let headerTitle: string = "";
-
-  const dispatch = createEventDispatcher();
 
   function handleDrawer() {
     openDrawer.update((v) => !v);
