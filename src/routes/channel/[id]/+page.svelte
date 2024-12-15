@@ -261,6 +261,8 @@
 <div class="flex grow flex-col px-1 pb-2 overflow-y-auto">
   <ChannelHeader
     headerTitle={$channelListStore.find((c) => c.id === $page.params.id)?.name}
+    isArchived={$channelListStore.find((c) => c.id === $page.params.id)
+      ?.isArchived}
   />
 
   <div id="messageContainer" class="grow flex flex-col-reverse overflow-y-auto">
