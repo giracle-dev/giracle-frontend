@@ -27,8 +27,10 @@
   },
   "type": "module",
   "dependencies": {
+    "@emoji-mart/data": "^1.2.1",
     "@tabler/icons-svelte": "^3.21.0",
     "@types/node": "^22.9.0",
-    "daisyui": "^4.12.14"
+    "daisyui": "^4.12.14",
+    "emoji-mart": "^5.6.0"
   }
 }
