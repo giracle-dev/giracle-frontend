@@ -5,6 +5,7 @@
     IconPointFilled,
     IconSearch,
     IconMail,
+    IconArchive,
   } from "@tabler/icons-svelte";
   import { goto } from "$app/navigation";
   import { myUserStore, onlineUserListStore } from "$lib/store/user";
@@ -91,6 +92,9 @@
                   <div class="truncate">{channel.name}</div>
 
                   <div class="flex flex-row items-center ml-auto gap-1">
+                    {#if channel.isArchived}
+                      <IconArchive class="text-warning" />
+                    {/if}
                     {#if $inboxStore.some((inbox) => inbox.Message.channelId === channel.id)}
                       <IconPointFilled class="text-error" />
                     {/if}
