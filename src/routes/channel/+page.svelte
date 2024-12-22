@@ -2,7 +2,11 @@
   import { onDestroy, onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { ws } from "$lib/wsHandler/INIT.ws";
-  import { IconSearch, IconPlus } from "@tabler/icons-svelte";
+  import {
+    IconSearch,
+    IconPlus,
+    IconArchiveFilled,
+  } from "@tabler/icons-svelte";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { channelListStore } from "$lib/store/channel";
   import type { IChannel } from "$lib/types/IChannel";
@@ -10,10 +14,12 @@
   import { IconDotsVertical } from "@tabler/icons-svelte";
   import { IconArchive } from "@tabler/icons-svelte";
   import { toastStore } from "$lib/store/toast";
+  import ChannelHeader from "./[id]/ChannelHeader.svelte";
   const channelRepository = repositoryFactory.get("channel");
 
   let my_modal_5: HTMLDialogElement;
   let processing: boolean = false;
+  let displayArchivedChannel = false;
   let channelName = "";
   let channels: IChannel[] = [];
 
@@ -267,6 +273,23 @@
 </script>
 
 <div class="m-2">
+  <ChannelHeader headerTitle="チャンネル一覧" />
+  <!-- ボタン表示 -->
+  <div class="flex flex-row w-full py-1">
+    <div class="form-control w-full">
+      <label class="label cursor-pointer">
+        <span class="label-text flex flex-row gap-2 items-center">
+          <IconArchiveFilled />
+          アーカイブされたチャンネルを表示
+        </span>
+        <input
+          type="checkbox"
+          bind:checked={displayArchivedChannel}
+          class="checkbox"
+        />
+      </label>
+    </div>
+  </div>
   <div class="flex gap-2 w-full">
     <!-- 検索と作成ボタン -->
     <div class="flex flex-1">
@@ -297,62 +320,63 @@
       <p class="text-center">処理中...</p>
     {/if}
     {#each channels as channel, index}
-      <div class="w-full card shadow-xl">
-        <div class="flex flex-row items-center p-2 px-8 gap-2">
-          <div class="flex-1 divide-y divide-slate-700">
-            <div class="flex items-center gap-2">
-              <p class="font-bold">{channel.name}</p>
-              {#if channel.isArchived}
-                <span class="badge badge-warning gap-2">
-                  <IconArchive size={15} />
-                </span>
-              {/if}
+      {#if !channel.isArchived || displayArchivedChannel}
+        <div class="w-full card bg-base-200 shadow-xl">
+          <div class="flex flex-row items-center p-2 px-8 gap-2">
+            <div class="flex-1 divide-y divide-slate-700">
+              <div class="flex items-center gap-2">
+                <p class="font-bold">{channel.name}</p>
+                {#if channel.isArchived}
+                  <span class="badge badge-warning gap-2">
+                    <IconArchive size={15} />
+                  </span>
+                {/if}
+              </div>
+              <p>{channel.description}asdf</p>
             </div>
-            <p>{channel.description}asdf</p>
-          </div>
-          {#if !$myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
-            <button
-              on:click={() => joinChannel(channel.id)}
-              class="btn btn-outline">参加</button
-            >
-          {:else}
-            <button
-              on:click={() => leaveChannel(channel.id)}
-              class="btn btn-error btn-link">脱退</button
-            >
-          {/if}
-          <div class="dropdown dropdown-bottom dropdown-end">
-            <button class="m-1 btn btn-ghost">
-              <IconDotsVertical size={15} />
-            </button>
-            <ul
-              class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
-            >
-              {#if !channel.isArchived}
-                <li>
-                  <button
-                    on:click={() => toggleArchiveChannel(channel.id, true)}
-                    class="btn btn-link"
-                    aria-disabled={channel.isArchived}
-                  >
-                    archive
-                  </button>
-                </li>
-              {:else}
-                <li>
-                  <button
-                    on:click={() => toggleArchiveChannel(channel.id, false)}
-                    class="btn btn-link"
-                    aria-disabled={!channel.isArchived}
-                  >
-                    archive解除
-                  </button>
-                </li>
-              {/if}
-            </ul>
-          </div>
+            {#if !$myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
+              <button
+                on:click={() => joinChannel(channel.id)}
+                class="btn btn-outline">参加</button
+              >
+            {:else}
+              <button
+                on:click={() => leaveChannel(channel.id)}
+                class="btn btn-error btn-link">脱退</button
+              >
+            {/if}
+            <div class="dropdown dropdown-bottom dropdown-end">
+              <button class="m-1 btn btn-ghost">
+                <IconDotsVertical size={15} />
+              </button>
+              <ul
+                class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+              >
+                {#if !channel.isArchived}
+                  <li>
+                    <button
+                      on:click={() => toggleArchiveChannel(channel.id, true)}
+                      class="btn btn-link"
+                      aria-disabled={channel.isArchived}
+                    >
+                      archive
+                    </button>
+                  </li>
+                {:else}
+                  <li>
+                    <button
+                      on:click={() => toggleArchiveChannel(channel.id, false)}
+                      class="btn btn-link"
+                      aria-disabled={!channel.isArchived}
+                    >
+                      archive解除
+                    </button>
+                  </li>
+                {/if}
+              </ul>
+            </div>
 
-          <!-- <div class="join">
+            <!-- <div class="join">
             <button
               on:click={() => toggleArchiveChannel(channel.id, true)}
               disabled={channel.isArchived}
@@ -364,16 +388,17 @@
               class="btn btn-primary join-item">archive解除</button
             >
           </div> -->
+          </div>
         </div>
-      </div>
+      {/if}
     {/each}
   </div>
 </div>
 
 <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
   <div class="modal-box">
-    <h3 class="text-lg font-bold">Hello!</h3>
-    <p class="py-4">Press ESC key or click the button below to close</p>
+    <h3 class="text-lg font-bold">チャンネルの作成</h3>
+    <p class="py-4">作成するチャンネル名を入力してください。</p>
     <input
       type="text"
       class="w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-200 focus:border-indigo-200 sm:text-sm"

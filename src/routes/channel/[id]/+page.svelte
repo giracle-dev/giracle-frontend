@@ -31,6 +31,10 @@
   import { channelListStore } from "$lib/store/channel";
   import { myRolePowerStore } from "$lib/store/myRolePower";
   import SystemMessage from "./SystemMessage.svelte";
+  import { IconLockOpen2 } from "@tabler/icons-svelte";
+  import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
+  import { toastStore } from "$lib/store/toast";
+  import ChannelHeader from "./ChannelHeader.svelte";
   const urlSearchParams = $page.url.searchParams;
 
   let messageId = urlSearchParams.get("messageId");
@@ -208,6 +212,40 @@
     return false;
   };
 
+  /**
+   * チャンネルをアーカイブ解除する
+   */
+  const unArchiveChannel = async () => {
+    const channelRepository = repositoryFactory.get("channel");
+    await channelRepository
+      .updateChannel({ channelId: $page.params.id, isArchived: false })
+      .then(() => {
+        //成功のトーストを出す
+        toastStore.update((toast) => {
+          return [
+            ...toast,
+            {
+              message: "チャンネルのアーカイブ状態を解除しました。",
+              type: "success",
+            },
+          ];
+        });
+      })
+      .catch((err) => {
+        //エラーのトーストを出す
+        toastStore.update((toast) => {
+          return [
+            ...toast,
+            {
+              message: "チャンネルのアーカイブ解除に失敗しました。",
+              type: "error",
+            },
+          ];
+        });
+        console.log("/channel/[id] :: unArchiveChannel : error->", err);
+      });
+  };
+
   let hoverMessageID: string = "";
 
   const onHover = (id: string) => {
@@ -221,6 +259,12 @@
 </script>
 
 <div class="flex grow flex-col px-1 pb-2 overflow-y-auto">
+  <ChannelHeader
+    headerTitle={$channelListStore.find((c) => c.id === $page.params.id)?.name}
+    isArchived={$channelListStore.find((c) => c.id === $page.params.id)
+      ?.isArchived}
+  />
+
   <div id="messageContainer" class="grow flex flex-col-reverse overflow-y-auto">
     {#each $channelHistoryStore.history as message, index}
       {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] && index !== 0}
@@ -375,8 +419,24 @@
       <p class="text-center mb-3 text-neutral-500">ここが最後</p>
     {/if}
   </div>
+
   <div class="flex gap-1">
-    <MessageInput on:sendMessage={sendMessage} />
+    {#if $channelListStore.find((c) => c.id === $page.params.id)?.isArchived}
+      <div
+        class="card flex flex-row justify-center items-center px-2 py-4 bg-base-200 w-full"
+      >
+        <p>このチャンネルはアーカイブされています</p>
+        <button
+          on:click={unArchiveChannel}
+          class="btn btn-outline btn-secondary ml-auto"
+        >
+          <IconLockOpen2 />
+          アーカイブ解除
+        </button>
+      </div>
+    {:else}
+      <MessageInput on:sendMessage={sendMessage} />
+    {/if}
   </div>
 </div>
 <div>
