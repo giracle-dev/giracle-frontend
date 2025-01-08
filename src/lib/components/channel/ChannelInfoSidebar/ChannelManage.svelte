@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { channelListStore } from "$lib/store/channel";
   import { get } from "svelte/store";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
@@ -6,13 +8,17 @@
   const channelRepository = repositoryFactory.get("channel");
 
   //props
-  export let channelId: string;
+  interface Props {
+    channelId: string;
+  }
 
-  let currentChannelInfo: IChannel | undefined;
+  let { channelId }: Props = $props();
+
+  let currentChannelInfo: IChannel | undefined = $state();
   //入力用
-  let channelName: string;
-  let channelDescription: string;
-  let isChanged = false;
+  let channelName: string = $state("");
+  let channelDescription: string = $state("");
+  let isChanged = $state(false);
 
   /**
    * データ初期化
@@ -66,7 +72,9 @@
   };
 
   //マウント時あるいはチャンネル移動時にデータ初期化実行
-  $: channelId && initialize();
+  run(() => {
+    channelId && initialize();
+  });
 </script>
 
 <div class="flex flex-col gap-4">
@@ -76,7 +84,7 @@
     </div>
     <input
       bind:value={channelName}
-      on:input={checkChanged}
+      oninput={checkChanged}
       type="text"
       placeholder="Random"
       class="input input-bordered w-full"
@@ -89,20 +97,20 @@
     </div>
     <textarea
       bind:value={channelDescription}
-      on:input={checkChanged}
+      oninput={checkChanged}
       placeholder="なんでも雑談"
       class="textarea textarea-bordered w-full"
-    />
+></textarea>
   </label>
 
   <div class="flex flex-col gap-2">
     <button
-      on:click={updateChannel}
+      onclick={updateChannel}
       class="btn btn-primary"
       disabled={!isChanged}>適用</button
     >
     <button
-      on:click={() => {
+      onclick={() => {
         channelName = currentChannelInfo?.name || "";
         channelDescription = currentChannelInfo?.description || "";
         checkChanged();

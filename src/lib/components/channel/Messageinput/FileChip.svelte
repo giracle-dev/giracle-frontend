@@ -4,12 +4,16 @@
   import { IconSquareRoundedXFilled, IconX } from "@tabler/icons-svelte";
   import { onMount } from "svelte";
 
-  export let fileData: File;
-  export let removeFilePROXY: (file: File) => void;
-  export let appendFileId: (fileId: string) => void;
+  interface Props {
+    fileData: File;
+    removeFilePROXY: (file: File) => void;
+    appendFileId: (fileId: string) => void;
+  }
 
-  let uploadResult = "";
-  let progress = 0;
+  let { fileData, removeFilePROXY, appendFileId }: Props = $props();
+
+  let uploadResult = $state("");
+  let progress = $state(0);
 
   /**
    * ファイルをアップロードする
@@ -93,7 +97,7 @@
         class="radial-progress"
         style={`--value:${progress}; --size:1rem;`}
         role="progressbar"
-      />
+></div>
     {/if}
 
     <p class="truncate text-xs">
@@ -105,7 +109,7 @@
       >{displaySizeForHuman(fileData.size)}</span
     >
     <button
-      on:click={() => removeFilePROXY(fileData)}
+      onclick={() => removeFilePROXY(fileData)}
       class="btn btn-xs btn-square"
     >
       <IconSquareRoundedXFilled />

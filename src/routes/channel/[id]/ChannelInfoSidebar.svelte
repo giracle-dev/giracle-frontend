@@ -6,7 +6,7 @@
   import ChannelManage from "$lib/components/channel/ChannelInfoSidebar/ChannelManage.svelte";
   import { myRolePowerStore } from "$lib/store/myRolePower";
 
-  let displayMode: "JOINED_USERS" | "MANAGE_PANEL" = "JOINED_USERS";
+  let displayMode: "JOINED_USERS" | "MANAGE_PANEL" = $state("JOINED_USERS");
   let isDisplayed = false;
 </script>
 
@@ -37,12 +37,12 @@
 
       <div class="join mx-auto w-full">
         <button
-          on:click={() => (displayMode = "JOINED_USERS")}
+          onclick={() => (displayMode = "JOINED_USERS")}
           class={`btn w-1/2 join-item ${displayMode === "JOINED_USERS" ? "btn-primary" : ""}`}
           >参加者</button
         >
         <button
-          on:click={() => (displayMode = "MANAGE_PANEL")}
+          onclick={() => (displayMode = "MANAGE_PANEL")}
           class={`btn w-1/2 join-item ${displayMode === "MANAGE_PANEL" ? "btn-primary" : ""}`}
           disabled={!$myRolePowerStore.manageChannel &&
             !$myRolePowerStore.manageServer}>管理</button

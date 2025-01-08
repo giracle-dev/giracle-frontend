@@ -1,12 +1,14 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { goto } from "$app/navigation";
   import { onMount } from "svelte";
 
-  let username = "";
-  let password = "";
-  let message = "";
-  let inviteCode = "";
+  let username = $state("");
+  let password = $state("");
+  let message = $state("");
+  let inviteCode = $state("");
 
   const userRepository = repositoryFactory.get("user");
 
@@ -44,7 +46,7 @@
     class="w-full max-w-md m-2 p-8 space-y-6 rounded shadow-md m-5 bg-base-100 bg-opacity-60 glass"
   >
     <h2 class="text-2xl font-bold text-center">サインアップ</h2>
-    <form on:submit|preventDefault={signUp} class="space-y-4">
+    <form onsubmit={preventDefault(signUp)} class="space-y-4">
       <div>
         <label for="username" class="block text-sm font-medium"
           >招待コード</label

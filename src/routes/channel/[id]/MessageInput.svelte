@@ -14,14 +14,14 @@
     }
     userList = users;
   });
-  let message = ""; //メッセージ入力用
-  let fileIds: string[] = []; //メッセージに使うファイルのID
-  let textarea: HTMLTextAreaElement;
-  let selectedFiles: File[] = []; // 選択されたファイルを保持
-  let mentionListVisible = false;
+  let message = $state(""); //メッセージ入力用
+  let fileIds: string[] = $state([]); //メッセージに使うファイルのID
+  let textarea: HTMLTextAreaElement = $state(null!);
+  let selectedFiles: File[] = $state([]); // 選択されたファイルを保持
+  let mentionListVisible = $state(false);
   let mentionQuery = "";
-  let filteredUserList: IUser[] = [];
-  let selectedUserIndex = 0; // 選択されたユーザーのインデックスを保持
+  let filteredUserList: IUser[] = $state([]);
+  let selectedUserIndex = $state(0); // 選択されたユーザーのインデックスを保持
 
   const dispatch = createEventDispatcher();
 
@@ -205,8 +205,8 @@
             selectedUserIndex
               ? 'bg-gray-200 text-neutral'
               : ''}"
-            on:click={() => selectUser(user)}
-            on:keydown={(event) => {
+            onclick={() => selectUser(user)}
+            onkeydown={(event) => {
               if (event.key === "Enter") {
                 selectUser(user);
               }
@@ -235,14 +235,14 @@
 
   <div class="flex w-full mt-2">
     <button
-      on:click={triggerFileInput}
+      onclick={triggerFileInput}
       class="mr-2 p-2 text-white rounded bg-neutral"
     >
       <IconPaperclip size={20} />
       <input
         type="file"
         id="fileInput"
-        on:change={handleFileChange}
+        onchange={handleFileChange}
         class="hidden"
         multiple
       />
@@ -252,12 +252,12 @@
         bind:value={message}
         placeholder="メッセージを入力"
         class="p-2 border rounded-lg resize-none h-10 w-full"
-        on:keydown={handleKeyDown}
+        onkeydown={handleKeyDown}
         bind:this={textarea}
-        on:input={handleInput}
-      />
+        oninput={handleInput}
+></textarea>
       <button
-        on:click={sendMessage}
+        onclick={sendMessage}
         class="p-2 text-white rounded-lg bg-neutral {message.trim() === '' &&
         selectedFiles.length === 0
           ? 'opacity-50'

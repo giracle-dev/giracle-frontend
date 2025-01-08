@@ -9,8 +9,8 @@
     modalCreateRole?.showModal();
   };
 
-  let processing = false;
-  let resultCreateRole: "success" | "error" | "" = "";
+  let processing = $state(false);
+  let resultCreateRole: "success" | "error" | "" = $state("");
   let roleCreating: {
     roleName: string;
     rolePower: {
@@ -19,7 +19,7 @@
       manageRole: boolean;
       manageUser: boolean;
     };
-  } = {
+  } = $state({
     roleName: "",
     rolePower: {
       manageServer: false,
@@ -27,7 +27,7 @@
       manageRole: false,
       manageUser: false,
     },
-  };
+  });
   let modalCreateRole: null | HTMLDialogElement = null;
 
   const createRole = async () => {
@@ -64,7 +64,7 @@
       class="input input-bordered w-full"
     />
 
-    <div class="divider" />
+    <div class="divider"></div>
 
     <label class="label cursor-pointer">
       <span class="label-text">ユーザーの管理</span>
@@ -114,7 +114,7 @@
         <button class="btn" disabled={processing}>キャンセル</button>
       </form>
       <button
-        on:click={createRole}
+        onclick={createRole}
         disabled={processing}
         class="btn btn-primary">作成</button
       >

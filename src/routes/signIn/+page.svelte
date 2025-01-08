@@ -1,4 +1,6 @@
 <script>
+  import { preventDefault } from 'svelte/legacy';
+
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { goto } from "$app/navigation";
   import { initWS } from "$lib/wsHandler/INIT.ws";
@@ -6,8 +8,8 @@
   import { get } from "svelte/store";
   import { init } from "$lib/middleware";
 
-  let username = "";
-  let password = "";
+  let username = $state("");
+  let password = $state("");
 
   const signIn = async () => {
     const userRepository = repositoryFactory.get("user");
@@ -39,7 +41,7 @@
     class="w-full max-w-md m-2 p-8 space-y-6 rounded shadow-md bg-base-100 bg-opacity-60 glass"
   >
     <h2 class="text-2xl font-bold text-center">サインインページ</h2>
-    <form class="space-y-6" on:submit|preventDefault={signIn}>
+    <form class="space-y-6" onsubmit={preventDefault(signIn)}>
       <div>
         <label for="username" class="block text-sm font-medium"
           >ユーザー名</label

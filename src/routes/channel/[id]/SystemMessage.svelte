@@ -1,9 +1,15 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { userListStore } from "$lib/store/user";
   import type { IMessage } from "$lib/types/IMessage";
 
   //props
-  export let message: IMessage = {
+  interface Props {
+    message?: IMessage;
+  }
+
+  let { message = {
     channelId: "",
     content: "",
     createdAt: new Date(0),
@@ -12,7 +18,7 @@
     userId: "",
     MessageUrlPreview: [],
     MessageFileAttached: [],
-  };
+  } }: Props = $props();
 
   type TSystemMessageTerm = "WELCOME" | "CHANNEL_JOIN" | "CHANNEL_LEFT";
   const SystemMessageMap: Record<TSystemMessageTerm, string> = {
@@ -24,16 +30,16 @@
   let messageJson: {
     messageTerm: TSystemMessageTerm | "";
     targetUserId: string;
-  } = {
+  } = $state({
     messageTerm: "",
     targetUserId: "",
-  };
+  });
 
-  $: {
+  run(() => {
     if (message.content) {
       messageJson = JSON.parse(message.content);
     }
-  }
+  });
 </script>
 
 <div class="p-1">

@@ -5,8 +5,8 @@
   import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
   import { get } from "svelte/store";
 
-  let groupByChannel: boolean = true;
-  let processing = false;
+  let groupByChannel: boolean = $state(true);
+  let processing = $state(false);
 
   /**
    * 指定のチャンネルの通知を全て既読にする
@@ -46,7 +46,7 @@
             </a>
           </div>
           <button
-            on:click={() => readWholeChannel(channel.id)}
+            onclick={() => readWholeChannel(channel.id)}
             class="ml-auto btn btn-primary btn-sm"
             disabled={processing}>既読する</button
           >
@@ -58,7 +58,7 @@
           {/each}
         </div>
 
-        <div class="divider" />
+        <div class="divider"></div>
       {/if}
     {/each}
   {:else}

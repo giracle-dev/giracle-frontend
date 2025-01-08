@@ -10,9 +10,9 @@
     modalDeleteRole?.showModal();
   };
 
-  let processing = false;
-  let resultDeleteRole: "success" | "error" | "" = "";
-  let roleDeleting: IRole = {
+  let processing = $state(false);
+  let resultDeleteRole: "success" | "error" | "" = $state("");
+  let roleDeleting: IRole = $state({
     name: "",
     id: "",
     createdAt: new Date(),
@@ -22,7 +22,7 @@
     manageChannel: false,
     manageRole: false,
     manageUser: false,
-  };
+  });
   let modalDeleteRole: null | HTMLDialogElement = null;
 
   const deleteRole = async () => {
@@ -70,7 +70,7 @@
         <button class="btn" disabled={processing}>キャンセル</button>
       </form>
       <button
-        on:dblclick={deleteRole}
+        ondblclick={deleteRole}
         disabled={processing}
         class="btn btn-error">ダブルクリックで削除</button
       >

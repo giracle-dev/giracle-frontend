@@ -74,8 +74,8 @@
     "sunset",
   ];
 
-  let selectedLightTheme: Theme = $themaStore.lightTheme;
-  let selectedDarkTheme: Theme = $themaStore.darkTheme;
+  let selectedLightTheme: Theme = $state($themaStore.lightTheme);
+  let selectedDarkTheme: Theme = $state($themaStore.darkTheme);
 
   themaStore.subscribe((value) => {
     selectedLightTheme = value.lightTheme;
@@ -110,7 +110,7 @@
 <div class="w-full h-10 flex gap-2 items-center">
   <button
     class="btn btn-ghost"
-    on:click={() => {
+    onclick={() => {
       goto("/setting");
     }}
   >
@@ -122,7 +122,7 @@
   <label>ライトテーマ</label>
   <select
     bind:value={selectedLightTheme}
-    on:change={() => handleLightThemeChange(selectedLightTheme)}
+    onchange={() => handleLightThemeChange(selectedLightTheme)}
   >
     {#each lightThemes as theme}
       <option value={theme}>{theme}</option>
@@ -132,7 +132,7 @@
   <label>ダークテーマ</label>
   <select
     bind:value={selectedDarkTheme}
-    on:change={() => handleDarkThemeChange(selectedDarkTheme)}
+    onchange={() => handleDarkThemeChange(selectedDarkTheme)}
   >
     {#each darkThemes as theme}
       <option value={theme}>{theme}</option>

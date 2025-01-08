@@ -5,7 +5,11 @@
   import { linkify } from "../../../routes/channel/[id]/channelMessage";
   import FilePreview from "../../../routes/channel/[id]/FilePreview.svelte";
 
-  export let message: IMessage;
+  interface Props {
+    message: IMessage;
+  }
+
+  let { message }: Props = $props();
 </script>
 
 {#if message}

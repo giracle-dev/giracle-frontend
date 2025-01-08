@@ -17,11 +17,11 @@
   import ChannelHeader from "./[id]/ChannelHeader.svelte";
   const channelRepository = repositoryFactory.get("channel");
 
-  let my_modal_5: HTMLDialogElement;
-  let processing: boolean = false;
-  let displayArchivedChannel = false;
-  let channelName = "";
-  let channels: IChannel[] = [];
+  let my_modal_5: HTMLDialogElement = $state(null!);
+  let processing: boolean = $state(false);
+  let displayArchivedChannel = $state(false);
+  let channelName = $state("");
+  let channels: IChannel[] = $state([]);
 
   onMount(async () => {
     my_modal_5 = document.getElementById("my_modal_5") as HTMLDialogElement;
@@ -306,7 +306,7 @@
     </div>
     <div>
       <button
-        on:click={() => my_modal_5.showModal()}
+        onclick={() => my_modal_5.showModal()}
         class="h-full flex items-center px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
       >
         <IconPlus size={20} class="md:mr-1" />
@@ -336,12 +336,12 @@
             </div>
             {#if !$myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
               <button
-                on:click={() => joinChannel(channel.id)}
+                onclick={() => joinChannel(channel.id)}
                 class="btn btn-outline">参加</button
               >
             {:else}
               <button
-                on:click={() => leaveChannel(channel.id)}
+                onclick={() => leaveChannel(channel.id)}
                 class="btn btn-error btn-link">脱退</button
               >
             {/if}
@@ -355,7 +355,7 @@
                 {#if !channel.isArchived}
                   <li>
                     <button
-                      on:click={() => toggleArchiveChannel(channel.id, true)}
+                      onclick={() => toggleArchiveChannel(channel.id, true)}
                       class="btn btn-link"
                       aria-disabled={channel.isArchived}
                     >
@@ -365,7 +365,7 @@
                 {:else}
                   <li>
                     <button
-                      on:click={() => toggleArchiveChannel(channel.id, false)}
+                      onclick={() => toggleArchiveChannel(channel.id, false)}
                       class="btn btn-link"
                       aria-disabled={!channel.isArchived}
                     >
@@ -412,7 +412,7 @@
         <button class="btn px-4 py-1">Close</button>
         <button
           class="btn px-4 py-1 {channelName === '' ? 'btn-disabled' : ''}"
-          on:click={channelCreate}
+          onclick={channelCreate}
         >
           作成
         </button>

@@ -14,17 +14,17 @@
   const userRepository = repositoryFactory.get("user");
 
   let iconObj: File | null = null;
-  let name = "";
-  let selfIntroduction = "";
-  let processing = false;
+  let name = $state("");
+  let selfIntroduction = $state("");
+  let processing = $state(false);
 
-  let my_modal_5: HTMLDialogElement;
+  let my_modal_5: HTMLDialogElement | undefined = $state();
 
-  let incorrectCurrentPassword: boolean = false;
-  let currentPassword: string = "";
-  let newPassword: string = "";
-  let newPasswordConfirm: string = "";
-  $: isCorrectNewPassword = newPassword == newPasswordConfirm;
+  let incorrectCurrentPassword: boolean = $state(false);
+  let currentPassword: string = $state("");
+  let newPassword: string = $state("");
+  let newPasswordConfirm: string = $state("");
+  let isCorrectNewPassword = $derived(newPassword == newPasswordConfirm);
 
   const closePasswordModal = () => {
     incorrectCurrentPassword = false;
@@ -39,7 +39,7 @@
       .changePassword(currentPassword, newPassword)
       .then((response) => {
         console.log("パスワード変更成功", response);
-        my_modal_5.close();
+        my_modal_5?.close();
         toastStore.update((toast) => {
           return [
             ...toast,
@@ -153,7 +153,7 @@
 <dialog
   id="my_modal_5"
   class="modal modal-bottom sm:modal-middle"
-  on:close={closePasswordModal}
+  onclose={closePasswordModal}
 >
   <div class="modal-box">
     <h3 class="text-lg font-bold">パスワードの変更</h3>
@@ -238,7 +238,7 @@
         class="btn btn-primary {isCorrectNewPassword && newPassword.length > 0
           ? ''
           : 'btn-disabled'}"
-        on:click={changePassword}>完了</button
+        onclick={changePassword}>完了</button
       >
     </div>
   </div>
@@ -248,7 +248,7 @@
   <div class="h-10 flex gap-2 items-center">
     <button
       class="btn btn-ghost"
-      on:click={() => {
+      onclick={() => {
         goto("/setting");
       }}
     >
@@ -284,11 +284,11 @@
             {/each}
           </div>
         </div>
-        <button class="btn btn-warning" on:click={() => my_modal_5.showModal()}>
+        <button class="btn btn-warning" onclick={() => my_modal_5?.showModal()}>
           パスワードを変更する</button
         >
         <button
-          on:click={async () => {
+          onclick={async () => {
             await userRepository
               .signOut()
               .then((response) => {
@@ -305,7 +305,7 @@
           ログアウト
         </button>
         <button
-          on:click={updateIt}
+          onclick={updateIt}
           class="btn btn-primary"
           disabled={(selfIntroduction === get(myUserStore).selfIntroduction &&
             name === get(myUserStore).name) ||
@@ -326,12 +326,12 @@
               </div>
             </div>
             <input
-              on:change={handleFileChange}
+              onchange={handleFileChange}
               type="file"
               class="file-input file-input-bordered w-full"
             />
             <div class="card-actions justify-end">
-              <button on:click={changeProfileIcon} class="btn btn-primary"
+              <button onclick={changeProfileIcon} class="btn btn-primary"
                 >アップロード</button
               >
             </div>
@@ -351,12 +351,12 @@
               </div>
             </div>
             <input
-              on:change={handleBannerFileChange}
+              onchange={handleBannerFileChange}
               type="file"
               class="file-input file-input-bordered w-full"
             />
             <div class="card-actions justify-end">
-              <button on:click={changeProfileBanner} class="btn btn-primary"
+              <button onclick={changeProfileBanner} class="btn btn-primary"
                 >アップロード</button
               >
             </div>

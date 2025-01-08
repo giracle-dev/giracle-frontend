@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: `<span>` is invalid inside `<option>` -->
 <script lang="ts">
   import { ws } from "$lib/wsHandler/INIT.ws";
   import { goto } from "$app/navigation";
@@ -157,10 +158,9 @@
           on:click={() => (roleConfiguring = structuredClone(role))}
           value={role.name}
           class="rounded-md"
+          style={`color:${role.color};`}
         >
-          <span style={`color:${role.color};`}>
-            {role.name}
-          </span>
+          {role.name}
         </option>
       {/each}
     </select>
@@ -169,7 +169,7 @@
   <div class="card bg-base-200 h-full overflow-y-auto flex flex-row gap-3 grow">
     <!-- サイドバー -->
     <div
-      class="w-4/12 flex flex-col hidden overflow-y-auto h-full p-2 pb-6 md:inline gap-1"
+      class="w-4/12 flex flex-col overflow-y-auto h-full p-2 pb-6 md:inline gap-1"
     >
       {#each roles as role}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -308,5 +308,5 @@
   </div>
 </div>
 
-<CreateRole bind:openCreateRoleDialog={PROXYopenCreateRoleDialog} />
-<DeleteRole bind:openDeleteRoleDialog={PROXYopenDeleteRoleDialog} />
+<CreateRole />
+<DeleteRole />

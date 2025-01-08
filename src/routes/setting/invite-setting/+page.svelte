@@ -10,12 +10,12 @@
   } from "@tabler/icons-svelte";
   const serverRepository = repositoryFactory.get("server");
 
-  let modalCreateInvite: null | HTMLDialogElement = null;
-  let invites: IInvite[] = [];
+  let modalCreateInvite: null | HTMLDialogElement = $state(null);
+  let invites: IInvite[] = $state([]);
 
-  let newInviteCode = "";
-  let processingCreateInvite = false;
-  let resultCreateInvite: "success" | "error" | "" = "";
+  let newInviteCode = $state("");
+  let processingCreateInvite = $state(false);
+  let resultCreateInvite: "success" | "error" | "" = $state("");
 
   //招待を作成
   const createInvite = async () => {
@@ -64,7 +64,7 @@
     <div class="card-body flex flex-row">
       <button
         class="btn btn-ghost w-16"
-        on:click={() => {
+        onclick={() => {
           goto("/setting");
         }}
       >
@@ -97,7 +97,7 @@
             <td class="text-xs">{new Date(inv.expireDate).toLocaleString()}</td>
             <td class="text-xs">
               <button
-                on:click={() => deleteInvite(index)}
+                onclick={() => deleteInvite(index)}
                 class="btn btn-sm hover:btn-error"
               >
                 削除
@@ -136,7 +136,7 @@
         <button class="btn">キャンセル</button>
       </form>
       <button
-        on:click={createInvite}
+        onclick={createInvite}
         disabled={processingCreateInvite}
         class="btn btn-primary">作成</button
       >
@@ -145,7 +145,7 @@
 </dialog>
 
 <button
-  on:click={() => modalCreateInvite?.showModal()}
+  onclick={() => modalCreateInvite?.showModal()}
   class="btn btn-primary btn-square w-20 h-20 fixed bottom-10 right-10"
 >
   <IconMailPlus size={28} />

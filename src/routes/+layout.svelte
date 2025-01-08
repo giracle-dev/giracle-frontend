@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import "../app.css";
   import { wsStatusStore } from "$lib/wsHandler/INIT.ws";
   import { onMount } from "svelte";
@@ -16,7 +18,7 @@
   import { IconPlugX } from "@tabler/icons-svelte";
   import { hasAnyNewMessageDerived } from "$lib/store/messageReadTime";
 
-  $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
+  let webManifestLink = $derived(pwaInfo ? pwaInfo.webManifest.linkTag : "");
 
   const hiddenDefaultLayout = ["/signIn", "/signUp"];
 
@@ -33,14 +35,19 @@
 
   //サイドバーを展開するためだけの参照
   import { openDrawer } from "$lib/store/drawer";
+  interface Props {
+    children?: import('svelte').Snippet;
+  }
+
+  let { children }: Props = $props();
 
   let touchStartX = 0;
   let touchEndX = 0;
   let touchStartY = 0;
   let touchEndY = 0;
 
-  let headerTitle = "None Title";
-  let headerIcon = "channel" as "channel" | "channelList";
+  let headerTitle = $state("None Title");
+  let headerIcon = $state("channel" as "channel" | "channelList");
 
   const handleTouchStart = (event: TouchEvent) => {
     touchStartX = event.changedTouches[0].screenX;
@@ -117,7 +124,7 @@
     }
   });
 
-  $: {
+  run(() => {
     switch ($page.url.pathname) {
       case "/channel":
         headerTitle = "Channel";
@@ -144,7 +151,7 @@
         headerIcon = "channel";
         break;
     }
-  }
+  });
 </script>
 
 <svelte:head>
@@ -168,7 +175,7 @@
       </div>
     </div>
   {/if}
-  <slot />
+  {@render children?.()}
 {:else}
   <Drawer
     openDrawer={$openDrawer}
@@ -178,8 +185,8 @@
     channelList={$channelListStore}
   >
     <div
-      on:touchstart={handleTouchStart}
-      on:touchend={handleTouchEnd}
+      ontouchstart={handleTouchStart}
+      ontouchend={handleTouchEnd}
       class="h-screen flex flex-col"
     >
       {#if $wsStatusStore === WebSocket.CLOSED}
@@ -199,7 +206,7 @@
           {headerIcon}
         />
       -->
-      <slot />
+      {@render children?.()}
     </div>
   </Drawer>
 {/if}

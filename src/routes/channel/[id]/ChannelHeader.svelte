@@ -7,8 +7,12 @@
   } from "@tabler/icons-svelte";
   import { page } from "$app/stores";
 
-  export let headerTitle: string = "";
-  export let isArchived: boolean = false;
+  interface Props {
+    headerTitle?: string;
+    isArchived?: boolean;
+  }
+
+  let { headerTitle = "", isArchived = false }: Props = $props();
 
   /**
    * Giracle全体用のサイドバー(左)を展開する
@@ -27,7 +31,7 @@
 
 <div class="bg-base-200 rounded-lg navbar h-8 w-full">
   <div class="flex-none lg:hidden">
-    <button class="px-2" on:click={handleDrawer}>
+    <button class="px-2" onclick={handleDrawer}>
       <IconTextWrapDisabled size={20} />
     </button>
   </div>
@@ -43,7 +47,7 @@
     <div class="flex-none lg:block">
       <ul class="menu menu-horizontal">
         <button
-          on:click={openChannelSidebarPROXY}
+          onclick={openChannelSidebarPROXY}
           class="btn btn-square btn-ghost"
         >
           <IconLayoutSidebarLeftCollapseFilled />
