@@ -73,7 +73,7 @@
     await roleRepository
       .updateRole({ roleId: roleConfiguring.id, roleData: roleConfiguring })
       .then((res) => {
-        console.log("/setting/role-setting :: updateRole : res->", res.data);
+        //console.log("/setting/role-setting :: updateRole : res->", res.data);
         //ロールを再取得
         fetchRoles();
       })
@@ -128,7 +128,7 @@
           signal: "role::Created";
           data: IRole;
         } = JSON.parse(event.data);
-    console.log("/setting/role-setting :: roleUpdateReceiver :: data->", dat);
+
     //signalが一致しているなら更新処理
     //削除
     if (dat.signal === "role::Deleted") {

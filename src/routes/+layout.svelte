@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
+  import { run } from "svelte/legacy";
 
   import "../app.css";
   import { wsStatusStore } from "$lib/wsHandler/INIT.ws";
@@ -27,7 +27,7 @@
   function isSettingPage(): boolean {
     const pathArray = $page.url.pathname.split("/");
     if ($page.url.pathname.startsWith("/setting") && pathArray.length > 2) {
-      console.log("isSettingPage", pathArray);
+      //console.log("isSettingPage", pathArray);
       return true;
     }
     return false;
@@ -36,7 +36,7 @@
   //サイドバーを展開するためだけの参照
   import { openDrawer } from "$lib/store/drawer";
   interface Props {
-    children?: import('svelte').Snippet;
+    children?: import("svelte").Snippet;
   }
 
   let { children }: Props = $props();
@@ -94,7 +94,7 @@
       .matchMedia("(prefers-color-scheme: dark)")
       .addEventListener("change", changeThema);
 
-    console.log("layoutMiddlewareを実行します");
+    //console.log("layoutMiddlewareを実行します");
     await authMiddleware();
 
     //ブラウザの通知許可を求める
@@ -110,7 +110,7 @@
   const getChannelName = (id: string): string => {
     let channel: IChannel | undefined;
     channel = $channelListStore.find((c) => c.id === id);
-    console.log("channel", channel);
+    //console.log("channel", channel);
     if (channel) {
       return channel.name;
     }

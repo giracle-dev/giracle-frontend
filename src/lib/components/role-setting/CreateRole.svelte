@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { IRole } from "$lib/types/IRole";
   import { IconExclamationCircleFilled } from "@tabler/icons-svelte";
   import { onMount } from "svelte";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
@@ -31,7 +30,7 @@
     await roleRepository
       .createRole(roleCreating)
       .then((res) => {
-        console.log("CreateRole :: createRole : res->", res.data);
+        //console.log("CreateRole :: createRole : res->", res.data);
         resultCreateRole = "success";
         modalCreateRole?.close();
       })

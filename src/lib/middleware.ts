@@ -23,7 +23,7 @@ export const pwaMiddleware = async () => {
     navigator.serviceWorker
       .register("/service-worker.js", { type: "module" })
       .then((registration) => {
-        console.info("サービスワーカーを登録しました:", registration.scope);
+        //console.info("サービスワーカーを登録しました:", registration.scope);
       })
       .catch((error) => {
         console.error("サービスワーカーが登録できませんでした:", error);
@@ -37,26 +37,28 @@ export const pwaMiddleware = async () => {
 export const init = async () => {
   //自分のユーザー情報の取得
   userRepository.getUserInfo(get(myUserStore).id).then((response) => {
+    /*
     console.log(
       "middleware :: authMiddleware : response(getUserInfo)->",
       response,
     );
+    */
     myUserStore.set({ ...get(myUserStore), ...response.data });
   });
   //自分向けの通知を取得
   await messageRepository.getInbox().then((response) => {
-    console.log("middleware :: init : response(getInbox)->", response);
+    //console.log("middleware :: init : response(getInbox)->", response);
     inboxStore.set(response.data);
   });
   //新着があるか調べる
   await messageRepository.getHasNewMessage().then((response) => {
-    console.log("middleware :: init : response(getHasNewMessage)->", response);
+    //console.log("middleware :: init : response(getHasNewMessage)->", response);
     hasNewMessageStore.set(response.data);
   });
   //既読時間を取得
   await messageRepository.getReadTime().then((response) => {
     for (const data of response.data) {
-      console.log("middleware :: init : response(getReadTime)->", data);
+      //console.log("middleware :: init : response(getReadTime)->", data);
       MessageReadTimeStore.update((store) => {
         store[data.channelId] = structuredClone(data).readTime;
         return store;
@@ -69,7 +71,7 @@ export const init = async () => {
   });
   // チャンネル一覧を取得
   await channelRepository.getChannel().then((response) => {
-    console.log(response);
+    //console.log(response);
     channelListStore.set(response.data);
   });
   //ロール一覧を取得
@@ -84,15 +86,17 @@ export const init = async () => {
   });
   // サーバー情報取得
   await serverRepository.getConfig().then((response) => {
-    console.log(response);
+    //console.log(response);
     serverInfoStore.set(response.data);
   });
   //オンラインユーザー情報取得
   await userRepository.getOnline().then((response) => {
+    /*
     console.log(
       "middleware :: authMiddleware : response(getOnline)->",
       response,
     );
+    */
     onlineUserListStore.set(response.data);
   });
 };
@@ -121,7 +125,7 @@ export const authMiddleware = async () => {
     await userRepository
       .verifyToken()
       .then((response: IResponseUSerVerifyToken) => {
-        console.log("middleware :: authMiddleware : response->", response);
+        //console.log("middleware :: authMiddleware : response->", response);
 
         //WebSocketの初期化
         initWS();

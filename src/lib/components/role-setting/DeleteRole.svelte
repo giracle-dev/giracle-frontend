@@ -20,7 +20,7 @@
     await roleRepository
       .deleteRole(roleDeleting.id)
       .then((res) => {
-        console.log("DeleteRole :: deleteRole : res->", res.data);
+        //console.log("DeleteRole :: deleteRole : res->", res.data);
         resultDeleteRole = "success";
         modalDeleteRole?.close();
       })
