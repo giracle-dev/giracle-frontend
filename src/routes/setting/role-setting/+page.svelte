@@ -119,12 +119,18 @@
 
   //更新されたロールデータの受け取り、ここでは削除のみ
   const roleUpdateReceiver = (event: MessageEvent) => {
-    const dat: {
-      signal: string;
-      data: string;
-    } = JSON.parse(event.data);
+    const dat:
+      | {
+          signal: "role::Deleted";
+          data: string;
+        }
+      | {
+          signal: "role::Created";
+          data: IRole;
+        } = JSON.parse(event.data);
     console.log("/setting/role-setting :: roleUpdateReceiver :: data->", dat);
     //signalが一致しているなら更新処理
+    //削除
     if (dat.signal === "role::Deleted") {
       //ループして一致するチャンネルデータを更新
       for (const index in roles) {
@@ -139,6 +145,12 @@
           return;
         }
       }
+    }
+    //作成
+    if (dat.signal === "role::Created") {
+      let _roles = [...roles];
+      _roles.push(dat.data);
+      roles = _roles;
     }
   };
   ws.addEventListener("message", roleUpdateReceiver);
