@@ -55,7 +55,7 @@
     await getChannelHistory(
       undefined,
       readTime,
-      "newer",
+      "older",
       messageId || undefined,
     );
     const MessageContainer = document.getElementById("messageContainer");
@@ -71,32 +71,7 @@
     );
 
     //既読時間のところまでスクロールする
-    /*
-    $channelHistoryStore.history.forEach((message) => {
-      if (message.createdAt === $MessageReadTimeBeforeStore[page.params.id]) {
-        document.getElementById("message::" + message.id)?.scrollIntoView({
-          block: "end",
-        });
-        return;
-      }
-    });
-    */
-    const readTimeIndex = $channelHistoryStore.history.findIndex(
-      (message, index) =>
-        message.createdAt === $MessageReadTimeBeforeStore[page.params.id],
-    );
-    if (
-      readTimeIndex !== -1 &&
-      $channelHistoryStore.history[readTimeIndex - 1] !== undefined
-    ) {
-      document
-        .getElementById(
-          "message::" + $channelHistoryStore.history[readTimeIndex - 1].id,
-        )
-        ?.scrollIntoView({
-          block: "end",
-        });
-    }
+    scrollToReadPos();
 
     window.addEventListener("focus", readItOnPageVisible);
 
@@ -139,15 +114,7 @@
           false,
         );
         //既読時間のところまでスクロールする
-        get(channelHistoryStore).history.forEach((message) => {
-          if (
-            message.createdAt ===
-            get(MessageReadTimeBeforeStore)[page.params.id]
-          ) {
-            document.getElementById("message::" + message.id)?.scrollIntoView();
-            return;
-          }
-        });
+        scrollToReadPos();
       }
     })();
   });
@@ -155,6 +122,28 @@
   onDestroy(() => {
     window.removeEventListener("focus", readItOnPageVisible);
   });
+
+  /**
+   * 既読時間のところまでスクロールする
+   */
+  const scrollToReadPos = () => {
+    const readTimeIndex = $channelHistoryStore.history.findIndex(
+      (message, index) =>
+        message.createdAt === $MessageReadTimeStore[page.params.id],
+    );
+    if (
+      readTimeIndex !== -1 &&
+      $channelHistoryStore.history[readTimeIndex - 1] !== undefined
+    ) {
+      document
+        .getElementById(
+          "message::" + $channelHistoryStore.history[readTimeIndex - 1].id,
+        )
+        ?.scrollIntoView({
+          block: "end",
+        });
+    }
+  };
 
   /**
    * タブのアクティブが切り替わったら既読処理をする

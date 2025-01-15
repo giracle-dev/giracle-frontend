@@ -9,6 +9,7 @@ import type { IMessage } from "$lib/types/IMessage";
 import { get } from "svelte/store";
 import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
 import updateReadTime from "$lib/utils/updateReadTime";
+import { hasNewMessageStore, MessageReadTimeStore } from "$lib/store/messageReadTime";
 const messageRepository = repositoryFactory.get("message");
 const channelRepository = repositoryFactory.get("channel");
 
@@ -132,10 +133,16 @@ export const getChannelHistory = async (
         channelHistoryStore.set(res.data);
       }
 
-      //メッセージIDが指定されている場合、そのメッセージまでスクロールする
+      //メッセージIDが指定されている場合、そのメッセージまでスクロールする。しかし新着がある場合はその新着までスクロールしてみる
       //console.log("channelMessage :: getChannelHistory : messageIdFrom->", document.getElementById("message::" + fetchedMessageIdFrom), fetchedMessageIdFrom);
       setTimeout(() => {
-        document.getElementById("message::" + fetchedMessageIdFrom)?.scrollIntoView(direction === "newer" ? false : { block:"start" });
+        if (get(hasNewMessageStore)[page.params.id]) {
+          const messageLatestRead = get(MessageReadTimeStore)[page.params.id];
+          const msg = get(channelHistoryStore).history.find((m) => m.createdAt === messageLatestRead);
+          document.getElementById("message::" + msg?.id)?.scrollIntoView({ block:"start" });
+        } else {
+          document.getElementById("message::" + fetchedMessageIdFrom)?.scrollIntoView(direction === "newer" ? false : { block:"start" });
+        }
       });
 
       //このチャンネル用のInbox取得
