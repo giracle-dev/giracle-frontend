@@ -197,10 +197,14 @@ export const scrollHandler = async () => {
     if (isBottom) {
       //console.log("scrollHandler :: isBottom");
       const targetMessage = get(channelHistoryStore).history[0];
+      //一番新しいメッセージから既読時間を更新する
+      const firstMsg = get(channelHistoryStore).history[0];
+      //メッセが取得できなければキャンセル
+      if (firstMsg === undefined) return;
       //既読時間を更新する
       await updateReadTime(
         page.params.id,
-        get(channelHistoryStore).history[0].createdAt,
+        firstMsg.createdAt,
         false,
       );
       if (isScrollLoading) return;
