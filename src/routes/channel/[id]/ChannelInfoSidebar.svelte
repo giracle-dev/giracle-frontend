@@ -1,8 +1,7 @@
 <script lang="ts">
   import ChannelJoinedUser from "$lib/components/channel/ChannelInfoSidebar/ChannelJoinedUser.svelte";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { channelListStore } from "$lib/store/channel";
-  import { get } from "svelte/store";
   import ChannelManage from "$lib/components/channel/ChannelInfoSidebar/ChannelManage.svelte";
   import { myRolePowerStore } from "$lib/store/myRolePower";
 
@@ -31,7 +30,7 @@
       <!-- Sidebar content here -->
       <div class="card truncate bg-base-100 w-full py-3 px-4">
         <div class="card-title">
-          # {$channelListStore.find((c) => c.id === $page.params.id)?.name}
+          # {$channelListStore.find((c) => c.id === page.params.id)?.name}
         </div>
       </div>
 
@@ -51,10 +50,10 @@
 
       <div class="card h-full w-full bg-base-100 z-0 py-3 px-4">
         {#if displayMode === "JOINED_USERS"}
-          <ChannelJoinedUser channelId={$page.params.id} />
+          <ChannelJoinedUser channelId={page.params.id} />
         {/if}
         {#if displayMode === "MANAGE_PANEL"}
-          <ChannelManage channelId={$page.params.id} />
+          <ChannelManage channelId={page.params.id} />
         {/if}
       </div>
     </ul>

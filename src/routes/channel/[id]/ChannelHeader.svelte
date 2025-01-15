@@ -5,7 +5,7 @@
     IconLayoutSidebarLeftCollapseFilled,
     IconArchive,
   } from "@tabler/icons-svelte";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
 
   interface Props {
     headerTitle?: string;
@@ -43,7 +43,7 @@
     {/if}
     <p>{headerTitle}</p>
   </div>
-  {#if $page.params.id !== undefined}
+  {#if page.params.id !== undefined}
     <div class="flex-none lg:block">
       <ul class="menu menu-horizontal">
         <button

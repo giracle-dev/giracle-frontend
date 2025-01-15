@@ -11,17 +11,21 @@
   import { myUserStore, onlineUserListStore } from "$lib/store/user";
   import { inboxStore } from "$lib/store/inbox";
   import type { IChannel } from "$lib/types/IChannel";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { serverInfoStore } from "$lib/store/serverInfo";
   import { hasNewMessageStore } from "$lib/store/messageReadTime";
 
   interface Props {
     openDrawer?: boolean;
     channelList: IChannel[];
-    children?: import('svelte').Snippet;
+    children?: import("svelte").Snippet;
   }
 
-  let { openDrawer = $bindable(false), channelList, children }: Props = $props();
+  let {
+    openDrawer = $bindable(false),
+    channelList,
+    children,
+  }: Props = $props();
 
   const dispatch = createEventDispatcher();
 
@@ -48,7 +52,7 @@
       for="my-drawer-2"
       aria-label="close sidebar"
       class="drawer-overlay flex flex-col"
-></label>
+    ></label>
     <div class="flex flex-col bg-base-200 text-base-content h-full w-60 p-2">
       <div
         class=" relative flex items-center justify-between h-[64px] md:h-[100px] bg-[url('/api/server/banner')] bg-center bg-cover"
@@ -106,7 +110,7 @@
                     {#if !$inboxStore.some((inbox) => inbox.Message.channelId === channel.id) && $hasNewMessageStore[channel.id]}
                       <IconPointFilled />
                     {/if}
-                    {#if channel.id === $page.params.id}
+                    {#if channel.id === page.params.id}
                       <span class="badge badge-primary">&larr;</span>
                     {/if}
                   </div>
@@ -120,7 +124,7 @@
       <!-- インボックス -->
       <a href="/inbox">
         <div
-          class={`${$page.url.pathname === "/inbox" ? "bg-primary text-primary-content" : "hover:bg-base-300"} rounded-lg p-3 flex flex-row items-center gap-3`}
+          class={`${page.url.pathname === "/inbox" ? "bg-primary text-primary-content" : "hover:bg-base-300"} rounded-lg p-3 flex flex-row items-center gap-3`}
         >
           <IconMail size={20} />
           <p>通知</p>
@@ -134,7 +138,7 @@
       <!-- search -->
       <a href="/search">
         <div
-          class={`${$page.url.pathname === "/search" ? "bg-primary text-primary-content" : "hover:bg-base-300"} rounded-lg p-3 flex flex-row items-center gap-3`}
+          class={`${page.url.pathname === "/search" ? "bg-primary text-primary-content" : "hover:bg-base-300"} rounded-lg p-3 flex flex-row items-center gap-3`}
         >
           <IconSearch size={20} />
           <p>検索</p>

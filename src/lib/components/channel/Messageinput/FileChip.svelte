@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import displaySizeForHuman from "$lib/utils/DisplaySizeForHuman";
   import { IconSquareRoundedXFilled, IconX } from "@tabler/icons-svelte";
   import { onMount } from "svelte";
@@ -24,7 +24,7 @@
     //アップロードするデータフォームオブジェクト生成
     const formData = new FormData();
     //送信者情報とディレクトリを付与
-    formData.append("channelId", $page.params.id);
+    formData.append("channelId", page.params.id);
     //ファイルそのものを内包
     formData.append("file", fileData);
 
@@ -97,7 +97,7 @@
         class="radial-progress"
         style={`--value:${progress}; --size:1rem;`}
         role="progressbar"
-></div>
+      ></div>
     {/if}
 
     <p class="truncate text-xs">

@@ -6,7 +6,7 @@
   import { onMount } from "svelte";
   import { authMiddleware, pwaMiddleware } from "$lib/middleware";
   import Drawer from "$lib/components/Drawer/Drawer.svelte";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { pwaAssetsHead } from "virtual:pwa-assets/head";
   import { pwaInfo } from "virtual:pwa-info";
   import { channelListStore } from "$lib/store/channel";
@@ -25,8 +25,8 @@
   // パスを/で分割して配列にする
 
   function isSettingPage(): boolean {
-    const pathArray = $page.url.pathname.split("/");
-    if ($page.url.pathname.startsWith("/setting") && pathArray.length > 2) {
+    const pathArray = page.url.pathname.split("/");
+    if (page.url.pathname.startsWith("/setting") && pathArray.length > 2) {
       //console.log("isSettingPage", pathArray);
       return true;
     }
@@ -118,20 +118,20 @@
   };
 
   channelListStore.subscribe((value) => {
-    if ($page.url.pathname === `/channel/${$page.params.id}`) {
-      headerTitle = getChannelName($page.params.id);
+    if (page.url.pathname === `/channel/${page.params.id}`) {
+      headerTitle = getChannelName(page.params.id);
       headerIcon = "channel";
     }
   });
 
   run(() => {
-    switch ($page.url.pathname) {
+    switch (page.url.pathname) {
       case "/channel":
         headerTitle = "Channel";
         headerIcon = "channelList";
         break;
-      case `/channel/${$page.params.id}`:
-        headerTitle = getChannelName($page.params.id);
+      case `/channel/${page.params.id}`:
+        headerTitle = getChannelName(page.params.id);
         headerIcon = "channel";
         break;
       case "/setting":
@@ -166,7 +166,7 @@
 
 <Toast />
 
-{#if hiddenDefaultLayout.includes($page.url.pathname) || isSettingPage()}
+{#if hiddenDefaultLayout.includes(page.url.pathname) || isSettingPage()}
   {#if $wsStatusStore === WebSocket.CLOSED}
     <div class="mx-2 mt-1">
       <div role="alert" class="alert alert-error">
