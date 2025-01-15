@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
   import { userListStore } from "$lib/store/user";
   import type { IUser } from "$lib/types/IUser";
   import { onlineUserListStore } from "$lib/store/user";
@@ -13,7 +11,7 @@
 
   let user: IUser | null = $state(null);
 
-  run(() => {
+  $effect(() => {
     user = $userListStore.find((user) => user.id === userId) ?? null;
   });
 </script>

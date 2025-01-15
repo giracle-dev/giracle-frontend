@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
+  import { run } from "svelte/legacy";
 
   import { channelListStore } from "$lib/store/channel";
   import { get } from "svelte/store";
@@ -100,7 +100,7 @@
       oninput={checkChanged}
       placeholder="なんでも雑談"
       class="textarea textarea-bordered w-full"
-></textarea>
+    ></textarea>
   </label>
 
   <div class="flex flex-col gap-2">

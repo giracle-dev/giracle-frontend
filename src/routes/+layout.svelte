@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { run } from "svelte/legacy";
-
   import "../app.css";
   import { wsStatusStore } from "$lib/wsHandler/INIT.ws";
   import { onMount } from "svelte";
@@ -124,7 +122,7 @@
     }
   });
 
-  run(() => {
+  $effect(() => {
     switch (page.url.pathname) {
       case "/channel":
         headerTitle = "Channel";
