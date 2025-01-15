@@ -1,4 +1,4 @@
-import { page } from "$app/stores";
+import { page } from "$app/state";
 import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
 import { channelHistoryStore } from "$lib/store/channelHistory";
 import { toastStore } from "$lib/store/toast";
@@ -65,14 +65,14 @@ export const getChannelHistory = async (
   };
 
   await channelRepository
-    .getHistory(get(page).params.id, {
+    .getHistory(page.params.id, {
       messageIdFrom: createMessageIdFrom(),
       messageTimeFrom: targetMessageTime ?? undefined,
       fetchDirection: direction ?? undefined,
       fetchLength: 30,
     })
     .then((res) => {
-      console.log("/channel/[id] :: getChannelHistory : res->", res);
+      //console.log("/channel/[id] :: getChannelHistory : res->", res);
       if (direction === "older") {
         fetchedMessageIdFrom = get(channelHistoryStore).history.at(-1)?.id;
         //console.log("channelMessage :: getChannelHistory : fetchedMessageIdFrom今 ->", fetchedMessageIdFrom);
@@ -136,7 +136,7 @@ export const getChannelHistory = async (
 
       //このチャンネル用のInbox取得
       const inboxForCurrentChannel = get(inboxStore).filter(
-        (i) => i.Message.channelId === get(page).params.id,
+        (i) => i.Message.channelId === page.params.id,
       );
       //取得した履歴にInbox内のメッセージがあれば既読にする
       for (const message of res.data.history) {
@@ -183,11 +183,11 @@ export const scrollHandler = async () => {
     }
 
     if (isBottom) {
-      console.log("scrollHandler :: isBottom");
+      //console.log("scrollHandler :: isBottom");
       const targetMessage = get(channelHistoryStore).history[0];
       //既読時間を更新する
       await updateReadTime(
-        get(page).params.id,
+        page.params.id,
         get(channelHistoryStore).history[0].createdAt,
         false,
       );
@@ -221,7 +221,7 @@ const checkScrollAndFetch = async () => {
     }
 
     if (isBottom) {
-      console.log("scrollHandler :: isBottom");
+      //console.log("scrollHandler :: isBottom");
       const targetMessage = get(channelHistoryStore).history[0];
       await getChannelHistory(targetMessage, undefined, "newer");
     }
@@ -342,7 +342,7 @@ export const sendMessage = async (event: CustomEvent) => {
   const fileIds = event.detail.fileIds;
   //console.log("/channel/[id] :: sendMessage : message->", message);
   await messageRepository
-    .sendMessage(get(page).params.id, message, fileIds)
+    .sendMessage(page.params.id, message, fileIds)
     .then((res) => {
       //console.log("/channel/[id] :: sendMessage : res->", res);
     })
