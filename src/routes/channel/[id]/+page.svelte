@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { run } from "svelte/legacy";
-
   import { page } from "$app/state";
   import { channelHistoryStore } from "$lib/store/channelHistory";
   import {
@@ -90,9 +88,12 @@
     alreadyMounted = true;
   });
 
-  run(() => {
+  $effect(() => {
     (async () => {
-      console.log("/channel/[id] :: $ : page.params.id->", page.params.id);
+      console.log(
+        "/channel/[id] :: $effect : page.params.id->",
+        page.params.id,
+      );
       //if (page.params.id) {
       if (alreadyMounted) {
         channelHistoryStore.update(() => ({
