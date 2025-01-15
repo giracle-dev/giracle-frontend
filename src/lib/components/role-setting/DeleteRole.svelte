@@ -5,6 +5,8 @@
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   const roleRepository = repositoryFactory.get("role");
 
+  let { roleDeleting }: { roleDeleting: IRole } = $props();
+
   export const openDeleteRoleDialog = (role: IRole) => {
     roleDeleting = role;
     modalDeleteRole?.showModal();
@@ -12,19 +14,7 @@
 
   let processing = $state(false);
   let resultDeleteRole: "success" | "error" | "" = $state("");
-  let roleDeleting: IRole = $state({
-    name: "",
-    id: "",
-    createdAt: new Date(),
-    createdUserId: "",
-    color: "",
-    manageServer: false,
-    manageChannel: false,
-    manageRole: false,
-    manageUser: false,
-  });
   let modalDeleteRole: null | HTMLDialogElement = null;
-
   const deleteRole = async () => {
     processing = true;
     await roleRepository
@@ -53,7 +43,7 @@
     <h3 class="text-lg font-bold">ロールを削除する</h3>
     <p class="py-4">次のロールを削除します</p>
 
-    <p class="font-bold text-4xl text-center">{roleDeleting.name}</p>
+    <p class="font-bold text-4xl text-center">{roleDeleting.name || "..."}</p>
 
     <div class="modal-action flex flex-row gap-2 mt-4 items-center">
       {#if resultDeleteRole === "error"}

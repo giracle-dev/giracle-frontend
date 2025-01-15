@@ -38,6 +38,20 @@
   let roleConfigChanged = false;
   //ロール更新中フラグ
   let processing = false;
+  //ロール作成と削除用ダイアログ取り込み用
+  let modalCreateRole: null | HTMLDialogElement = null;
+  let modalDeleteRole: null | HTMLDialogElement = null;
+  let roleToDelete: IRole = {
+    id: "",
+    name: "",
+    createdAt: new Date(),
+    createdUserId: "",
+    color: "",
+    manageServer: false,
+    manageChannel: false,
+    manageRole: false,
+    manageUser: false,
+  };
   $: {
     const roleOriginal = roles.find((role) => role.id === roleConfiguring.id);
     roleConfigChanged =
@@ -45,8 +59,13 @@
   }
 
   //ロール作成ダイアログを開く用
-  let PROXYopenCreateRoleDialog = () => {};
-  let PROXYopenDeleteRoleDialog = (role: IRole) => {};
+  let PROXYopenCreateRoleDialog = () => {
+    modalCreateRole?.showModal();
+  };
+  let PROXYopenDeleteRoleDialog = (role: IRole) => {
+    roleToDelete = role;
+    modalDeleteRole?.showModal();
+  };
 
   //ロールを更新する
   const updateRole = async () => {
@@ -102,18 +121,22 @@
   const roleUpdateReceiver = (event: MessageEvent) => {
     const dat: {
       signal: string;
-      data: {
-        roleId: string;
-      };
+      data: string;
     } = JSON.parse(event.data);
-    //console.log("/setting/role-setting :: roleUpdateReceiver :: data->", dat);
+    console.log("/setting/role-setting :: roleUpdateReceiver :: data->", dat);
     //signalが一致しているなら更新処理
     if (dat.signal === "role::Deleted") {
       //ループして一致するチャンネルデータを更新
       for (const index in roles) {
-        if (roles[index].id === dat.data.roleId) {
+        if (roles[index].id === dat.data) {
+          //削除
+          let _roles = [...roles];
+          _roles.splice(parseInt(index), 1);
+          roles = _roles;
+          //編集中ロールが削除された場合、最初のロールを編集中と設定
           roleConfiguring = structuredClone(roles[0]);
-          roles.splice(parseInt(index), 1);
+
+          return;
         }
       }
     }
@@ -122,6 +145,14 @@
 
   onMount(() => {
     fetchRoles();
+
+    //ダイアログ達の取り込み
+    modalCreateRole = document.getElementById(
+      "createInvite",
+    ) as HTMLDialogElement;
+    modalDeleteRole = document.getElementById(
+      "deleteRole",
+    ) as HTMLDialogElement;
   });
 
   onDestroy(() => {
@@ -309,4 +340,4 @@
 </div>
 
 <CreateRole />
-<DeleteRole />
+<DeleteRole roleDeleting={roleToDelete} />

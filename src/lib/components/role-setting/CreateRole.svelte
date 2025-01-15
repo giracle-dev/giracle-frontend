@@ -5,10 +5,6 @@
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   const roleRepository = repositoryFactory.get("role");
 
-  export const openCreateRoleDialog = () => {
-    modalCreateRole?.showModal();
-  };
-
   let processing = $state(false);
   let resultCreateRole: "success" | "error" | "" = $state("");
   let roleCreating: {
@@ -113,10 +109,8 @@
       <form method="dialog">
         <button class="btn" disabled={processing}>キャンセル</button>
       </form>
-      <button
-        onclick={createRole}
-        disabled={processing}
-        class="btn btn-primary">作成</button
+      <button onclick={createRole} disabled={processing} class="btn btn-primary"
+        >作成</button
       >
     </div>
   </div>
