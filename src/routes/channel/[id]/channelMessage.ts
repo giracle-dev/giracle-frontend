@@ -12,6 +12,8 @@ import updateReadTime from "$lib/utils/updateReadTime";
 const messageRepository = repositoryFactory.get("message");
 const channelRepository = repositoryFactory.get("channel");
 
+let fetchingHistory = false;
+
 /**
  *  ユーザー名を取得する
  */
@@ -51,6 +53,7 @@ export const getChannelHistory = async (
   direction?: "older" | "newer",
   messageIdFrom?: string,
 ) => {
+  if (fetchingHistory) return;
   if (direction === "older" && get(channelHistoryStore).atTop) return;
   if (direction === "newer" && get(channelHistoryStore).atEnd) return;
 
@@ -64,6 +67,7 @@ export const getChannelHistory = async (
     }
   };
 
+  fetchingHistory = true;
   await channelRepository
     .getHistory(page.params.id, {
       messageIdFrom: createMessageIdFrom(),
@@ -152,6 +156,7 @@ export const getChannelHistory = async (
       console.log("channelMessage :: getChannelHistory : err->", err);
     });
 
+  fetchingHistory = false;
   //現在のスクロール位置を調べて必要ならさらにメッセージを取得する
   setTimeout(checkScrollAndFetch, 100);
 };
