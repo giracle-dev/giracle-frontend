@@ -59,6 +59,16 @@
       return false;
     }
   };
+
+  let userProfileModal:HTMLDialogElement;
+  let currentUserId:string;
+
+  function onClickUserProfile(event:CustomEvent) {
+    currentUserId = event.detail.userId;
+    userProfileModal.showModal();
+  }
+
+
 </script>
 
 <div class="h-full w-full flex flex-col px-1 pb-2">
@@ -87,7 +97,7 @@
             tabindex={index}
             class="shadow m-0 p-0 card card-compact dropdown-content bg-base-100 rounded-box w-64"
           >
-            <UserProfile userId={message.userId} />
+            <UserProfile on:showUserProfileModal={onClickUserProfile} userId={message.userId} />
           </div>
         </div>
 
@@ -162,6 +172,15 @@
     <MessageInput on:sendMessage={sendMessage} />
   </div>
 </div>
+<!--ユーザープロフィールモーダル-->
+<dialog bind:this={userProfileModal} class="modal">
+  <div class="modal-box w-1/3 h-auto overflow-visible">
+    <UserProfile userId={currentUserId} canEditRole={true} />
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
 
 <style>
   /* サイドバーとかぶってしまうため */

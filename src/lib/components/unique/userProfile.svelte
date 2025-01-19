@@ -3,13 +3,21 @@
   import type { IUser } from "$lib/types/IUser";
   import { onlineUserListStore } from "$lib/store/user";
   import UserRoles from "./userProfile/UserRoles.svelte";
-
+  import { createEventDispatcher } from "svelte";
   export let userId: string | null = null;
-
+  export let canEditRole: boolean = false;
   let user: IUser | null = null;
+
+  const dispatch = createEventDispatcher();
 
   $: {
     user = $userListStore.find((user) => user.id === userId) ?? null;
+  }
+
+  function onClickIcon(){
+    dispatch('showUserProfileModal',{
+      userId: userId
+    });
   }
 </script>
 
@@ -33,11 +41,13 @@
             : 'offline'}"
         >
           <div class="w-10 rounded-full relative">
-            <img
-              src={"/api/user/icon/" + user.id}
-              alt="user"
-              class="w-10 h-10 rounded-full object-cover"
-            />
+            <button on:click={onClickIcon}>
+              <img
+                src={"/api/user/icon/" + user.id}
+                alt="user"
+                class="w-10 h-10 rounded-full object-cover"
+              />
+            </button>
           </div>
         </div>
       </div>
@@ -50,7 +60,7 @@
       </div>
 
       <div>
-        <UserRoles userId={user.id} roleList={user.RoleLink} />
+        <UserRoles userId={user.id} roleList={user.RoleLink} canEditRole={canEditRole}/>
       </div>
     </div>
   {/if}
