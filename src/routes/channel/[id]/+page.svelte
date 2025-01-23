@@ -354,7 +354,9 @@
 
             <!-- URLプレビュー -->
             {#if message.MessageUrlPreview && message.MessageUrlPreview.length > 0}
-              <div class="card bg-base-300 p-3 md:p-2 rounded-lg">
+              <div
+                class={`card bg-base-300 p-3 md:p-2 rounded-lg ${hoverMessageID === message.id ? "border" : ""}`}
+              >
                 {#each message.MessageUrlPreview as preview}
                   <div class="md:flex flex-row">
                     <div class="md:ml-4 md:grow md:min-w-0 md:basis-1/2">
