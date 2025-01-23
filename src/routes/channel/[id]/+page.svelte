@@ -354,37 +354,52 @@
 
             <!-- URLプレビュー -->
             {#if message.MessageUrlPreview && message.MessageUrlPreview.length > 0}
-              <div class="mt-2 p-2 border rounded-lg">
+              <div class="card bg-base-300 p-3 md:p-2 rounded-lg">
                 {#each message.MessageUrlPreview as preview}
                   <div class="md:flex flex-row">
-                    <div class="md:ml-4 md:flex-grow md:min-w-0 md:basis-1/2">
+                    <div class="md:ml-4 md:grow md:min-w-0 md:basis-1/2">
+                      <!-- タイトル -->
                       <a
                         href={preview.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         class="text-blue-700 md:flex-shrink-0 break-words break-all"
                       >
-                        <img
-                          src={preview.faviconLink}
-                          alt="Favicon"
-                          class="inline w-4 h-4 mr-1"
-                        />
+                        {#if preview.faviconLink !== ""}
+                          <!-- faviconURLのパターンに合わせて表示 -->
+                          {#if preview.faviconLink.startsWith("/")}
+                            <img
+                              src={new URL(preview.url).origin +
+                                preview.faviconLink}
+                              alt="Favicon"
+                              class="inline w-4 h-4 mr-1"
+                            />
+                          {:else}
+                            <img
+                              src={preview.faviconLink}
+                              alt="Favicon"
+                              class="inline w-4 h-4 mr-1"
+                            />
+                          {/if}
+                        {/if}
                         {preview.title}
                       </a>
+                      <!-- 概要 -->
                       <div class="md:ml-4 md:flex-grow md:min-w-0 md:max-w-100">
                         <p class="break-words break-all">
                           {preview.description}
                         </p>
                       </div>
                     </div>
+                    <!-- 画像 -->
                     {#if preview.imageLink}
                       <div
-                        class="h-30 sm:h-20 md:h-40 md:w-fit overflow-hidden md:ml-4"
+                        class="h-30 sm:h-20 p-1 md:p-0 md:h-auto md:w-1/3 xl:w-1/5 md:ml-4"
                       >
                         <img
                           src={preview.imageLink}
                           alt={`Preview image for ${preview.title}`}
-                          class="mt-2 w-full h-full object-cover rounded-lg"
+                          class="w-full h-full object-cover rounded-lg"
                         />
                       </div>
                     {/if}
