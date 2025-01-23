@@ -4,9 +4,13 @@
   import { IconX } from "@tabler/icons-svelte";
   const channelRepository = repositoryFactory.get("channel");
 
-  let result: IChannel[] = []; //検索結果格納用
-  let query = ""; //検索クエリ
-  export let selection: IChannel[] = []; //結果から選択されたチャンネルを格納
+  let result: IChannel[] = $state([]); //検索結果格納用
+  let query = $state(""); //検索クエリ
+  interface Props {
+    selection?: IChannel[];
+  }
+
+  let { selection = $bindable([]) }: Props = $props();
 
   /**
    * チャンネルを検索する
@@ -46,11 +50,11 @@
       class="absolute left-0 bottom-full border w-full max-h-[250px] overflow-y-auto bg-white shadow-lg rounded-lg z-10"
     >
       {#each result as channel}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
         <div
           role="button"
           class="p-2 hover:bg-neutral bg-base-200 cursor-pointer"
-          on:click={() => controlChannelData(channel)}
+          onclick={() => controlChannelData(channel)}
           tabindex={0}
         >
           {channel.name}
@@ -67,7 +71,7 @@
       <div class="badge badge-lg badge-neutral gap-2">
         {channel.name}
         <button
-          on:click={() => {
+          onclick={() => {
             controlChannelData(channel);
           }}
         >
@@ -80,16 +84,16 @@
     {/if}
   </div>
 
-  <div class="divider my-1" />
+  <div class="divider my-1"></div>
 
   <div class="flex flex-row gap-2 w-full items-center">
     <input
       bind:value={query}
       type="text"
-      on:focusout={() => (result = [])}
+      onfocusout={() => (result = [])}
       placeholder="チャンネルを検索する"
       class="input w-full grow bg-base-200"
     />
-    <button on:click={searchChannel} class="btn btn-primary">検索</button>
+    <button onclick={searchChannel} class="btn btn-primary">検索</button>
   </div>
 </div>

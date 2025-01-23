@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: Can't migrate code with afterUpdate. Please migrate by hand. -->
 <script lang="ts">
   import type { IServer } from "$lib/types/IServer";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";

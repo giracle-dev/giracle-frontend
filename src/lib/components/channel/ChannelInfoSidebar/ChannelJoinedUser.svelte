@@ -3,7 +3,11 @@
   import UserProfile from "$lib/components/unique/userProfile.svelte";
 
   //props
-  export let channelId: string;
+  interface Props {
+    channelId: string;
+  }
+
+  let { channelId }: Props = $props();
 
   const getJoinedUser = (_channelId: string) => {
     return $userListStore.filter((user) =>

@@ -1,15 +1,19 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import displaySizeForHuman from "$lib/utils/DisplaySizeForHuman";
   import { IconSquareRoundedXFilled, IconX } from "@tabler/icons-svelte";
   import { onMount } from "svelte";
 
-  export let fileData: File;
-  export let removeFilePROXY: (file: File) => void;
-  export let appendFileId: (fileId: string) => void;
+  interface Props {
+    fileData: File;
+    removeFilePROXY: (file: File) => void;
+    appendFileId: (fileId: string) => void;
+  }
 
-  let uploadResult = "";
-  let progress = 0;
+  let { fileData, removeFilePROXY, appendFileId }: Props = $props();
+
+  let uploadResult = $state("");
+  let progress = $state(0);
 
   /**
    * ファイルをアップロードする
@@ -20,7 +24,7 @@
     //アップロードするデータフォームオブジェクト生成
     const formData = new FormData();
     //送信者情報とディレクトリを付与
-    formData.append("channelId", $page.params.id);
+    formData.append("channelId", page.params.id);
     //ファイルそのものを内包
     formData.append("file", fileData);
 
@@ -93,7 +97,7 @@
         class="radial-progress"
         style={`--value:${progress}; --size:1rem;`}
         role="progressbar"
-      />
+      ></div>
     {/if}
 
     <p class="truncate text-xs">
@@ -105,7 +109,7 @@
       >{displaySizeForHuman(fileData.size)}</span
     >
     <button
-      on:click={() => removeFilePROXY(fileData)}
+      onclick={() => removeFilePROXY(fileData)}
       class="btn btn-xs btn-square"
     >
       <IconSquareRoundedXFilled />

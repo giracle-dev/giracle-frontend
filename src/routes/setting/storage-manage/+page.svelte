@@ -6,7 +6,7 @@
   import displaySizeForHuman from "$lib/utils/DisplaySizeForHuman";
   const serverRepository = repositoryFactory.get("server");
 
-  let FileStorageUsage = 0;
+  let FileStorageUsage = $state(0);
 
   //ストレージ使用量を取得
   const getStorageUsage = async () => {
@@ -30,7 +30,7 @@
   <div class="card bg-base-200 p-3 flex flex-row items-center">
     <button
       class="btn btn-ghost w-16"
-      on:click={() => {
+      onclick={() => {
         goto("/setting");
       }}
     >
@@ -46,7 +46,7 @@
         <code class="text-xl ml-auto">{displaySizeForHuman(FileStorageUsage)}</code>
       </span>
 
-      <div class="divider" />
+      <div class="divider"></div>
 
       <div class="text-center">Coming soon...</div>
     </div>

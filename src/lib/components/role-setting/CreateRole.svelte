@@ -1,16 +1,11 @@
 <script lang="ts">
-  import type { IRole } from "$lib/types/IRole";
   import { IconExclamationCircleFilled } from "@tabler/icons-svelte";
   import { onMount } from "svelte";
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   const roleRepository = repositoryFactory.get("role");
 
-  export const openCreateRoleDialog = () => {
-    modalCreateRole?.showModal();
-  };
-
-  let processing = false;
-  let resultCreateRole: "success" | "error" | "" = "";
+  let processing = $state(false);
+  let resultCreateRole: "success" | "error" | "" = $state("");
   let roleCreating: {
     roleName: string;
     rolePower: {
@@ -19,7 +14,7 @@
       manageRole: boolean;
       manageUser: boolean;
     };
-  } = {
+  } = $state({
     roleName: "",
     rolePower: {
       manageServer: false,
@@ -27,7 +22,7 @@
       manageRole: false,
       manageUser: false,
     },
-  };
+  });
   let modalCreateRole: null | HTMLDialogElement = null;
 
   const createRole = async () => {
@@ -35,7 +30,7 @@
     await roleRepository
       .createRole(roleCreating)
       .then((res) => {
-        console.log("CreateRole :: createRole : res->", res.data);
+        //console.log("CreateRole :: createRole : res->", res.data);
         resultCreateRole = "success";
         modalCreateRole?.close();
       })
@@ -64,7 +59,7 @@
       class="input input-bordered w-full"
     />
 
-    <div class="divider" />
+    <div class="divider"></div>
 
     <label class="label cursor-pointer">
       <span class="label-text">ユーザーの管理</span>
@@ -113,10 +108,8 @@
       <form method="dialog">
         <button class="btn" disabled={processing}>キャンセル</button>
       </form>
-      <button
-        on:click={createRole}
-        disabled={processing}
-        class="btn btn-primary">作成</button
+      <button onclick={createRole} disabled={processing} class="btn btn-primary"
+        >作成</button
       >
     </div>
   </div>

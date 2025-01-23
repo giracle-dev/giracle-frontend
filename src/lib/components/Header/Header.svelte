@@ -6,9 +6,13 @@
     IconLayoutSidebarLeftCollapseFilled,
   } from "@tabler/icons-svelte";
 
-  export let headerTitle: string = "None Title";
 
-  export let headerIcon = "channelList" as "channel" | "channelList";
+  interface Props {
+    headerTitle?: string;
+    headerIcon?: any;
+  }
+
+  let { headerTitle = "None Title", headerIcon = "channelList" as "channel" | "channelList" }: Props = $props();
 
   const dispatch = createEventDispatcher();
 
@@ -26,7 +30,7 @@
 
 <div class="navbar h-8 w-full">
   <div class="flex-none lg:hidden">
-    <button class="px-2" on:click={handleDrawer}>
+    <button class="px-2" onclick={handleDrawer}>
       <IconTextWrapDisabled size={20} />
     </button>
   </div>
@@ -44,7 +48,7 @@
       <!-- Navbar menu content here -->
       {#if headerIcon === "channel"}
         <button
-          on:click={openChannelSidebarPROXY}
+          onclick={openChannelSidebarPROXY}
           class="btn btn-square btn-ghost"
         >
           <IconLayoutSidebarLeftCollapseFilled />

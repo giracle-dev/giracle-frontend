@@ -20,7 +20,7 @@
     <div class=" flex flex-col">
       <button
         class="btn btn-ghost mx-auto btn-circle"
-        on:click={() => {
+        onclick={() => {
           goto("/setting/profile-setting");
         }}
       >
@@ -31,7 +31,7 @@
     <div class=" flex flex-col">
       <button
         class="btn btn-ghost mx-auto btn-circle"
-        on:click={() => {
+        onclick={() => {
           goto("/setting/client-setting");
         }}
       >
@@ -49,7 +49,7 @@
       <div class=" flex flex-col">
         <button
           class="btn btn-ghost mx-auto btn-circle"
-          on:click={() => {
+          onclick={() => {
             goto("/setting/server-manage");
           }}
         >
@@ -60,7 +60,7 @@
       <div class=" flex flex-col">
         <button
           class="btn btn-ghost mx-auto btn-circle"
-          on:click={() => {
+          onclick={() => {
             goto("/setting/storage-manage");
           }}
         >
@@ -74,7 +74,7 @@
       <div class=" flex flex-col">
         <button
           class="btn btn-ghost mx-auto btn-circle"
-          on:click={() => {
+          onclick={() => {
             goto("/setting/role-setting");
           }}
         >
@@ -88,7 +88,7 @@
       <div class=" flex flex-col">
         <button
           class="btn btn-ghost mx-auto btn-circle"
-          on:click={() => {
+          onclick={() => {
             goto("/setting/invite-setting");
           }}
         >

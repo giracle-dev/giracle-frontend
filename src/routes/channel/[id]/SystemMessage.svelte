@@ -3,16 +3,22 @@
   import type { IMessage } from "$lib/types/IMessage";
 
   //props
-  export let message: IMessage = {
-    channelId: "",
-    content: "",
-    createdAt: new Date(0),
-    id: "",
-    isSystemMessage: false,
-    userId: "",
-    MessageUrlPreview: [],
-    MessageFileAttached: [],
-  };
+  interface Props {
+    message?: IMessage;
+  }
+
+  let {
+    message = {
+      channelId: "",
+      content: "",
+      createdAt: new Date(0),
+      id: "",
+      isSystemMessage: false,
+      userId: "",
+      MessageUrlPreview: [],
+      MessageFileAttached: [],
+    },
+  }: Props = $props();
 
   type TSystemMessageTerm = "WELCOME" | "CHANNEL_JOIN" | "CHANNEL_LEFT";
   const SystemMessageMap: Record<TSystemMessageTerm, string> = {
@@ -24,16 +30,16 @@
   let messageJson: {
     messageTerm: TSystemMessageTerm | "";
     targetUserId: string;
-  } = {
+  } = $state({
     messageTerm: "",
     targetUserId: "",
-  };
+  });
 
-  $: {
+  $effect(() => {
     if (message.content) {
       messageJson = JSON.parse(message.content);
     }
-  }
+  });
 </script>
 
 <div class="p-1">

@@ -3,13 +3,17 @@
   import type { IUser } from "$lib/types/IUser";
   import { onlineUserListStore } from "$lib/store/user";
 
-  export let userId: string | null = null;
-
-  let user: IUser | null = null;
-
-  $: {
-    user = $userListStore.find((user) => user.id === userId) ?? null;
+  interface Props {
+    userId?: string | null;
   }
+
+  let { userId = null }: Props = $props();
+
+  let user: IUser | null = $state(null);
+
+  $effect(() => {
+    user = $userListStore.find((user) => user.id === userId) ?? null;
+  });
 </script>
 
 <div class="bg-base p-2">

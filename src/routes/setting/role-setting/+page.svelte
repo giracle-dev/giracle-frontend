@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: `<span>` is invalid inside `<option>` -->
 <script lang="ts">
   import { ws } from "$lib/wsHandler/INIT.ws";
   import { goto } from "$app/navigation";
@@ -37,6 +38,20 @@
   let roleConfigChanged = false;
   //ロール更新中フラグ
   let processing = false;
+  //ロール作成と削除用ダイアログ取り込み用
+  let modalCreateRole: null | HTMLDialogElement = null;
+  let modalDeleteRole: null | HTMLDialogElement = null;
+  let roleToDelete: IRole = {
+    id: "",
+    name: "",
+    createdAt: new Date(),
+    createdUserId: "",
+    color: "",
+    manageServer: false,
+    manageChannel: false,
+    manageRole: false,
+    manageUser: false,
+  };
   $: {
     const roleOriginal = roles.find((role) => role.id === roleConfiguring.id);
     roleConfigChanged =
@@ -44,8 +59,13 @@
   }
 
   //ロール作成ダイアログを開く用
-  let PROXYopenCreateRoleDialog = () => {};
-  let PROXYopenDeleteRoleDialog = (role: IRole) => {};
+  let PROXYopenCreateRoleDialog = () => {
+    modalCreateRole?.showModal();
+  };
+  let PROXYopenDeleteRoleDialog = (role: IRole) => {
+    roleToDelete = role;
+    modalDeleteRole?.showModal();
+  };
 
   //ロールを更新する
   const updateRole = async () => {
@@ -53,7 +73,7 @@
     await roleRepository
       .updateRole({ roleId: roleConfiguring.id, roleData: roleConfiguring })
       .then((res) => {
-        console.log("/setting/role-setting :: updateRole : res->", res.data);
+        //console.log("/setting/role-setting :: updateRole : res->", res.data);
         //ロールを再取得
         fetchRoles();
       })
@@ -99,28 +119,52 @@
 
   //更新されたロールデータの受け取り、ここでは削除のみ
   const roleUpdateReceiver = (event: MessageEvent) => {
-    const dat: {
-      signal: string;
-      data: {
-        roleId: string;
-      };
-    } = JSON.parse(event.data);
-    //console.log("/setting/role-setting :: roleUpdateReceiver :: data->", dat);
+    const dat:
+      | {
+          signal: "role::Deleted";
+          data: string;
+        }
+      | {
+          signal: "role::Created";
+          data: IRole;
+        } = JSON.parse(event.data);
+
     //signalが一致しているなら更新処理
+    //削除
     if (dat.signal === "role::Deleted") {
       //ループして一致するチャンネルデータを更新
       for (const index in roles) {
-        if (roles[index].id === dat.data.roleId) {
+        if (roles[index].id === dat.data) {
+          //削除
+          let _roles = [...roles];
+          _roles.splice(parseInt(index), 1);
+          roles = _roles;
+          //編集中ロールが削除された場合、最初のロールを編集中と設定
           roleConfiguring = structuredClone(roles[0]);
-          roles.splice(parseInt(index), 1);
+
+          return;
         }
       }
+    }
+    //作成
+    if (dat.signal === "role::Created") {
+      let _roles = [...roles];
+      _roles.push(dat.data);
+      roles = _roles;
     }
   };
   ws.addEventListener("message", roleUpdateReceiver);
 
   onMount(() => {
     fetchRoles();
+
+    //ダイアログ達の取り込み
+    modalCreateRole = document.getElementById(
+      "createInvite",
+    ) as HTMLDialogElement;
+    modalDeleteRole = document.getElementById(
+      "deleteRole",
+    ) as HTMLDialogElement;
   });
 
   onDestroy(() => {
@@ -157,10 +201,9 @@
           on:click={() => (roleConfiguring = structuredClone(role))}
           value={role.name}
           class="rounded-md"
+          style={`color:${role.color};`}
         >
-          <span style={`color:${role.color};`}>
-            {role.name}
-          </span>
+          {role.name}
         </option>
       {/each}
     </select>
@@ -169,7 +212,7 @@
   <div class="card bg-base-200 h-full overflow-y-auto flex flex-row gap-3 grow">
     <!-- サイドバー -->
     <div
-      class="w-4/12 flex flex-col hidden overflow-y-auto h-full p-2 pb-6 md:inline gap-1"
+      class="w-4/12 flex flex-col overflow-y-auto h-full p-2 pb-6 md:inline gap-1"
     >
       {#each roles as role}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -308,5 +351,5 @@
   </div>
 </div>
 
-<CreateRole bind:openCreateRoleDialog={PROXYopenCreateRoleDialog} />
-<DeleteRole bind:openDeleteRoleDialog={PROXYopenDeleteRoleDialog} />
+<CreateRole />
+<DeleteRole roleDeleting={roleToDelete} />

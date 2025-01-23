@@ -4,7 +4,7 @@ import { hasNewMessageStore } from "$lib/store/messageReadTime";
 import { myUserStore, userListStore } from "$lib/store/user";
 import { channelListStore } from "$lib/store/channel";
 import { get } from "svelte/store";
-import { page } from "$app/stores";
+import { page } from "$app/state";
 import updateReadTime from "$lib/utils/updateReadTime";
 import { ReadInboxItem } from "$lib/utils/ReadInboxItem";
 import { goto } from "$app/navigation";
@@ -35,7 +35,7 @@ export const sendMessageWsOn = async (data: IResponseWsSendMessage) => {
     console.log("message::SendMessage====>", data.data);
     // 一番下に追加
     // 現在のチャンネルメッセージではない場合は追加しない
-    if (get(page).params.id === data.data.channelId) {
+    if (page.params.id === data.data.channelId) {
       //Giracle自体がフォーカスされているなら既読時間を更新、違うなら新着とマーク
       if (WINDOW_FOCUS) {
         //既読時間も更新させる

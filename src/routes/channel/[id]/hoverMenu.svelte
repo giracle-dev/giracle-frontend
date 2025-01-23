@@ -1,15 +1,19 @@
 <script lang="ts">
   import { IconDots } from "@tabler/icons-svelte";
   import {toastStore} from "$lib/store/toast";
-  export let messageId: string = "";
-  export let hoverMessageId: string = "";
-  export let isLast: boolean = false;
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
+  interface Props {
+    messageId?: string;
+    hoverMessageId?: string;
+    isLast?: boolean;
+  }
+
+  let { messageId = "", hoverMessageId = "", isLast = false }: Props = $props();
 
   const messageRepository = repositoryFactory.get("message");
-  let isDisplayDeleteModal: boolean = false;
-  let isHoverDropDown: boolean = false;
-  let deleteModal:HTMLDialogElement;
+  let isDisplayDeleteModal: boolean = $state(false);
+  let isHoverDropDown: boolean = $state(false);
+  let deleteModal:HTMLDialogElement | undefined = $state();
 
   const deleteMessage = async (messageId :string)=>{
     console.log("deleting");
@@ -17,7 +21,7 @@
       .deleteMessage(messageId)
       .then((response) => {
         console.log("メッセージ削除成功",response);
-        deleteModal.close();
+        deleteModal?.close();
         toastStore.update((toast) =>{
           return [
             ...toast,
@@ -30,7 +34,7 @@
       })
       .catch((response) =>{
         console.log("メッセージ削除失敗",response);
-        deleteModal.close();
+        deleteModal?.close();
         toastStore.update((toast) =>{
           return [
             ...toast,
@@ -61,10 +65,10 @@
         class="btn btn-sm join-item px-2 py-0"
         role="button"
         tabindex="0"
-        on:focus={() => {
+        onfocus={() => {
           isHoverDropDown = true;
         }}
-        on:blur={() => {
+        onblur={() => {
           isHoverDropDown = false;
         }}
       >
@@ -77,10 +81,10 @@
         <li>
           <button
             class="text-error"
-            on:click={() =>{
+            onclick={() =>{
                console.log("OnClick Delete id:"+ hoverMessageId +"isDisplayDeleteModal:"+ isDisplayDeleteModal);
                isDisplayDeleteModal = true;
-               deleteModal.showModal();
+               deleteModal?.showModal();
             }}
             >メッセージを削除</button
           >
@@ -100,7 +104,7 @@
           <!-- if there is a button in form, it will close the modal -->
           <button class="btn">キャンセル</button>
         </form>
-        <button class="btn" on:click={()=> deleteMessage(messageId)}>削除する</button>
+        <button class="btn" onclick={()=> deleteMessage(messageId)}>削除する</button>
       </div>
     </div>
   </dialog>

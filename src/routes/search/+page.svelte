@@ -10,17 +10,17 @@
   import CompactMessageRender from "$lib/components/unique/CompactMessageRender.svelte";
   const messageRepository = repositoryFactory.get("message");
 
-  let query = "";
-  let hasUrlPreview: boolean | undefined = undefined;
-  let hasFileAttachment: boolean | undefined = undefined;
+  let query = $state("");
+  let hasUrlPreview: boolean | undefined = $state(undefined);
+  let hasFileAttachment: boolean | undefined = $state(undefined);
   //let userId: string | undefined = undefined;
-  let loadIndex = 1;
-  let dateOrder: "desc" | "asc" = "desc";
+  let loadIndex = $state(1);
+  let dateOrder: "desc" | "asc" = $state("desc");
 
-  let result: IMessage[] = [];
-  let fetchResult: "success" | "error" | "-" = "-";
-  let processing = false;
-  let hasMoreMessages = false;
+  let result: IMessage[] = $state([]);
+  let fetchResult: "success" | "error" | "-" = $state("-");
+  let processing = $state(false);
+  let hasMoreMessages = $state(false);
 
   const searchIt = async (continuousSearch: boolean = false) => {
     processing = true;
@@ -68,7 +68,7 @@
           class="grow input input-bordered join-item"
         />
         <button
-          on:click={() => {
+          onclick={() => {
             loadIndex = 1;
             searchIt(false);
           }}
@@ -85,17 +85,17 @@
         <p class="truncate">URLプレビュー</p>
         <div class="join join-horizontal w-full sm:w-fit ml-auto">
           <button
-            on:click={() => (hasUrlPreview = true)}
+            onclick={() => (hasUrlPreview = true)}
             class={`btn grow sm:grow-0 ${hasUrlPreview === true ? "btn-primary" : "btn-neutral"} join-item`}
             >必須</button
           >
           <button
-            on:click={() => (hasUrlPreview = undefined)}
+            onclick={() => (hasUrlPreview = undefined)}
             class={`btn grow sm:grow-0 ${hasUrlPreview === undefined ? "btn-primary" : "btn-neutral"} join-item`}
             >-</button
           >
           <button
-            on:click={() => (hasUrlPreview = false)}
+            onclick={() => (hasUrlPreview = false)}
             class={`btn grow sm:grow-0 ${hasUrlPreview === false ? "btn-primary" : "btn-neutral"} join-item`}
             >除外</button
           >
@@ -107,17 +107,17 @@
         <p class="truncate">ファイル添付</p>
         <div class="join join-horizontal w-full sm:w-fit ml-auto">
           <button
-            on:click={() => (hasFileAttachment = true)}
+            onclick={() => (hasFileAttachment = true)}
             class={`btn grow sm:grow-0 ${hasFileAttachment === true ? "btn-primary" : "btn-neutral"} join-item`}
             >必須</button
           >
           <button
-            on:click={() => (hasFileAttachment = undefined)}
+            onclick={() => (hasFileAttachment = undefined)}
             class={`btn grow sm:grow-0 ${hasFileAttachment === undefined ? "btn-primary" : "btn-neutral"} join-item`}
             >-</button
           >
           <button
-            on:click={() => (hasFileAttachment = false)}
+            onclick={() => (hasFileAttachment = false)}
             class={`btn grow sm:grow-0 ${hasFileAttachment === false ? "btn-primary" : "btn-neutral"} join-item`}
             >除外</button
           >
@@ -129,19 +129,19 @@
         <p class="truncate">時間ソート</p>
         <div class="join join-horizontal w-full sm:w-fit ml-auto">
           <button
-            on:click={() => (dateOrder = "desc")}
+            onclick={() => (dateOrder = "desc")}
             class={`btn grow sm:grow-0 ${dateOrder === "desc" ? "btn-primary" : "btn-neutral"} join-item`}
             >新しい順</button
           >
           <button
-            on:click={() => (dateOrder = "asc")}
+            onclick={() => (dateOrder = "asc")}
             class={`btn grow sm:grow-0 ${dateOrder === "asc" ? "btn-primary" : "btn-neutral"} join-item`}
             >古い順</button
           >
         </div>
       </div>
 
-      <div class="divider" />
+      <div class="divider"></div>
 
       <!-- ここから結果表示 -->
       <div class="flex flex-col gap-2">
@@ -163,7 +163,7 @@
         <!-- さらに読み込むボタン -->
         {#if hasMoreMessages}
           <button
-            on:click={() => {
+            onclick={() => {
               loadIndex++;
               searchIt(true);
             }}

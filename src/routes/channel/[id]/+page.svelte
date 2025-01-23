@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { channelHistoryStore } from "$lib/store/channelHistory";
   import {
     onlineUserListStore,
@@ -35,25 +35,25 @@
   import { repositoryFactory } from "$lib/repositories/RepositoryFactory";
   import { toastStore } from "$lib/store/toast";
   import ChannelHeader from "./ChannelHeader.svelte";
-  const urlSearchParams = $page.url.searchParams;
+  const urlSearchParams = page.url.searchParams;
 
   let messageId = urlSearchParams.get("messageId");
-  let alreadyMounted = false;
+  let alreadyMounted = $state(false);
 
   onMount(async () => {
-    //console.log("/channel/[id] :: onMount : $page.params.id->", $page.params.id);
+    //console.log("/channel/[id] :: onMount : page.params.id->", page.params.id);
     // ユーザー一覧が取得されるまで待つ
     while ($userListStore.length === 0) {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
     messageId = urlSearchParams.get("messageId");
     //既読時間
-    const readTime = get(MessageReadTimeStore)[$page.params.id];
+    const readTime = get(MessageReadTimeStore)[page.params.id];
     //履歴取得
     await getChannelHistory(
       undefined,
       readTime,
-      "newer",
+      "older",
       messageId || undefined,
     );
     const MessageContainer = document.getElementById("messageContainer");
@@ -63,20 +63,13 @@
 
     //既読時間を更新させてみる
     await updateReadTime(
-      $page.params.id,
+      page.params.id,
       $channelHistoryStore.history[0]?.createdAt,
       false,
     );
 
     //既読時間のところまでスクロールする
-    $channelHistoryStore.history.forEach((message) => {
-      if (message.createdAt === $MessageReadTimeBeforeStore[$page.params.id]) {
-        document.getElementById("message::" + message.id)?.scrollIntoView({
-          block: "start",
-        });
-        return;
-      }
-    });
+    scrollToReadPos();
 
     window.addEventListener("focus", readItOnPageVisible);
 
@@ -95,44 +88,63 @@
     alreadyMounted = true;
   });
 
-  $: (async () => {
-    console.log("/channel/[id] :: $ : page.params.id->", $page.params.id);
-    //if ($page.params.id) {
-    if (alreadyMounted) {
-      channelHistoryStore.update(() => ({
-        history: [],
-        atEnd: false,
-        atTop: false,
-      }));
-
-      await getChannelHistory(
-        undefined,
-        get(MessageReadTimeStore)[$page.params.id],
-        "older",
+  $effect(() => {
+    (async () => {
+      console.log(
+        "/channel/[id] :: $effect : page.params.id->",
+        page.params.id,
       );
+      //if (page.params.id) {
+      if (alreadyMounted) {
+        channelHistoryStore.update(() => ({
+          history: [],
+          atEnd: false,
+          atTop: false,
+        }));
 
-      //既読時間を更新させてみる
-      await updateReadTime(
-        get(page).params.id,
-        get(channelHistoryStore).history[0]?.createdAt,
-        false,
-      );
-      //既読時間のところまでスクロールする
-      get(channelHistoryStore).history.forEach((message) => {
-        if (
-          message.createdAt ===
-          get(MessageReadTimeBeforeStore)[get(page).params.id]
-        ) {
-          document.getElementById("message::" + message.id)?.scrollIntoView();
-          return;
-        }
-      });
-    }
-  })();
+        await getChannelHistory(
+          undefined,
+          get(MessageReadTimeStore)[page.params.id],
+          "older",
+        );
+
+        //既読時間を更新させてみる
+        await updateReadTime(
+          page.params.id,
+          get(channelHistoryStore).history[0]?.createdAt,
+          false,
+        );
+        //既読時間のところまでスクロールする
+        scrollToReadPos();
+      }
+    })();
+  });
 
   onDestroy(() => {
     window.removeEventListener("focus", readItOnPageVisible);
   });
+
+  /**
+   * 既読時間のところまでスクロールする
+   */
+  const scrollToReadPos = () => {
+    const readTimeIndex = $channelHistoryStore.history.findIndex(
+      (message, index) =>
+        message.createdAt === $MessageReadTimeStore[page.params.id],
+    );
+    if (
+      readTimeIndex !== -1 &&
+      $channelHistoryStore.history[readTimeIndex - 1] !== undefined
+    ) {
+      document
+        .getElementById(
+          "message::" + $channelHistoryStore.history[readTimeIndex - 1].id,
+        )
+        ?.scrollIntoView({
+          block: "end",
+        });
+    }
+  };
 
   /**
    * タブのアクティブが切り替わったら既読処理をする
@@ -140,7 +152,7 @@
   const readItOnPageVisible = async () => {
     console.log("/channel/[id] :: readItOnPageVisible");
     await updateReadTime(
-      $page.params.id,
+      page.params.id,
       $channelHistoryStore.history[0]?.createdAt,
       false,
     );
@@ -218,7 +230,7 @@
   const unArchiveChannel = async () => {
     const channelRepository = repositoryFactory.get("channel");
     await channelRepository
-      .updateChannel({ channelId: $page.params.id, isArchived: false })
+      .updateChannel({ channelId: page.params.id, isArchived: false })
       .then(() => {
         //成功のトーストを出す
         toastStore.update((toast) => {
@@ -246,7 +258,7 @@
       });
   };
 
-  let hoverMessageID: string = "";
+  let hoverMessageID: string = $state("");
 
   const onHover = (id: string) => {
     //console.log(`hoverChanged ${hoverMessageID} to ${id} `);
@@ -260,14 +272,14 @@
 
 <div class="flex grow flex-col px-1 pb-2 overflow-y-auto">
   <ChannelHeader
-    headerTitle={$channelListStore.find((c) => c.id === $page.params.id)?.name}
-    isArchived={$channelListStore.find((c) => c.id === $page.params.id)
+    headerTitle={$channelListStore.find((c) => c.id === page.params.id)?.name}
+    isArchived={$channelListStore.find((c) => c.id === page.params.id)
       ?.isArchived}
   />
 
   <div id="messageContainer" class="grow flex flex-col-reverse overflow-y-auto">
     {#each $channelHistoryStore.history as message, index}
-      {#if message.createdAt === $MessageReadTimeBeforeStore[$page.params.id] && index !== 0}
+      {#if message.createdAt === $MessageReadTimeBeforeStore[page.params.id] && index !== 0}
         <NewMessageLine />
       {/if}
 
@@ -279,21 +291,21 @@
           class={`flex py-1 px-2 items-start w-full hover:bg-base-300 rounded-md ${message.content.includes("@<" + get(myUserStore).id + ">") ? "bg-neutral" : ""}`}
           role="log"
           id={"message::" + message.id}
-          on:mouseover={() =>
+          onmouseover={() =>
             $myRolePowerStore.manageServer ||
             get(myUserStore).id === message.userId
               ? onHover(message.id)
               : null}
-          on:mouseout={() => onEndHover()}
-          on:focus={() =>
+          onmouseout={() => onEndHover()}
+          onfocus={() =>
             $myRolePowerStore.manageServer ||
             get(myUserStore).id === message.userId
               ? onHover(message.id)
               : null}
-          on:blur={() => onEndHover()}
+          onblur={() => onEndHover()}
         >
           {#if displayAvatar(message)}
-            <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+            <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
             <div class="dropdown dropdown-right dropdown-end shrink-0 w-[50px]">
               <!-- アイコン表示 -->
               <div tabindex={index} role="button" class="w-15 mx-auto">
@@ -421,13 +433,13 @@
   </div>
 
   <div class="flex gap-1">
-    {#if $channelListStore.find((c) => c.id === $page.params.id)?.isArchived}
+    {#if $channelListStore.find((c) => c.id === page.params.id)?.isArchived}
       <div
         class="card flex flex-row justify-center items-center px-2 py-4 bg-base-200 w-full"
       >
         <p>このチャンネルはアーカイブされています</p>
         <button
-          on:click={unArchiveChannel}
+          onclick={unArchiveChannel}
           class="btn btn-outline btn-secondary ml-auto"
         >
           <IconLockOpen2 />
@@ -440,7 +452,7 @@
   </div>
 </div>
 <div>
-  {#if $channelListStore.find((c) => c.id === $page.params.id) !== undefined}
+  {#if $channelListStore.find((c) => c.id === page.params.id) !== undefined}
     <ChannelInfoSidebar />
   {/if}
 </div>
