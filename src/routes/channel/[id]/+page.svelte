@@ -358,6 +358,7 @@
                 {#each message.MessageUrlPreview as preview}
                   <div class="md:flex flex-row">
                     <div class="md:ml-4 md:grow md:min-w-0 md:basis-1/2">
+                      <!-- タイトル -->
                       <a
                         href={preview.url}
                         target="_blank"
@@ -383,12 +384,14 @@
                         {/if}
                         {preview.title}
                       </a>
+                      <!-- 概要 -->
                       <div class="md:ml-4 md:flex-grow md:min-w-0 md:max-w-100">
                         <p class="break-words break-all">
                           {preview.description}
                         </p>
                       </div>
                     </div>
+                    <!-- 画像 -->
                     {#if preview.imageLink}
                       <div
                         class="h-30 sm:h-20 p-1 md:p-0 md:h-auto md:w-1/3 xl:w-1/5 md:ml-4"
