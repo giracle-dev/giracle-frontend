@@ -365,11 +365,21 @@
                         class="text-blue-700 md:flex-shrink-0 break-words break-all"
                       >
                         {#if preview.faviconLink !== ""}
-                          <img
-                            src={preview.faviconLink}
-                            alt="Favicon"
-                            class="inline w-4 h-4 mr-1"
-                          />
+                          <!-- faviconURLのパターンに合わせて表示 -->
+                          {#if preview.faviconLink.startsWith("/")}
+                            <img
+                              src={new URL(preview.url).origin +
+                                preview.faviconLink}
+                              alt="Favicon"
+                              class="inline w-4 h-4 mr-1"
+                            />
+                          {:else}
+                            <img
+                              src={preview.faviconLink}
+                              alt="Favicon"
+                              class="inline w-4 h-4 mr-1"
+                            />
+                          {/if}
                         {/if}
                         {preview.title}
                       </a>
