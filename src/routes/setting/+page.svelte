@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import SidebarButton from "$lib/components/unique/SidebarButton.svelte";
   import { myRolePowerStore } from "$lib/store/myRolePower";
   import {
     IconUser,
@@ -14,8 +15,12 @@
   const version = __VERSION__;
 </script>
 
-<div class="m-2 flex flex-col">
-  <h3 class="w-full font-bold">基本設定</h3>
+<div class="mx-2 py-1 flex flex-col">
+  <div class="card bg-base-200 px-2 py-4 flex flex-row items-center gap-1">
+    <SidebarButton />
+    <h3 class="w-full font-bold">基本設定</h3>
+  </div>
+
   <div class="flex items-center gap-5 m-5">
     <div class=" flex flex-col">
       <button
