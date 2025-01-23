@@ -354,7 +354,7 @@
 
             <!-- URLプレビュー -->
             {#if message.MessageUrlPreview && message.MessageUrlPreview.length > 0}
-              <div class="card bg-base-200 p-2 rounded-lg">
+              <div class="card bg-base-300 p-2 rounded-lg">
                 {#each message.MessageUrlPreview as preview}
                   <div class="md:flex flex-row">
                     <div class="md:ml-4 md:grow md:min-w-0 md:basis-1/2">
@@ -379,7 +379,7 @@
                     </div>
                     {#if preview.imageLink}
                       <div
-                        class="h-30 sm:h-20 md:h-auto md:w-1/3 xl:w-1/5 md:ml-4"
+                        class="h-30 sm:h-20 p-1 md:p-0 md:h-auto md:w-1/3 xl:w-1/5 md:ml-4"
                       >
                         <img
                           src={preview.imageLink}
