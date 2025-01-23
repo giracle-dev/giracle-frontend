@@ -354,10 +354,10 @@
 
             <!-- URLプレビュー -->
             {#if message.MessageUrlPreview && message.MessageUrlPreview.length > 0}
-              <div class="mt-2 p-2 border rounded-lg">
+              <div class="card bg-base-200 p-2 rounded-lg">
                 {#each message.MessageUrlPreview as preview}
                   <div class="md:flex flex-row">
-                    <div class="md:ml-4 md:flex-grow md:min-w-0 md:basis-1/2">
+                    <div class="md:ml-4 md:grow md:min-w-0 md:basis-1/2">
                       <a
                         href={preview.url}
                         target="_blank"
@@ -379,12 +379,12 @@
                     </div>
                     {#if preview.imageLink}
                       <div
-                        class="h-30 sm:h-20 md:h-40 md:w-fit overflow-hidden md:ml-4"
+                        class="h-30 sm:h-20 md:h-auto md:w-1/3 xl:w-1/5 md:ml-4"
                       >
                         <img
                           src={preview.imageLink}
                           alt={`Preview image for ${preview.title}`}
-                          class="mt-2 w-full h-full object-cover rounded-lg"
+                          class="w-full h-full object-cover rounded-lg"
                         />
                       </div>
                     {/if}
