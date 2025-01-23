@@ -288,7 +288,7 @@
         <SystemMessage {message} />
       {:else}
         <div
-          class={`flex py-1 px-2 items-start w-full hover:bg-base-300 rounded-md ${message.content.includes("@<" + get(myUserStore).id + ">") ? "bg-neutral" : ""}`}
+          class={`flex py-1 px-2 items-start w-full hover:bg-base-200 rounded-md ${message.content.includes("@<" + get(myUserStore).id + ">") ? "bg-neutral" : ""}`}
           role="log"
           id={"message::" + message.id}
           onmouseover={() =>
@@ -354,7 +354,9 @@
 
             <!-- URLプレビュー -->
             {#if message.MessageUrlPreview && message.MessageUrlPreview.length > 0}
-              <div class="card bg-base-300 p-3 md:p-2 rounded-lg">
+              <div
+                class={`card bg-base-200 p-3 md:p-2 rounded-lg ${hoverMessageID === message.id ? "msgUrlPreviewBorder" : "msgUrlPreviewBorderNone"}`}
+              >
                 {#each message.MessageUrlPreview as preview}
                   <div class="md:flex flex-row">
                     <div class="md:ml-4 md:grow md:min-w-0 md:basis-1/2">
@@ -480,5 +482,18 @@
   }
   .avatar.online:before {
     z-index: 0 !important;
+  }
+
+  /* メッセージホバー時用のインサイドボーダー */
+  .msgUrlPreviewBorder {
+    border: 2px solid;
+    border-color: var(
+      --fallback-b1,
+      oklch(var(--b1) / var(--tw-bg-opacity, 1))
+    );
+  }
+  .msgUrlPreviewBorderNone {
+    border: 2px solid;
+    border-color: transparent;
   }
 </style>
