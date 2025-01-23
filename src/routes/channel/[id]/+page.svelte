@@ -354,7 +354,7 @@
 
             <!-- URLプレビュー -->
             {#if message.MessageUrlPreview && message.MessageUrlPreview.length > 0}
-              <div class="card bg-base-300 p-2 rounded-lg">
+              <div class="card bg-base-300 p-3 md:p-2 rounded-lg">
                 {#each message.MessageUrlPreview as preview}
                   <div class="md:flex flex-row">
                     <div class="md:ml-4 md:grow md:min-w-0 md:basis-1/2">
@@ -364,11 +364,13 @@
                         rel="noopener noreferrer"
                         class="text-blue-700 md:flex-shrink-0 break-words break-all"
                       >
-                        <img
-                          src={preview.faviconLink}
-                          alt="Favicon"
-                          class="inline w-4 h-4 mr-1"
-                        />
+                        {#if preview.faviconLink !== ""}
+                          <img
+                            src={preview.faviconLink}
+                            alt="Favicon"
+                            class="inline w-4 h-4 mr-1"
+                          />
+                        {/if}
                         {preview.title}
                       </a>
                       <div class="md:ml-4 md:flex-grow md:min-w-0 md:max-w-100">
