@@ -1,6 +1,6 @@
 {
   "name": "girackle-frontend",
-  "version": "0.12.0-alpha",
+  "version": "0.12.1-alpha",
   "private": true,
   "scripts": {
     "dev": "vite dev",
