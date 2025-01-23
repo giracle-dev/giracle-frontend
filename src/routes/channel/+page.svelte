@@ -321,7 +321,7 @@
     {/if}
     {#each channels as channel, index}
       {#if !channel.isArchived || displayArchivedChannel}
-        <div class="w-full card bg-base-200 shadow-xl">
+        <div class="w-full card border-2 border-base-200 shadow-xl">
           <div class="flex flex-row items-center p-2 px-8 gap-2">
             <div class="flex-1 divide-y divide-slate-700">
               <div class="flex items-center gap-2">
@@ -332,7 +332,7 @@
                   </span>
                 {/if}
               </div>
-              <p>{channel.description}asdf</p>
+              <p>{channel.description}</p>
             </div>
             {#if !$myUserStore.ChannelJoin.find((c) => c.channelId === channel.id)}
               <button
@@ -350,16 +350,16 @@
                 <IconDotsVertical size={15} />
               </button>
               <ul
-                class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+                class="dropdown-content menu bg-base-300 rounded-box z-[1] w-52 p-2 shadow"
               >
                 {#if !channel.isArchived}
                   <li>
                     <button
                       onclick={() => toggleArchiveChannel(channel.id, true)}
-                      class="btn btn-link"
+                      class="btn"
                       aria-disabled={channel.isArchived}
                     >
-                      archive
+                      アーカイブする
                     </button>
                   </li>
                 {:else}
@@ -369,7 +369,7 @@
                       class="btn btn-link"
                       aria-disabled={!channel.isArchived}
                     >
-                      archive解除
+                      アーカイブを解除
                     </button>
                   </li>
                 {/if}
