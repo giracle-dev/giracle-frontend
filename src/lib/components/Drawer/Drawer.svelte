@@ -34,7 +34,7 @@
   }
 </script>
 
-<div class="drawer lg:drawer-open w-full">
+<div class="drawer md:drawer-open w-full">
   <input
     id="my-drawer-2"
     type="checkbox"
